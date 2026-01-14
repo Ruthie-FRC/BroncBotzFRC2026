@@ -5,7 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
+
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,7 +25,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem m_exampleSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
+  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
+  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -40,7 +52,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   
+   m_driverController.button(1).whileTrue(climberSubsystem.setHeight(Meters.of(0.2)));
+  m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.4)));
   }
 
   /**
