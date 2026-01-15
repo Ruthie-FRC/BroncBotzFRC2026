@@ -16,4 +16,12 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class CanIDconstants {
+    public static final int climberCanID = 10;
+    public static final int intakeRollerID = 20;
+    public static final int turretID = 30;
+    public static final int intakeArmID = 40;
+    public static final int swerveID = 50;
+  }
 }
