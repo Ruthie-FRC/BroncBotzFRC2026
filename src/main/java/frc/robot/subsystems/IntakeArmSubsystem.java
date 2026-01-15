@@ -1,13 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
+
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Second;
@@ -16,15 +12,20 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CanIDconstants;
-import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
@@ -34,104 +35,148 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class IntakeArmSubsystem extends SubsystemBase {
+// TODO: Example with absolute encoders
 
-  private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
-  .withControlMode(ControlMode.CLOSED_LOOP)
-  // Feedback Constants (PID Constants)
-  .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  // Feedforward Constants
-  .withFeedforward(new ArmFeedforward(0, 0, 0))
-  .withSimFeedforward(new ArmFeedforward(0, 0, 0))
-  // Telemetry name and verbosity level
-  .withTelemetry("ArmMotor", TelemetryVerbosity.HIGH)
-  // Gearing from the motor rotor to final shaft.
-  // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-  // Motor properties to prevent over currenting.
-  .withMotorInverted(false)
-  .withIdleMode(MotorMode.BRAKE)
-  .withStatorCurrentLimit(Amps.of(40))
-  .withSupplyCurrentLimit(Amps.of(40))
-  .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25));
+/**
+ * Exponentially profiled arm subsystem. The arm represented by this class does NOT have an absolute encoder! This
+ * subsystem has a "self-homing" command, more details in the function description.
+ */
+public class IntakeArmSubsystem extends SubsystemBase
+{
 
-  // Vendor motor controller object
-  private SparkMax spark = new SparkMax(CanIDconstants.intakeArmID, MotorType.kBrushless);
-
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
-
-  private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
-  // Soft limit is applied to the SmartMotorControllers PID
-  .withSoftLimits(Degrees.of(-20), Degrees.of(10))
-  // Hard limit is applied to the simulation.
-  .withHardLimit(Degrees.of(-30), Degrees.of(40))
-  // Starting position is where your arm starts
-  .withStartingPosition(Degrees.of(-5))
-  // Length and mass of your arm for sim.
-  .withLength(Feet.of(3))
-  .withMass(Pounds.of(1))
-  // Telemetry name and verbosity for the arm.
-  .withTelemetry("Arm", TelemetryVerbosity.HIGH);
-
-  // Arm Mechanism
-  private Arm arm = new Arm(armCfg);
-
-  /**
-   * Set the angle of the arm.
-   * @param angle Angle to go to.
+  private final String           motorTelemetryName = "ExponentiallyProfiledArmMotor";
+  private final String           mechTelemetryName  = "ExponentiallyProfiledArm";
+  private final SparkMax         armMotor           = new SparkMax(1, MotorType.kBrushless);
+  ///  Configuration Options
+  private final DCMotor          dcMotor            = DCMotor.getNEO(1);
+  private final MechanismGearing gearing            = new MechanismGearing(7);
+  private final Mass             weight             = Pounds.of(10);
+  private final Distance         length             = Feet.of(2);
+  /*
+   * Using the protractor, where 0deg on the protractor is when the arm is parallel to the ground,
+   * you can measure where the starting angle should be.
    */
-  public Command setAngle(Angle angle) { return arm.setAngle(angle);}
-
-  /**
-   * Move the arm up and down.
-   * @param dutycycle [-1, 1] speed to set the arm too.
+  private final Angle            startingAngle      = Degrees.of(30);
+  /*
+   * To find these limits measure the starting angle relative to when the arm is parallel to the ground using a protractor.
    */
-  public Command set(double dutycycle) { return arm.set(dutycycle);}
-
-  /**
-   * Run sysId on the {@link Arm}
+  private final Angle            softLowerLimit     = Degrees.of(-20);
+  private final Angle            softUpperLimit     = Degrees.of(100);
+  /*
+   * These are the real "limits" of the robot shown in simulation.
    */
-  public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+  private final Angle            hardLowerLimit     = Degrees.of(-30);
+  private final Angle            hardUpperLimit     = Degrees.of(110);
 
-  /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {}
-
-  /**
-   * Example command factory method.
-   *
-   * @return a command
+  /*
+   * This is the STARTING PID Controller for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  private final ExponentialProfilePIDController pidController  = new ExponentialProfilePIDController(1,
+                                                                                                     0,
+                                                                                                     0,
+                                                                                                     ExponentialProfilePIDController.createArmConstraints(
+                                                                                                         Volts.of(12),
+                                                                                                         dcMotor,
+                                                                                                         weight,
+                                                                                                         length,
+                                                                                                         gearing));
+  /*
+   * This is the STARTING Feedforward for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
+   */
+  private final ArmFeedforward                  armFeedforward = new ArmFeedforward(0, 0, 0, 0);
+  /**
+   * {@link SmartMotorControllerConfig} for the arm motor.
+   */
+  private final SmartMotorControllerConfig      motorConfig    = new SmartMotorControllerConfig(this)
+                                                /*
+                                                 * Basic Configuration options for the motor
+                                                 */
+                                                .withMotorInverted(false)
+                                                .withIdleMode(MotorMode.BRAKE)
+                                                .withControlMode(ControlMode.CLOSED_LOOP)
+                                                .withGearing(gearing)
+                                                .withStatorCurrentLimit(Amps.of(40)) // Prevents our motor from continuously over-taxing itself when it is stuck.
+                                                .withClosedLoopRampRate(Seconds.of(0.25)) // Prevents our motor from rapid demand changes that could cause dramatic voltage drops, and current draw.
+                                                .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
+                                                .withTelemetry(motorTelemetryName,
+                                                               TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
+                                                /*
+                                                 * Closed loop configuration options for the motor.
+                                                 */
+                                                .withClosedLoopController(pidController)
+                                                .withFeedforward(armFeedforward)
+                                                .withSoftLimit(softLowerLimit, softUpperLimit);
+
+  /// Generic Smart Motor Controller with our options and vendor motor.
+  private final SmartMotorController motor    = new SparkWrapper(armMotor, dcMotor, motorConfig);
+  /// Arm-specific options
+  private       ArmConfig            m_config = new ArmConfig(motor)
+      /*
+       * Basic configuration options for the arm.
+       */
+      .withLength(length)
+      .withMass(weight)
+      .withStartingPosition(startingAngle) // The starting position should ONLY be defined if you are NOT using an absolute encoder.
+      //.withHorizontalZero(Degrees.of(0)) // The horizontal zero should ONLY be defined if you ARE using an absolute encoder.
+      .withTelemetry(mechTelemetryName, TelemetryVerbosity.HIGH)
+      /*
+       * Simulation configuration options for the arm.
+       */
+      .withHardLimit(hardLowerLimit, hardUpperLimit);
+  // Arm mechanism
+  private final Arm                  arm      = new Arm(m_config);
+
+  public IntakeArmSubsystem()
+  {
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void periodic()
+  {
     arm.updateTelemetry();
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+  public void simulationPeriodic()
+  {
     arm.simIterate();
   }
+
+  /**
+   * Reset the encoder to the lowest position when the current threshhold is reached. Should be used when the Arm
+   * position is unreliable, like startup. Threshhold is only detected if exceeded for 0.4 seconds, and the motor moves
+   * less than 2 degrees per second.
+   *
+   * @param threshhold The current threshhold held when the Arm is at it's hard limit.
+   * @return
+   */
+  public Command homing(Current threshhold)
+  {
+    Debouncer       currentDebouncer  = new Debouncer(0.4); // Current threshold is only detected if exceeded for 0.4 seconds.
+    Voltage         runVolts          = Volts.of(2); // Volts required to run the mechanism up. Could be negative if the mechanism is inverted.
+    Angle           limitHit          = hardUpperLimit;  // Limit which gets hit. Could be the lower limit if the volts makes the arm go down.
+    AngularVelocity velocityThreshold = DegreesPerSecond.of(2); // The maximum amount of movement for the arm to be considered "hitting the hard limit".
+    return Commands.startRun(motor::stopClosedLoopController, // Stop the closed loop controller
+                             () -> motor.setVoltage(runVolts)) // Set the voltage of the motor
+                   .until(() -> currentDebouncer.calculate(motor.getStatorCurrent().gte(threshhold) &&
+                                                           motor.getMechanismVelocity().abs(DegreesPerSecond) <=
+                                                           velocityThreshold.in(DegreesPerSecond)))
+                   .finallyDo(() -> {
+                     motor.setEncoderPosition(limitHit);
+                     motor.startClosedLoopController();
+                   });
+  }
+
+  public Command armCmd(double dutycycle)
+  {
+    return arm.set(dutycycle);
+  }
+
+  public Command setAngle(Angle angle)
+  {
+    return arm.setAngle(angle);
+  }
+
+  public Command sysId()
+    {
+        return arm.sysId(Volts.of(3), Volts.of(3).per(Second), Second.of(30));
+    }
 }

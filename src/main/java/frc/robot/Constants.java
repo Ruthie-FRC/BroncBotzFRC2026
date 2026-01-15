@@ -24,4 +24,6 @@ public final class Constants {
     public static final int intakeArmID = 40;
     public static final int swerveID = 50;
   }
+
+public static final double maxSpeed = 4.5; //meters per second
 }
