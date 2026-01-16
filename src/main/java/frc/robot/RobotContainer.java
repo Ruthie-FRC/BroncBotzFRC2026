@@ -10,9 +10,12 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import swervelib.SwerveInputStream;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem drivebase = new SwerveSubsystem();
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
@@ -37,10 +40,66 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+    public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAngularVelocity : driveFieldOrientedDirectAngleKeyboard);
   }
+
+      SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                    () -> m_driverController.getLeftY() * -1,
+                                                                    () -> m_driverController.getLeftX() * -1)
+                                                                    .withControllerRotationAxis(m_driverController::getRightX)
+                                                                    .deadband(OperatorConstants.DEADBAND)
+                                                                    .scaleTranslation(0.8)
+                                                                    .allianceRelativeControl(true);
+
+
+      SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(m_driverController::getRightX, 
+                                                                                                m_driverController::getRightY)
+                                                                                                .headingWhile(true);                                               
+
+
+    Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+
+    Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+
+// simulation stuff
+
+    SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
+    () -> -m_driverController.getLeftY(),
+    () -> -m_driverController.getLeftX())
+    .withControllerRotationAxis(() -> m_driverController.getRawAxis(
+    2))
+    .deadband(OperatorConstants.DEADBAND)
+    .scaleTranslation(0.8)
+    .allianceRelativeControl(true);
+    // Derive the heading axis with math!
+    SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
+            .withControllerHeadingAxis(() ->
+                                          Math.sin(
+                                              m_driverController.getRawAxis(
+                                                  2) *
+                                              Math.PI) *
+                                          (Math.PI *
+                                            2),
+                                      () ->
+                                          Math.cos(
+                                              m_driverController.getRawAxis(
+                                                  2) *
+                                              Math.PI) *
+                                          (Math.PI *
+                                            2))
+            .headingWhile(true)
+            .translationHeadingOffset(true)
+            .translationHeadingOffset(Rotation2d.fromDegrees(
+                0));
+
+
+
+    Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
+
+ 
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
