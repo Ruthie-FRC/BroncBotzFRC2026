@@ -37,13 +37,14 @@ public final class Constants {
     public static final double DEADBAND = 0.05;
   }
 
-  public static class CanIDconstants {
+  public static class CanIDConstants {
 
     public static final int climberCanID = 10;
     public static final int intakeRollerID = 20;
     public static final int turretID = 30;
     public static final int intakeArmID = 40;
     public static final int swerveID = 50;
+    public static int turretFlywheelID = 31;
 
   }
   public static class Climber {

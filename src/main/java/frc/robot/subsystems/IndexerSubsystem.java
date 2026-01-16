@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CanIDconstants;
+import frc.robot.Constants.CanIDConstants;
 
 
 
@@ -29,7 +29,7 @@ public class IndexerSubsystem extends SubsystemBase
   public static final double kWristMomentOfInertia = 0.00032; // kg * m^2
   
   
-    private final SparkMax m_rollerMotor = new SparkMax(CanIDconstants.intakeRollerID, MotorType.kBrushless);
+    private final SparkMax m_rollerMotor = new SparkMax(CanIDConstants.intakeRollerID, MotorType.kBrushless);
   
     private final DCMotor m_rollerMotorGearbox = DCMotor.getNeoVortex(1);
   
