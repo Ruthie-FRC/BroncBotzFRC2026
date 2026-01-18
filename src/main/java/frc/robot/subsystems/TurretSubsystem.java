@@ -11,13 +11,25 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import yams.gearing.GearBox;
@@ -33,12 +45,24 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import limelight.Limelight;
+import limelight.networktables.AngularVelocity3d;
+import limelight.networktables.LimelightPoseEstimator;
+import limelight.networktables.LimelightPoseEstimator.EstimationMode;
+import limelight.networktables.LimelightResults;
+import limelight.networktables.LimelightSettings.LEDMode;
+import limelight.networktables.Orientation3d;
+import limelight.networktables.PoseEstimate;
+import limelight.networktables.target.pipeline.NeuralClassifier;
 
 
 
 public class TurretSubsystem extends SubsystemBase
 {
+    SwerveSubsystem swerve = new SwerveSubsystem();
     private SparkMax turretMotor = new SparkMax(4, MotorType.kBrushless);
+    Limelight                limelight;
+    LimelightPoseEstimator   limelightPoseEstimator;
 
   private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(4, 0, 0, DegreesPerSecond.of(180), DegreesPerSecondPerSecond.of(90))
@@ -74,16 +98,79 @@ public class TurretSubsystem extends SubsystemBase
 
   public TurretSubsystem()
   {
-    // TODO: Set the default command, if any, for this subsystem by calling setDefaultCommand(command)
-    //       in the constructor or in the robot coordination class, such as RobotContainer.
-    //       Also, you can call addChild(name, sendableChild) to associate sendables with the subsystem
-    //       such as SpeedControllers, Encoders, DigitalInputs, etc.
+    setupLimelight();
   }
+
+    public void setupLimelight()
+  {
+
+    limelight = new Limelight("limelight");
+    limelight.getSettings()
+             .withPipelineIndex(0)
+             .withCameraOffset(new Pose3d(Units.inchesToMeters(12),
+                                          Units.inchesToMeters(12),
+                                          Units.inchesToMeters(10.5),
+                                          new Rotation3d(0, 0, Units.degreesToRadians(45))))
+             .withArilTagIdFilter(List.of(17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0))
+             .save();
+
+
+
+  }
+
+  private int     outofAreaReading = 0;
+  private boolean initialReading   = false;
 
   public void periodic()
   {
     turret.updateTelemetry();
-  }
+
+    // limelight.getSettings()
+    //          .withRobotOrientation(new Orientation3d(new Rotation3d(swerveDrive.getOdometryHeading()
+    //                                                                            .rotateBy(Rotation2d.kZero)),
+    //                                                  new AngularVelocity3d(DegreesPerSecond.of(0),
+    //                                                                        DegreesPerSecond.of(0),
+    //                                                                        DegreesPerSecond.of(0))))
+    //          .save();
+    Optional<PoseEstimate>     poseEstimates = limelightPoseEstimator.getPoseEstimate();
+    Optional<LimelightResults> results       = limelight.getLatestResults();
+    if (results.isPresent()/* && poseEstimates.isPresent()*/)
+    {
+      LimelightResults result       = results.get();
+      PoseEstimate     poseEstimate = poseEstimates.get();
+      SmartDashboard.putNumber("Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
+      SmartDashboard.putNumber("Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
+      SmartDashboard.putNumber("Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
+      SmartDashboard.putNumber("Avg Distance", poseEstimate.avgTagDist);
+      SmartDashboard.putNumber("Avg Tag Area", poseEstimate.avgTagArea);
+      SmartDashboard.putNumber("Limelight Pose/x", poseEstimate.pose.getX());
+      SmartDashboard.putNumber("Limelight Pose/y", poseEstimate.pose.getY());
+      SmartDashboard.putNumber("Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
+      if (result.valid)
+      {
+        // // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
+        // Pose2d usefulPose     = result.getBotPose2d(Alliance.Blue);
+        // double distanceToPose = usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
+        // if (distanceToPose < 0.5 || (outofAreaReading > 10) || (outofAreaReading > 10 && !initialReading))
+        // {
+        //   if (!initialReading)
+        //   {
+        //     initialReading = true;
+        //   }
+        //   outofAreaReading = 0;
+        //   // System.out.println(usefulPose.toString());
+        //   swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
+        //   // System.out.println(result.timestamp_LIMELIGHT_publish);
+        //   // System.out.println(result.timestamp_RIOFPGA_capture);
+        //   swerveDrive.addVisionMeasurement(usefulPose, Timer.getTimestamp());
+        } else
+        {
+          outofAreaReading += 1;
+        }
+      
+      }
+    }
+  
 
   public void simulationPeriodic()
   {

@@ -32,7 +32,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class FlywheelSubsystem extends SubsystemBase {
+public class TurretFlywheelSubsystem extends SubsystemBase {
 
   private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.turretFlywheelID, MotorType.kBrushless);
 
@@ -60,7 +60,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
   private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
 
-  public FlywheelSubsystem() {
+  public TurretFlywheelSubsystem() {
   }
 
   public AngularVelocity getVelocity() {

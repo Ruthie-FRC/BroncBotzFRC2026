@@ -49,15 +49,16 @@ public class IntakeArmSubsystem extends SubsystemBase
   /*
    * This is the STARTING PID Controller for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
-  private final ExponentialProfilePIDController pidController  = new ExponentialProfilePIDController(1,
-                                                                                                     0,
-                                                                                                     0,
-                                                                                                     ExponentialProfilePIDController.createArmConstraints(
-                                                                                                         Volts.of(12),
-                                                                                                         Intake.dcMotor,
-                                                                                                         Intake.weight,
-                                                                                                         Intake.length,
-                                                                                                         Intake.gearing));
+  private final ExponentialProfilePIDController pidController  = 
+                new ExponentialProfilePIDController(1,
+                                                    0,
+                                                    0,
+                                                    ExponentialProfilePIDController.createArmConstraints(
+                                                        Volts.of(12),
+                                                        Intake.dcMotor,
+                                                        Intake.weight,
+                                                        Intake.length,
+                                                        Intake.gearing));
   /*
    * This is the STARTING Feedforward for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
@@ -66,24 +67,24 @@ public class IntakeArmSubsystem extends SubsystemBase
    * {@link SmartMotorControllerConfig} for the arm motor.
    */
   private final SmartMotorControllerConfig      motorConfig    = new SmartMotorControllerConfig(this)
-                                                /*
-                                                 * Basic Configuration options for the motor
-                                                 */
-                                                .withMotorInverted(false)
-                                                .withIdleMode(MotorMode.BRAKE)
-                                                .withControlMode(ControlMode.CLOSED_LOOP)
-                                                .withGearing(Intake.gearing)
-                                                .withStatorCurrentLimit(Amps.of(40)) // Prevents our motor from continuously over-taxing itself when it is stuck.
-                                                .withClosedLoopRampRate(Seconds.of(0.25)) // Prevents our motor from rapid demand changes that could cause dramatic voltage drops, and current draw.
-                                                .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
-                                                .withTelemetry(Intake.motorTelemetryName,
-                                                               TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
-                                                /*
-                                                 * Closed loop configuration options for the motor.
-                                                 */
-                                                .withClosedLoopController(pidController)
-                                                .withFeedforward(armFeedforward)
-                                                .withSoftLimit(Intake.softLowerLimit, Intake.softUpperLimit);
+  /*
+    * Basic Configuration options for the motor
+    */
+  .withMotorInverted(false)
+  .withIdleMode(MotorMode.BRAKE)
+  .withControlMode(ControlMode.CLOSED_LOOP)
+  .withGearing(Intake.gearing)
+  .withStatorCurrentLimit(Amps.of(40)) // Prevents our motor from continuously over-taxing itself when it is stuck.
+  .withClosedLoopRampRate(Seconds.of(0.25)) // Prevents our motor from rapid demand changes that could cause dramatic voltage drops, and current draw.
+  .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
+  .withTelemetry(Intake.motorTelemetryName,
+                  TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
+  /*
+    * Closed loop configuration options for the motor.
+    */
+  .withClosedLoopController(pidController)
+  .withFeedforward(armFeedforward)
+  .withSoftLimit(Intake.softLowerLimit, Intake.softUpperLimit);
 
   /// Generic Smart Motor Controller with our options and vendor motor.
   private final SmartMotorController motor    = new SparkWrapper(Intake.armMotor, Intake.dcMotor, motorConfig);
