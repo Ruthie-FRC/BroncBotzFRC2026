@@ -32,9 +32,9 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class IntakeRollerSubsystem extends SubsystemBase {
+public class AgitatorSubsystem extends SubsystemBase {
 
-  private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.intakeRollerID, MotorType.kBrushless);
+  private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.agitatorID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
@@ -60,7 +60,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
 
   private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
 
-  public IntakeRollerSubsystem() {
+  public AgitatorSubsystem() {
   }
 
   public AngularVelocity getVelocity() {

@@ -40,11 +40,19 @@ public final class Constants {
   public static class CanIDConstants {
 
     public static final int climberCanID = 10;
+
     public static final int intakeRollerID = 20;
+
     public static final int turretID = 30;
-    public static final int intakeArmID = 40;
-    public static final int swerveID = 50;
     public static int turretFlywheelID = 31;
+    public static final int hoodID = 32;
+    public static final int agitatorID = 33;
+    public static final int indexerID = 34;
+
+
+    public static final int intakeArmID = 40;
+
+  
 
   
 

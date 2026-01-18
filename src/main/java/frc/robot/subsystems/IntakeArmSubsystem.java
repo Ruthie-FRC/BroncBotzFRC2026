@@ -67,9 +67,6 @@ public class IntakeArmSubsystem extends SubsystemBase
    * {@link SmartMotorControllerConfig} for the arm motor.
    */
   private final SmartMotorControllerConfig      motorConfig    = new SmartMotorControllerConfig(this)
-  /*
-    * Basic Configuration options for the motor
-    */
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
   .withControlMode(ControlMode.CLOSED_LOOP)
@@ -79,9 +76,6 @@ public class IntakeArmSubsystem extends SubsystemBase
   .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
   .withTelemetry(Intake.motorTelemetryName,
                   TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
-  /*
-    * Closed loop configuration options for the motor.
-    */
   .withClosedLoopController(pidController)
   .withFeedforward(armFeedforward)
   .withSoftLimit(Intake.softLowerLimit, Intake.softUpperLimit);
