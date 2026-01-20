@@ -16,7 +16,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.HardwareMap;
 import frc.robot.Constants.CanIDConstants;
 
 import java.util.function.Supplier;
@@ -35,6 +34,8 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class AgitatorSubsystem extends SubsystemBase {
 
+  private final SparkMax agitator = new SparkMax(CanIDConstants.agitatorID, MotorType.kBrushless);
+
 
   private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
@@ -49,7 +50,7 @@ public class AgitatorSubsystem extends SubsystemBase {
       .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
       .withControlMode(ControlMode.CLOSED_LOOP);
 
-  private final SmartMotorController motor = new SparkWrapper(HardwareMap.agitator, DCMotor.getNEO(1), motorConfig);
+  private final SmartMotorController motor = new SparkWrapper(agitator, DCMotor.getNEO(1), motorConfig);
 
   private final FlyWheelConfig flywheelConfig = new FlyWheelConfig(motor)
       .withDiameter(Inches.of(4))
