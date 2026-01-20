@@ -9,7 +9,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class ScoreingSubsystem {
+public class ScoringSubsystem {
     
     private IndexerSubsystem m_indexer;
     private IntakeArmSubsystem m_intakeArm;
@@ -17,7 +17,7 @@ public class ScoreingSubsystem {
     private SwerveSubsystem m_swerve;
     private TurretSubsystem m_turret;
 
-    public ScoreingSubsystem(IndexerSubsystem indexer, IntakeArmSubsystem intakeArm, IntakeRollerSubsystem intakeRoller, SwerveSubsystem swerve, TurretSubsystem turret){
+    public ScoringSubsystem(IndexerSubsystem indexer, IntakeArmSubsystem intakeArm, IntakeRollerSubsystem intakeRoller, SwerveSubsystem swerve, TurretSubsystem turret){
         m_indexer = indexer;
         m_intakeArm = intakeArm;
         m_intakeRollers = intakeRoller;
