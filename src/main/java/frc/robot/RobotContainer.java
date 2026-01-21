@@ -5,12 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.TurretFlywheelSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import swervelib.SwerveInputStream;
+import yams.units.YUnits;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -30,9 +35,16 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+
   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
-  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+
+  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
+  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
+  private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
+
+  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+  private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -43,8 +55,18 @@ public class RobotContainer {
     public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAngularVelocity : driveFieldOrientedDirectAngleKeyboard);
+    defaultCommands();
   }
+
+  public void defaultCommands(){
+    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAngularVelocity : driveFieldOrientedDirectAngleKeyboard);
+    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+    
+    turretFlywheelSubsystem.setDefaultCommand(turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    
+  }
+
 
       SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                     () -> m_driverController.getLeftY() * -1,

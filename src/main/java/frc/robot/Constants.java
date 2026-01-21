@@ -114,7 +114,13 @@ public final class Constants {
     public static final Angle            hardUpperLimit     = Degrees.of(110);
 
   }
+  public static class Turret {
+
+    public static double wheelDiameter = 0;
+    }
+
+  }
 
 
 
-}
+

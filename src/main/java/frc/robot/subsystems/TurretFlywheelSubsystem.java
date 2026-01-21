@@ -10,13 +10,16 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import frc.robot.Constants;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
+import frc.robot.Constants.Turret;
 
 import java.util.function.Supplier;
 
@@ -31,6 +34,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.YUnits;
 
 public class TurretFlywheelSubsystem extends SubsystemBase {
 
@@ -69,6 +73,9 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
 
   public Command setVelocity(AngularVelocity speed) {
     return flywheel.setSpeed(speed);
+  }
+  public Command setVelocity(LinearVelocity speed) {
+    return flywheel.setSpeed(RPM.of(speed.in(YUnits.SandwichPerSecond) * Turret.wheelDiameter));
   }
 
   public Command setDutyCycle(double dutyCycle) {
