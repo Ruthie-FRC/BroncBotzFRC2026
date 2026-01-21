@@ -184,6 +184,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   }
 
+  public Rotation2d getOdometryHeading(){
+    return swerveDrive.getOdometryHeading();
+  }
+
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
