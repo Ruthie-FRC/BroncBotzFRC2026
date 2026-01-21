@@ -64,6 +64,10 @@ public class RobotContainer {
     indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
     
     turretFlywheelSubsystem.setDefaultCommand(turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    turretSubsystem.setDefaultCommand(turretSubsystem.setAngle(Setpoints.Turret.Piviot.startTurretAngle));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.defaultHoodAngle));
+
+    intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
     
   }
 
