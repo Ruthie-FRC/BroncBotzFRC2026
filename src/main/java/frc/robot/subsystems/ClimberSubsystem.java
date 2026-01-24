@@ -3,19 +3,31 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static edu.wpi.first.units.Units.Feet;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.Second;
+import edu.wpi.first.units.measure.Angle;
+import static edu.wpi.first.units.Units.Volts;
+import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.positional.Arm;
 import frc.robot.Constants;
-import frc.robot.Constants.Climber;
+import frc.robot.Constants.ClimberConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
@@ -34,23 +46,6 @@ import yams.motorcontrollers.local.SparkWrapper;
  */
 public class ClimberSubsystem extends SubsystemBase
 {
-
-  /*
-   * This is the STARTING PID Controller for the Elevator. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
-   */
-  private final ExponentialProfilePIDController pidController  = new ExponentialProfilePIDController(1,
-                                                                                                     0,
-                                                                                                     0,
-                                                                                                     ExponentialProfilePIDController.createElevatorConstraints(
-                                                                                                           Volts.of(12),
-                                                                                                           Climber.dcMotor,
-                                                                                                           Climber.weight,
-                                                                                                           Climber.radius,
-                                                                                                           Climber.gearing));
-  /*Climber.
-   * This is the STARTING Feedforward for the Elevator. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
-   */
-  private final ElevatorFeedforward             elevatorFeedforward = new ElevatorFeedforward(0, 0, 0, 0);
   /**
   * {@link SmartMotorControllerConfig} for the elevator motor.
   */
@@ -58,90 +53,79 @@ public class ClimberSubsystem extends SubsystemBase
       /*
        * Basic Configuration options for the motor
        */
-      .withMotorInverted(false)
-      .withIdleMode(MotorMode.BRAKE)
-      .withControlMode(ControlMode.CLOSED_LOOP)
-      .withMechanismCircumference(Climber.circumference)
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-      .withStatorCurrentLimit(Amps.of(40)) // Prevents our motor from continuously over-taxing itself when it is stuck.
-      .withClosedLoopRampRate(Seconds.of(0.25)) // Prevents our motor from rapid demand changes that could cause dramatic voltage drops, and current draw.
-      .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
-      .withTelemetry(Climber.motorTelemetryName,
-                     TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
-      /*
-       * Closed loop configuration options for the motor.
-       */
-      .withClosedLoopController(pidController)
-      .withFeedforward(elevatorFeedforward)
-      .withSoftLimit(Climber.softLowerLimit, Climber.softUpperLimit);
+          .withControlMode(ControlMode.CLOSED_LOOP)
+          // Feedback Constants (PID Constants)
+          .withClosedLoopController(ClimberConstants.kP, ClimberConstants.kI, ClimberConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+          .withSimClosedLoopController(ClimberConstants.kPSim, ClimberConstants.kISim, ClimberConstants.kDSim, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+          // Feedforward Constants
+          .withFeedforward(new ArmFeedforward(ClimberConstants.kS, ClimberConstants.kG, ClimberConstants.kV))
+          .withSimFeedforward(new ArmFeedforward(ClimberConstants.kSSim, ClimberConstants.kGSim, ClimberConstants.kVSim))
+          // Telemetry name and verbosity level
+          .withTelemetry(ClimberConstants.motorTelemetryName, TelemetryVerbosity.HIGH)
+          // Gearing from the motor rotor to final shaft.
+          // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
+          // You could also use .withGearing(12) which does the same thing.
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+          // Motor properties to prevent over currenting.
+          .withMotorInverted(false)
+          .withIdleMode(MotorMode.BRAKE)
+          .withStatorCurrentLimit(Amps.of(40))
+          .withClosedLoopRampRate(Seconds.of(0.25))
+          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withExternalEncoder(Constants.IntakeConstants.armMotor.getAbsoluteEncoder())
+          .withExternalEncoderInverted(false)
+          .withUseExternalFeedbackEncoder(true)
+          .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+          .withExternalEncoderZeroOffset(Degrees.of(0));
+          ;
+
+          private SparkMax spark = new SparkMax(4, MotorType.kBrushless);
+          private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), motorConfig);
+          private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
+            // Soft limit is applied to the SmartMotorControllers PID
+            .withSoftLimits(Degrees.of(-20), Degrees.of(10))
+            // Hard limit is applied to the simulation.
+            .withHardLimit(Degrees.of(-30), Degrees.of(40))
+            // Starting position is where your arm starts
+            .withStartingPosition(Degrees.of(-5))
+            // Length and mass of your arm for sim.
+            .withLength(Feet.of(3))
+            .withMass(Pounds.of(1))
+            // Telemetry name and verbosity for the arm.
+            .withTelemetry("Arm", TelemetryVerbosity.HIGH);
+
+    // Arm Mechanism
+    private Arm arm = new Arm(armCfg);
+
+    /**
+     * Set the angle of the arm.
+     * @param angle Angle to go to.
+     */
+    public Command setAngle(Angle angle) { return arm.setAngle(angle);}
+    /**
+     * Move the arm up and down.
+     * @param dutycycle [-1, 1] speed to set the arm too.
+     */
+    public Command set(double dutycycle) { return arm.set(dutycycle);}
+    /**
+     * Run sysId on the {@link Arm}
+     */
+    public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
   /// Generic Smart Motor Controller with our options and vendor motor.
-  private final SmartMotorController motor         = new SparkWrapper(Climber.elevatorMotor, Climber.dcMotor, motorConfig);
-  /// Elevator-specific options
-  private       ElevatorConfig       m_config      = new ElevatorConfig(motor)
-      /*
-       * Basic configuration options for the arm.
-       */
-      .withMass(Climber.weight)
-      .withStartingHeight(Climber.startingHeight) // The starting position should ONLY be defined if you are NOT using an absolute encoder.
-      .withTelemetry(Climber.mechTelemetryName, TelemetryVerbosity.HIGH)
-      /*
-       * Simulation configuration options for the arm.
-       */
-      .withHardLimits(Climber.hardLowerLimit, Climber.hardUpperLimit);
-  // Arm mechanism
-  private final Elevator             m_elevator    = new Elevator(m_config);
 
   public ClimberSubsystem()
   {
+
   }
 
   public void periodic()
   {
-    m_elevator.updateTelemetry();
+    arm.updateTelemetry();
   }
 
   public void simulationPeriodic()
   {
-    m_elevator.simIterate();
+    arm.simIterate();
   }
 
-  /**
-   * Reset the encoder to the lowest position when the current threshhold is reached. Should be used when the Elevator
-   * position is unreliable, like startup. Threshhold is only detected if exceeded for 0.4 seconds, and the motor moves
-   * less than 2 degrees per second.
-   *
-   * @param threshhold The current threshhold held when the Elevator is at it's hard limit.
-   * @return
-   */
-  public Command homing(Current threshhold)
-  {
-      Debouncer       currentDebouncer  = new Debouncer(0.4); // Current threshold is only detected if exceeded for 0.4 seconds.
-      Voltage runVolts          = Volts.of(-2); // Volts required to run the mechanism down. Could be positive if the mechanism is inverted.
-      Distance limitHit          = Climber.hardLowerLimit;  // Limit which gets hit. Could be the lower limit if the volts makes the arm go down.
-      AngularVelocity velocityThreshold = DegreesPerSecond.of(2); // The maximum amount of movement for the arm to be considered "hitting the hard limit".
-      return Commands.startRun(motor::stopClosedLoopController, // Stop the closed loop controller
-                      () -> motor.setVoltage(runVolts)) // Set the voltage of the motor
-              .until(() -> currentDebouncer.calculate(motor.getStatorCurrent().gte(threshhold) &&
-                      motor.getMechanismVelocity().abs(DegreesPerSecond) <=
-                              velocityThreshold.in(DegreesPerSecond)))
-              .finallyDo(() -> {
-                  motor.setEncoderPosition(limitHit);
-                  motor.startClosedLoopController();
-              });
-  }
-
-  public Command elevCmd(double dutycycle)
-  {
-    return m_elevator.set(dutycycle);
-  }
-
-  public Command setHeight(Distance height)
-  {
-    return m_elevator.setHeight(height);
-  }
-
-  public Command sysId()
-  {
-    return m_elevator.sysId(Volts.of(12), Volts.of(12).per(Second), Second.of(30));
-  }
 }

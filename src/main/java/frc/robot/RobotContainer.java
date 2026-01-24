@@ -18,6 +18,7 @@ import swervelib.SwerveInputStream;
 import yams.units.YUnits;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Degrees;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -25,12 +26,35 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import frc.robot.Setpoints.Turret.Hood;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
+
+/**
+ *
+ * TO DO:
+ * - CAN ID
+ * - Change CLIMBER SUBSYSTEM into an ARM
+ * - MOVE all Variables into the contants file
+ *  -go through subsystem
+ *  - YAMS
+ *   - Climber an ARM - contants
+ * - Think about setpoints we need (Scoring angle)
+ *  - Sourish, John
+ *
+ *
+ *
+ */
+
+
+
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
@@ -56,7 +80,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     defaultCommands();
-  }
+    climberSubsystem.setDefaultCommand(climberSubsystem.setAngle(Degrees.of(0)));
+    }
 
   public void defaultCommands(){
     drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAngularVelocity : driveFieldOrientedDirectAngleKeyboard);
@@ -64,8 +89,8 @@ public class RobotContainer {
     indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
     
     turretFlywheelSubsystem.setDefaultCommand(turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
-    turretSubsystem.setDefaultCommand(turretSubsystem.setAngle(Setpoints.Turret.Piviot.startTurretAngle));
-    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.defaultHoodAngle));
+    turretSubsystem.setDefaultCommand(turretSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
 
     intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
     
@@ -137,8 +162,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-   m_driverController.button(1).whileTrue(climberSubsystem.setHeight(Meters.of(0.2)));
-  m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.4)));
+    m_driverController.button(3).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));
+
+    m_driverController.a().whileTrue(climberSubsystem.setAngle(Degrees.of(-5)));
+    m_driverController.b().whileTrue(climberSubsystem.setAngle(Degrees.of(15)));
+    // Schedule `set` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.x().whileTrue(climberSubsystem.set(0.3));
+    m_driverController.y().whileTrue(climberSubsystem.set(-0.3));
+
   }
 
   /**

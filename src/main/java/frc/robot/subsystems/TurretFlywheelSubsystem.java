@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
-import frc.robot.Constants.Turret;
+import frc.robot.Constants.TurretConstants;
 
 import java.util.function.Supplier;
 
@@ -35,6 +35,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 import yams.units.YUnits;
+import frc.robot.Constants.TurretConstants.PivotConstants;
 
 public class TurretFlywheelSubsystem extends SubsystemBase {
 
@@ -75,7 +76,7 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
     return flywheel.setSpeed(speed);
   }
   public Command setVelocity(LinearVelocity speed) {
-    return flywheel.setSpeed(RPM.of(speed.in(YUnits.SandwichPerSecond) * Turret.wheelDiameter));
+    return flywheel.setSpeed(RPM.of(speed.in(YUnits.SandwichPerSecond) * TurretConstants.wheelDiameter));
   }
 
   public Command setDutyCycle(double dutyCycle) {

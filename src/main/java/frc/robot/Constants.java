@@ -40,7 +40,6 @@ public final class Constants {
   public static class CanIDConstants {
 
     public static final int climberCanID = 10;
-
     public static final int intakeRollerID = 20;
 
     public static final int turretID = 30;
@@ -57,37 +56,40 @@ public final class Constants {
   
 
   }
-  public static class Climber {
+  public static class Agitator{
+    public static double kP = 0;
+    public static double kD = 0;
+    public static double kI = 0;
 
-    public static final String           motorTelemetryName = "ExponentiallyProfiledElevatorMotor";
-    public static final String           mechTelemetryName  = "ExponentiallyProfiledElevator";
-    public static final SparkMax         elevatorMotor      = new SparkMax(2, SparkLowLevel.MotorType.kBrushless);
-    ///  Configuration Options
-    public static final DCMotor          dcMotor            = DCMotor.getNEO(1);
-    public static final Distance         chainPitch         = Inches.of(0.25);
-    public static final int              toothCount         = 22;
-    public final static Distance         circumference      = chainPitch.times(toothCount);
-    public static final Distance         radius             = circumference.div(2 * Math.PI);
-    public static final MechanismGearing gearing            = new MechanismGearing(GearBox.fromReductionStages(3, 4));
-    public static final Mass             weight             = Pounds.of(16);
-    /*
-    * Using a measuring tape, where 0 cm marks the elevator at its lowest point,
-    * you can measure the height to determine the starting position reference.
-    */
-    public static final Distance            startingHeight      = Meters.of(0);
-    /*
-    * To find these limits, measure the starting height relative to the elevator's lowest position using a measuring tape or ruler.
-    */
-    public static final Distance            softLowerLimit     = Meters.of(0);
-    public static final Distance            softUpperLimit     = Meters.of(2);
-    /*
-    * These are the real "limits" of the robot shown in simulation.
-    */
-    public static final Distance            hardLowerLimit     = Meters.of(0);
-    public static final Distance            hardUpperLimit     = Meters.of(3);
+    public static double kS = 0.27937;
+    public static double kV = 0.089836;
+    public static double kA = 0.014557;
+  }
+  public static class ClimberConstants {
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double kPSim = 1;
+    public static final double kISim = 0;
+    public static final double kDSim = 0;
+
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+    public static final double kG = 0;
+
+    public static final double kSSim = 0;
+    public static final double kVSim = 0;
+    public static final double kASim = 0;
+    public static final double kGSim = 0;
+
+    public static final String motorTelemetryName = "Arm Motor";
+
+
   }
 
-  public static class Intake {
+  public static class IntakeConstants {
 
     public static final String           motorTelemetryName = "ExponentiallyProfiledArmMotor";
     public static final String           mechTelemetryName  = "ExponentiallyProfiledArm";
@@ -112,12 +114,55 @@ public final class Constants {
     */
     public static final Angle            hardLowerLimit     = Degrees.of(-30);
     public static final Angle            hardUpperLimit     = Degrees.of(110);
+// Intake
+    public static double kP = 1;
+    public static double kI = 0;
+    public static double kD = 0;
+
+    public static double kPSim = 1;
+    public static double kISim = 0;
+    public static double kDSim = 0;
+
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+    public static final double kG = 0;
+
+    public static final double kSSim = 0;
+    public static final double kVSim = 0;
+    public static final double kASim = 0;
+    public static final double kGSim = 0;
 
   }
-  public static class Turret {
 
+
+  public static class TurretConstants {
     public static double wheelDiameter = 0;
+    public static class PivotConstants{
+
+
+      public static double kP = 1;
+      public static double kD = 0;
+      public static double kI = 0;
+
+      public static double kPSim = 1;
+      public static double kISim = 0;
+      public static double kDSim = 0;
+
+      public static final double kS = 0;
+      public static final double kV = 0;
+      public static final double kA = 0;
+      public static final double kG = 0;
+
+      public static final double kSSim = 0;
+      public static final double kVSim = 0;
+      public static final double kASim = 0;
+      public static final double kGSim = 0;
+      public static Angle  softLimitMin       = Degrees.of(-30);
+
     }
+  
+  }
 
   }
 

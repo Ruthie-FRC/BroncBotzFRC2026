@@ -1,16 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +21,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
+import frc.robot.Constants.TurretConstants.PivotConstants;
 import frc.robot.Constants.CanIDConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -56,6 +48,7 @@ import limelight.networktables.Orientation3d;
 import limelight.networktables.PoseEstimate;
 import limelight.networktables.target.pipeline.NeuralClassifier;
 
+import static edu.wpi.first.units.Units.*;
 
 
 public class TurretSubsystem extends SubsystemBase
@@ -66,7 +59,7 @@ public class TurretSubsystem extends SubsystemBase
     LimelightPoseEstimator   limelightPoseEstimator;
 
   private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
-      .withClosedLoopController(4, 0, 0, DegreesPerSecond.of(180), DegreesPerSecondPerSecond.of(90))
+      .withClosedLoopController(PivotConstants.kP, PivotConstants.kI, PivotConstants.kD, DegreesPerSecond.of(180), DegreesPerSecondPerSecond.of(90))
       .withSoftLimit(Degrees.of(-30), Degrees.of(100))
       .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
       .withIdleMode(MotorMode.BRAKE)
@@ -93,7 +86,7 @@ public class TurretSubsystem extends SubsystemBase
       .withTelemetry("ArmExample", TelemetryVerbosity.HIGH)
       .withStartingPosition(Degrees.of(0))
       .withMechanismPositionConfig(robotToMechanism)
-      .withMOI(0.001);
+      .withMOI(Meter.of(0.001), Pounds.of(3));
 
   private final Pivot                      turret           = new Pivot(m_config);
 

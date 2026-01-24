@@ -24,6 +24,9 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Setpoints;
+import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ArmConfig;
@@ -34,7 +37,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
-import frc.robot.Constants.Intake;;
+import frc.robot.Constants.IntakeConstants;
 
 // TODO: Example with absolute encoders
 
@@ -50,19 +53,19 @@ public class IntakeArmSubsystem extends SubsystemBase
    * This is the STARTING PID Controller for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
   private final ExponentialProfilePIDController pidController  = 
-                new ExponentialProfilePIDController(1,
-                                                    0,
-                                                    0,
+                new ExponentialProfilePIDController(Constants.IntakeConstants.kP,
+                                                    Constants.IntakeConstants.kI,
+                                                    Constants.IntakeConstants.kD,
                                                     ExponentialProfilePIDController.createArmConstraints(
                                                         Volts.of(12),
-                                                        Intake.dcMotor,
-                                                        Intake.weight,
-                                                        Intake.length,
-                                                        Intake.gearing));
+                                                            IntakeConstants.dcMotor,
+                                                            IntakeConstants.weight,
+                                                            IntakeConstants.length,
+                                                            IntakeConstants.gearing));
   /*
    * This is the STARTING Feedforward for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
-  private final ArmFeedforward                  armFeedforward = new ArmFeedforward(0, 0, 0, 0);
+  private final ArmFeedforward                  armFeedforward = new ArmFeedforward(IntakeConstants.kS, IntakeConstants.kG, IntakeConstants.kV, IntakeConstants.kA);
   /**
    * {@link SmartMotorControllerConfig} for the arm motor.
    */
@@ -70,32 +73,39 @@ public class IntakeArmSubsystem extends SubsystemBase
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
   .withControlMode(ControlMode.CLOSED_LOOP)
-  .withGearing(Intake.gearing)
+  .withGearing(IntakeConstants.gearing)
   .withStatorCurrentLimit(Amps.of(40)) // Prevents our motor from continuously over-taxing itself when it is stuck.
   .withClosedLoopRampRate(Seconds.of(0.25)) // Prevents our motor from rapid demand changes that could cause dramatic voltage drops, and current draw.
   .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
-  .withTelemetry(Intake.motorTelemetryName,
-                  TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
+  .withTelemetry(IntakeConstants.motorTelemetryName, TelemetryVerbosity.HIGH) // Could have more fine-grained control over what gets reported with SmartMotorControllerTelemetryConfig
   .withClosedLoopController(pidController)
   .withFeedforward(armFeedforward)
-  .withSoftLimit(Intake.softLowerLimit, Intake.softUpperLimit);
+  .withSoftLimit(IntakeConstants.softLowerLimit, IntakeConstants.softUpperLimit)
+  .withExternalEncoder(IntakeConstants.armMotor.getAbsoluteEncoder())
+  .withExternalEncoderInverted(false)
+  .withUseExternalFeedbackEncoder(true)
+  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+  .withExternalEncoderZeroOffset(Degrees.of(0));
+
+  //encoder here
+          ;
 
   /// Generic Smart Motor Controller with our options and vendor motor.
-  private final SmartMotorController motor    = new SparkWrapper(Intake.armMotor, Intake.dcMotor, motorConfig);
+  private final SmartMotorController motor    = new SparkWrapper(IntakeConstants.armMotor, IntakeConstants.dcMotor, motorConfig);
   /// Arm-specific options
   private       ArmConfig            m_config = new ArmConfig(motor)
       /*
        * Basic configuration options for the arm.
        */
-      .withLength(Intake.length)
-      .withMass(Intake.weight)
-      .withStartingPosition(Intake.startingAngle) // The starting position should ONLY be defined if you are NOT using an absolute encoder.
+      .withLength(IntakeConstants.length)
+      .withMass(IntakeConstants.weight)
+      .withStartingPosition(IntakeConstants.startingAngle) // The starting position should ONLY be defined if you are NOT using an absolute encoder.
       //.withHorizontalZero(Degrees.of(0)) // The horizontal zero should ONLY be defined if you ARE using an absolute encoder.
-      .withTelemetry(Intake.mechTelemetryName, TelemetryVerbosity.HIGH)
+      .withTelemetry(IntakeConstants.mechTelemetryName, TelemetryVerbosity.HIGH)
       /*
        * Simulation configuration options for the arm.
        */
-      .withHardLimit(Intake.hardLowerLimit, Intake.hardUpperLimit);
+      .withHardLimit(IntakeConstants.hardLowerLimit, IntakeConstants.hardUpperLimit);
   // Arm mechanism
   private final Arm                  arm      = new Arm(m_config);
 
@@ -125,7 +135,7 @@ public class IntakeArmSubsystem extends SubsystemBase
   {
     Debouncer       currentDebouncer  = new Debouncer(0.4); // Current threshold is only detected if exceeded for 0.4 seconds.
     Voltage         runVolts          = Volts.of(2); // Volts required to run the mechanism up. Could be negative if the mechanism is inverted.
-    Angle           limitHit          = Intake.hardUpperLimit;  // Limit which gets hit. Could be the lower limit if the volts makes the arm go down.
+    Angle           limitHit          = IntakeConstants.hardUpperLimit;  // Limit which gets hit. Could be the lower limit if the volts makes the arm go down.
     AngularVelocity velocityThreshold = DegreesPerSecond.of(2); // The maximum amount of movement for the arm to be considered "hitting the hard limit".
     return Commands.startRun(motor::stopClosedLoopController, // Stop the closed loop controller
                              () -> motor.setVoltage(runVolts)) // Set the voltage of the motor
