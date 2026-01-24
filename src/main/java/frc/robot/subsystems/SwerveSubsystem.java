@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.AlignmentConstants.DriveToPose;
 import frc.robot.Constants;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
@@ -16,8 +18,11 @@ import limelight.networktables.PoseEstimate;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -25,7 +30,11 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.DriveFeedforwards;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -43,9 +52,13 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.struct.parser.ParseException;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Second;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -188,6 +201,32 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getOdometryHeading();
   }
 
+ /**
+   * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
+   * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
+   *
+   * @return The yaw angle
+   */
+  public Rotation2d getHeading()
+  {
+    return getPose().getRotation();
+  }
+
+  /**
+   * Gets the current pose (position and rotation) of the robot, as reported by odometry.
+   *
+   * @return The robot's pose
+   */
+  public Pose2d getPose()
+  {
+    return swerveDrive.getPose();
+  }
+
+  public Rotation2d getRotation()
+  {
+    return swerveDrive.getYaw();
+  }
+
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
@@ -285,4 +324,191 @@ public void setupPathPlanner()
     // Create a path following command using AutoBuilder. This will also trigger event markers.
     return new PathPlannerAuto(pathName);
   }
+
+    public Command driveToPose(Supplier<Pose2d> pose)
+  {
+    double tooCloseMeters = 0.5; // If the bot is too close by this much it needs to drive back a little bit.
+    return defer(() -> driveToPose(pose.get()));
+  }
+
+  public Command pathndToPose(Supplier<Pose2d> pose)
+  {
+    return defer(()->{
+    PathConstraints constraints = new PathConstraints(
+        DriveToPose.maximumVelocityMetersPerSecond, DriveToPose.maximumAccelerationMetersPerSecondSquared,
+        Degrees.of(DriveToPose.maximumAngularVelocityDegreesPerSecond).per(Second).in(RadiansPerSecond), Units.degreesToRadians(DriveToPose.maximumAngularAccelerationDegreesPerSecondSquared));
+// Since AutoBuilder is configured, we can use it to build pathfinding commands
+    return AutoBuilder.pathfindToPose(
+        pose.get(),
+        constraints,
+        edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
+                                     );
+    });
+  }
+
+    public void stopDriving()
+  {
+    swerveDrive.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+  }
+
+  public Command stopDrivingCommand()
+  {
+    return runOnce(()->stopDriving());
+  }
+
+  public Command driveToPose(Pose2d pose)
+  {
+    stopDriving();
+    boolean useSetpointGenerator  = false;
+    boolean useProfiledController = true;
+    boolean resetBeforehand       = true;
+    Supplier<ChassisSpeeds> robotRelativeSpeeds;
+    BooleanSupplier atTargetPose;
+
+    if (resetBeforehand)
+    {
+      DriveToPose.driveController.getXController().reset();
+      DriveToPose.driveController.getYController().reset();
+      DriveToPose.driveController.getThetaController().reset(getPose().getRotation().getRadians());
+
+      if (useProfiledController)
+      {
+        DriveToPose.profiledDriveController.reset(getSwerveDrive().getPose());
+      }
+    }
+    if (useProfiledController)
+    {
+      atTargetPose = DriveToPose.profiledDriveController::atReference;
+      robotRelativeSpeeds = () -> DriveToPose.profiledDriveController.calculate(getPose(),
+                                                                                pose,
+                                                                                0,
+                                                                                pose.getRotation());
+    } else
+    {
+      atTargetPose = DriveToPose.driveController::atReference;
+      robotRelativeSpeeds = () -> DriveToPose.driveController.calculate(getPose(),
+                                                                        pose,
+                                                                        0,
+                                                                        pose.getRotation());
+    }
+
+    if (useSetpointGenerator)
+    {
+      try
+      {
+
+        return driveWithSetpointGenerator(robotRelativeSpeeds).until(atTargetPose).finallyDo(this::stopDriving);
+      } catch (Exception ignored)
+      {
+        DriverStation.reportWarning("Could not use setpoint generator with drive to pose.", false);
+      }
+    }
+
+    return run(() -> swerveDrive.drive(robotRelativeSpeeds.get())).until(atTargetPose).finallyDo(this::stopDriving);
+    /*
+// Create the constraints to use while pathfinding
+    */
+  }
+
+    /**
+   * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
+   *
+   * @param robotRelativeChassisSpeed Robot relative {@link ChassisSpeeds} to achieve.
+   * @return {@link Command} to run.
+   * @throws IOException    If the PathPlanner GUI settings is invalid
+   * @throws ParseException If PathPlanner GUI settings is nonexistent.
+        * @throws org.json.simple.parser.ParseException 
+      */
+     private Command driveWithSetpointGenerator(Supplier<ChassisSpeeds> robotRelativeChassisSpeed)
+     throws IOException, ParseException, org.json.simple.parser.ParseException
+  {
+    SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(RobotConfig.fromGUISettings(),
+                                                                            swerveDrive.getMaximumChassisAngularVelocity());
+    AtomicReference<SwerveSetpoint> prevSetpoint
+        = new AtomicReference<>(new SwerveSetpoint(swerveDrive.getRobotVelocity(),
+                                                   swerveDrive.getStates(),
+                                                   DriveFeedforwards.zeros(swerveDrive.getModules().length)));
+    AtomicReference<Double> previousTime = new AtomicReference<>();
+
+    return startRun(() -> previousTime.set(Timer.getFPGATimestamp()),
+                    () -> {
+                      double newTime = Timer.getFPGATimestamp();
+                      SwerveSetpoint newSetpoint = setpointGenerator.generateSetpoint(prevSetpoint.get(),
+                                                                                      robotRelativeChassisSpeed.get(),
+                                                                                      newTime - previousTime.get());
+                      swerveDrive.drive(newSetpoint.robotRelativeSpeeds(),
+                                        newSetpoint.moduleStates(),
+                                        newSetpoint.feedforwards().linearForces());
+                      prevSetpoint.set(newSetpoint);
+                      previousTime.set(newTime);
+
+                    });
+  }
+
+
+  /**
+   * Drive with 254's Setpoint generator; port written by PathPlanner.
+   *
+   * @param fieldRelativeSpeeds Field-Relative {@link ChassisSpeeds}
+   * @return Command to drive the robot using the setpoint generator.
+   */
+  public Command driveWithSetpointGeneratorFieldRelative(Supplier<ChassisSpeeds> fieldRelativeSpeeds)
+  {
+    try
+    {
+      return driveWithSetpointGenerator(() -> {
+        return ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds.get(), getHeading());
+
+      });
+    } catch (Exception e)
+    {
+      DriverStation.reportError(e.toString(), true);
+    }
+    return Commands.none();
+
+  }
+
+  
+  public Command driveForwards()
+  {
+    return run(() -> {
+      swerveDrive.drive(new Translation2d(1, 0), 0, false, false);
+    }).finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
+  }
+
+  public Command driveBackwards()
+  {
+    return run(() -> {
+      swerveDrive.drive(new Translation2d(-1, 0), 0, false, false);
+    }).finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
+  }
+
+  public Command lockPos()
+  {
+    return run(swerveDrive::lockPose);
+  }
+
+
+  public Command drive(Supplier<ChassisSpeeds> driveAngularVelocity)
+  {
+    return run(() -> {
+      swerveDrive.drive(driveAngularVelocity.get());
+    });
+  }
+
+
+  public Command rotateToHeading(Rotation2d rotation2d)
+  {
+    return run(() -> swerveDrive.drive(new Translation2d(0, 0),
+                                       swerveDrive.getSwerveController().headingCalculate(getHeading().getRadians(),
+                                                                                          getHeading().getRadians() -
+                                                                                          rotation2d.getRadians()),
+                                       false, true));
+  }
+
+  public void zeroGyro()
+  {
+    swerveDrive.zeroGyro();
+  }
+
 }
