@@ -88,7 +88,7 @@ public class IntakeArmSubsystem extends SubsystemBase
   .withExternalEncoderZeroOffset(Degrees.of(0));
 
   //encoder here
-          ;
+         
 
   /// Generic Smart Motor Controller with our options and vendor motor.
   private final SmartMotorController motor    = new SparkWrapper(IntakeConstants.armMotor, IntakeConstants.dcMotor, motorConfig);

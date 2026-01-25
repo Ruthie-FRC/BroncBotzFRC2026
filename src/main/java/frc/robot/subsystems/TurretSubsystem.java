@@ -53,7 +53,6 @@ import static edu.wpi.first.units.Units.*;
 
 public class TurretSubsystem extends SubsystemBase
 {
-    SwerveSubsystem swerve = new SwerveSubsystem();
     private SparkMax turretMotor = new SparkMax(CanIDConstants.turretID, MotorType.kBrushless);
     Limelight                limelight;
     LimelightPoseEstimator   limelightPoseEstimator;
