@@ -40,13 +40,15 @@ public final class Constants {
   public static class CanIDConstants {
 
     public static final int climberCanID = 10;
+
     public static final int intakeRollerID = 20;
 
     public static final int turretID = 30;
-    public static int turretFlywheelID = 31;
-    public static final int hoodID = 32;
-    public static final int agitatorID = 33;
-    public static final int indexerID = 34;
+    public static final int hoodID = 31;
+    public static final int agitatorID = 32;
+    public static final int indexerID = 33;
+    public static final int indexerflywheelID = 34;
+    public static final int turretFlywheelID = 35;
 
 
     public static final int intakeArmID = 40;
@@ -93,7 +95,7 @@ public final class Constants {
 
     public static final String           motorTelemetryName = "ExponentiallyProfiledArmMotor";
     public static final String           mechTelemetryName  = "ExponentiallyProfiledArm";
-    public static final SparkMax         armMotor           = new SparkMax(1, MotorType.kBrushless);
+    public static final SparkMax         armMotor           = new SparkMax(CanIDConstants.intakeArmID, MotorType.kBrushless);
     ///  Configuration Options
     public static final DCMotor          dcMotor            = DCMotor.getNEO(1);
     public static final MechanismGearing gearing            = new MechanismGearing(7);

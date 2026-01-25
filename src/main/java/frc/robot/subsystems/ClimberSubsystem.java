@@ -22,6 +22,7 @@ import static edu.wpi.first.units.Units.Volts;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import frc.robot.Constants;
+import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.ClimberConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -79,7 +80,7 @@ public class ClimberSubsystem extends SubsystemBase
           .withExternalEncoderZeroOffset(Degrees.of(0));
           ;
 
-          private SparkMax spark = new SparkMax(4, MotorType.kBrushless);
+          private SparkMax spark = new SparkMax(CanIDConstants.climberCanID, MotorType.kBrushless);
           private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), motorConfig);
           private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
             // Soft limit is applied to the SmartMotorControllers PID

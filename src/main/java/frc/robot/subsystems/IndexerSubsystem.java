@@ -34,7 +34,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IndexerSubsystem extends SubsystemBase {
 
-  private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.turretFlywheelID, MotorType.kBrushless);
+  private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
       .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))

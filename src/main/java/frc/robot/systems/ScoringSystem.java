@@ -9,7 +9,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
-public class LoadingSubsystem {
+public class ScoringSystem {
     
     private IndexerSubsystem m_indexer;
     private IntakeArmSubsystem m_intakeArm;
@@ -17,7 +17,7 @@ public class LoadingSubsystem {
     private SwerveSubsystem m_swerve;
     private TurretSubsystem m_turret;
 
-    public LoadingSubsystem(IndexerSubsystem indexer, IntakeArmSubsystem intakeArm, IntakeRollerSubsystem intakeRoller, SwerveSubsystem swerve, TurretSubsystem turret){
+    public ScoringSystem(IndexerSubsystem indexer, IntakeArmSubsystem intakeArm, IntakeRollerSubsystem intakeRoller, SwerveSubsystem swerve, TurretSubsystem turret){
         m_indexer = indexer;
         m_intakeArm = intakeArm;
         m_intakeRollers = intakeRoller;
@@ -25,17 +25,12 @@ public class LoadingSubsystem {
         m_turret = turret;
     }
 
-    private static Command intakeBalls(){
-        //intake the balls
+    private static Command score(){
+        //this one included turret tracking
         return null;
     }
-
-    private static Command transferBalls(){
-        //transfer balls to the shooter
-        return null;
-    }
-    private static Command intakeHumanPlayer(){
-        //when we intake from human player
+    private static Command shootBall(){
+        //just transfer and shoot
         return null;
     }
 
