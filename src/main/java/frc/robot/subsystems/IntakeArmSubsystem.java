@@ -48,7 +48,9 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeArmSubsystem extends SubsystemBase
 {
 
- 
+    public static final SparkMax         armMotor           = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
+    ///  Configuration Options
+    public static final DCMotor          dcMotor            = DCMotor.getNEO(1);
   /*
    * This is the STARTING PID Controller for the Arm. If you are using a TalonFX or TalonFXS this will run on the motor controller itself.
    */
@@ -58,7 +60,7 @@ public class IntakeArmSubsystem extends SubsystemBase
                                                     Constants.IntakeConstants.kD,
                                                     ExponentialProfilePIDController.createArmConstraints(
                                                         Volts.of(12),
-                                                            IntakeConstants.dcMotor,
+                                                            dcMotor,
                                                             IntakeConstants.weight,
                                                             IntakeConstants.length,
                                                             IntakeConstants.gearing));
@@ -81,7 +83,7 @@ public class IntakeArmSubsystem extends SubsystemBase
   .withClosedLoopController(pidController)
   .withFeedforward(armFeedforward)
   .withSoftLimit(IntakeConstants.softLowerLimit, IntakeConstants.softUpperLimit)
-  .withExternalEncoder(IntakeConstants.armMotor.getAbsoluteEncoder())
+  .withExternalEncoder(armMotor.getAbsoluteEncoder())
   .withExternalEncoderInverted(false)
   .withUseExternalFeedbackEncoder(true)
   .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
@@ -91,7 +93,7 @@ public class IntakeArmSubsystem extends SubsystemBase
          
 
   /// Generic Smart Motor Controller with our options and vendor motor.
-  private final SmartMotorController motor    = new SparkWrapper(IntakeConstants.armMotor, IntakeConstants.dcMotor, motorConfig);
+  private final SmartMotorController motor    = new SparkWrapper(armMotor, dcMotor, motorConfig);
   /// Arm-specific options
   private       ArmConfig            m_config = new ArmConfig(motor)
       /*
@@ -143,7 +145,6 @@ public class IntakeArmSubsystem extends SubsystemBase
                                                            motor.getMechanismVelocity().abs(DegreesPerSecond) <=
                                                            velocityThreshold.in(DegreesPerSecond)))
                    .finallyDo(() -> {
-                     motor.setEncoderPosition(limitHit);
                      motor.startClosedLoopController();
                    });
   }

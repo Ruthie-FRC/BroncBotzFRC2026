@@ -32,7 +32,8 @@ import yams.gearing.MechanismGearing;
 public final class Constants {
   public static final double maxSpeed = 4.5; //meters per second
 
-  public static class OperatorConstants {
+
+    public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double DEADBAND = 0.05;
   }
@@ -67,37 +68,13 @@ public final class Constants {
     public static double kV = 0.089836;
     public static double kA = 0.014557;
   }
-  public static class ClimberConstants {
-    public static final double kP = 1;
-    public static final double kI = 0;
-    public static final double kD = 0;
 
-    public static final double kPSim = 1;
-    public static final double kISim = 0;
-    public static final double kDSim = 0;
-
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
-    public static final double kG = 0;
-
-    public static final double kSSim = 0;
-    public static final double kVSim = 0;
-    public static final double kASim = 0;
-    public static final double kGSim = 0;
-
-    public static final String motorTelemetryName = "Arm Motor";
-
-
-  }
 
   public static class IntakeConstants {
 
     public static final String           motorTelemetryName = "ExponentiallyProfiledArmMotor";
     public static final String           mechTelemetryName  = "ExponentiallyProfiledArm";
-    public static final SparkMax         armMotor           = new SparkMax(CanIDConstants.intakeArmID, MotorType.kBrushless);
-    ///  Configuration Options
-    public static final DCMotor          dcMotor            = DCMotor.getNEO(1);
+
     public static final MechanismGearing gearing            = new MechanismGearing(7);
     public static final Mass             weight             = Pounds.of(10);
     public static final Distance         length             = Feet.of(2);
@@ -137,6 +114,25 @@ public final class Constants {
 
   }
 
+  public static class IntakeRollerConstants{
+      public static double kP = 0.2;
+      public static double kI = 0;
+      public static double kD = 0;
+
+      public static double kPSim = 0.2;
+      public static double kISim = 0;
+      public static double kDSim = 0;
+
+      public static double IntakeRollerOuttakeSpeeds = -.5;
+      public static double IntakeRollerIntakeSpeeds = .5;
+      public static double IntakeRollerHoldSpeed = 0.3;
+
+      public static double kWristMomentOfInertia    = 0.0;
+      public static double kWristGearRatio          = 0.0;
+
+
+  }
+
 
   public static class TurretConstants {
     public static double wheelDiameter = 0;
@@ -163,9 +159,32 @@ public final class Constants {
       public static Angle  softLimitMin       = Degrees.of(-30);
 
     }
+
   
   }
+  public static class ClimberConstants {
+      public static final double kP = 1;
+      public static final double kI = 0;
+      public static final double kD = 0;
 
+      public static final double kPSim = 1;
+      public static final double kISim = 0;
+      public static final double kDSim = 0;
+
+      public static final double kS = 0;
+      public static final double kV = 0;
+      public static final double kA = 0;
+      public static final double kG = 0;
+
+      public static final double kSSim = 0;
+      public static final double kVSim = 0;
+      public static final double kASim = 0;
+      public static final double kGSim = 0;
+
+      public static final String motorTelemetryName = "Arm Motor";
+
+
+    }
   }
 
 

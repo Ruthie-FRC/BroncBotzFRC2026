@@ -47,10 +47,12 @@ import yams.motorcontrollers.local.SparkWrapper;
  */
 public class ClimberSubsystem extends SubsystemBase
 {
+    public static final SparkMax         armMotor           = new SparkMax(CanIDConstants.climberCanID, MotorType.kBrushless);
   /**
   * {@link SmartMotorControllerConfig} for the elevator motor.
   */
   private final SmartMotorControllerConfig      motorConfig    = new SmartMotorControllerConfig(this)
+
       /*
        * Basic Configuration options for the motor
        */
@@ -73,7 +75,7 @@ public class ClimberSubsystem extends SubsystemBase
           .withStatorCurrentLimit(Amps.of(40))
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withExternalEncoder(Constants.IntakeConstants.armMotor.getAbsoluteEncoder())
+          .withExternalEncoder(armMotor.getAbsoluteEncoder())
           .withExternalEncoderInverted(false)
           .withUseExternalFeedbackEncoder(true)
           .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
