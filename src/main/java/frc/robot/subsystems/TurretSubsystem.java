@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.TurretConstants.PivotConstants;
+import frc.robot.Setpoints.Turret;
 import frc.robot.Constants.CanIDConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -100,11 +101,11 @@ public class TurretSubsystem extends SubsystemBase
     limelight = new Limelight("limelight");
     limelight.getSettings()
              .withPipelineIndex(0)
-             .withCameraOffset(new Pose3d(Units.inchesToMeters(12),
-                                          Units.inchesToMeters(12),
-                                          Units.inchesToMeters(10.5),
-                                          new Rotation3d(0, 0, Units.degreesToRadians(45))))
-             .withArilTagIdFilter(List.of(17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0))
+             .withCameraOffset(new Pose3d(Units.inchesToMeters(0),
+                                          Units.inchesToMeters(0),
+                                          Units.inchesToMeters(0),
+                                          new Rotation3d(0, 0, Units.degreesToRadians(0))))
+             .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
              .save();
 
 
@@ -118,50 +119,52 @@ public class TurretSubsystem extends SubsystemBase
   {
     turret.updateTelemetry();
 
-    // limelight.getSettings()
-    //          .withRobotOrientation(new Orientation3d(new Rotation3d(swerveDrive.getOdometryHeading()
-    //                                                                            .rotateBy(Rotation2d.kZero)),
-    //                                                  new AngularVelocity3d(DegreesPerSecond.of(0),
-    //                                                                        DegreesPerSecond.of(0),
-    //                                                                        DegreesPerSecond.of(0))))
-    //          .save();
+    limelight.getSettings()
+             .withRobotOrientation(new Orientation3d(new Rotation3d(SwerveSubsystem.swerveDrive.getOdometryHeading()
+                                                                               .rotateBy(Rotation2d.kZero)),
+                                                     new AngularVelocity3d(DegreesPerSecond.of(0),
+                                                                           DegreesPerSecond.of(0),
+                                                                           DegreesPerSecond.of(0))))
+              .withCameraOffset(TurretConstants.cameraOffsetFromRobotCenter.rotateAround(TurretConstants.turretPivotCenterFromRobotCenter, new Rotation3d(0,Degrees.of(65).in(Radians), turret.getAngle().in(Radians))))
+             .save(); //camera pose is the camera pose from the center of robot
     Optional<PoseEstimate>     poseEstimates = limelightPoseEstimator.getPoseEstimate();
     Optional<LimelightResults> results       = limelight.getLatestResults();
     if (results.isPresent()/* && poseEstimates.isPresent()*/)
     {
-      LimelightResults result       = results.get();
-      PoseEstimate     poseEstimate = poseEstimates.get();
-      SmartDashboard.putNumber("Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
-      SmartDashboard.putNumber("Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
-      SmartDashboard.putNumber("Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
-      SmartDashboard.putNumber("Avg Distance", poseEstimate.avgTagDist);
-      SmartDashboard.putNumber("Avg Tag Area", poseEstimate.avgTagArea);
-      SmartDashboard.putNumber("Limelight Pose/x", poseEstimate.pose.getX());
-      SmartDashboard.putNumber("Limelight Pose/y", poseEstimate.pose.getY());
-      SmartDashboard.putNumber("Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
-      if (result.valid)
-      {
-        // // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
-        // Pose2d usefulPose     = result.getBotPose2d(Alliance.Blue);
-        // double distanceToPose = usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
-        // if (distanceToPose < 0.5 || (outofAreaReading > 10) || (outofAreaReading > 10 && !initialReading))
-        // {
-        //   if (!initialReading)
-        //   {
-        //     initialReading = true;
-        //   }
-        //   outofAreaReading = 0;
-        //   // System.out.println(usefulPose.toString());
-        //   swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
-        //   // System.out.println(result.timestamp_LIMELIGHT_publish);
-        //   // System.out.println(result.timestamp_RIOFPGA_capture);
-        //   swerveDrive.addVisionMeasurement(usefulPose, Timer.getTimestamp());
-        } else
+        LimelightResults result       = results.get();
+        PoseEstimate     poseEstimate = poseEstimates.get();
+        SmartDashboard.putNumber("Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
+        SmartDashboard.putNumber("Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
+        SmartDashboard.putNumber("Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
+        SmartDashboard.putNumber("Avg Distance", poseEstimate.avgTagDist);
+        SmartDashboard.putNumber("Avg Tag Area", poseEstimate.avgTagArea);
+        SmartDashboard.putNumber("Limelight Pose/x", poseEstimate.pose.getX());
+        SmartDashboard.putNumber("Limelight Pose/y", poseEstimate.pose.getY());
+        SmartDashboard.putNumber("Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
+        if (result.valid)
         {
-          outofAreaReading += 1;
-        }
-      
-      }
+          // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
+          Pose2d usefulPose     = result.getBotPose2d(Alliance.Blue);
+          double distanceToPose = usefulPose.getTranslation().getDistance(SwerveSubsystem.swerveDrive.getPose().getTranslation());
+          if (distanceToPose < 0.5 || (outofAreaReading > 10) || (outofAreaReading > 10 && !initialReading))
+          {
+            if (!initialReading)
+            {
+              initialReading = true;
+            }
+            outofAreaReading = 0;
+            
+            // System.out.println(usefulPose.toString());
+            SwerveSubsystem.swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
+            // System.out.println(result.timestamp_LIMELIGHT_publish);
+            // System.out.println(result.timestamp_RIOFPGA_capture);
+            SwerveSubsystem.swerveDrive.addVisionMeasurement(usefulPose, result.timestamp_RIOFPGA_capture);
+          } else
+          {
+            outofAreaReading += 1;
+          }
+       }
+    }
     }
   
 

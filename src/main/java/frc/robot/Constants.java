@@ -14,6 +14,9 @@ import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -43,7 +46,6 @@ public final class Constants {
     public static final int climberCanID = 10;
 
     public static final int intakeRollerID = 20;
-
     public static final int turretID = 30;
     public static final int hoodID = 31;
     public static final int agitatorID = 32;
@@ -54,9 +56,7 @@ public final class Constants {
 
     public static final int intakeArmID = 40;
 
-  
 
-  
 
   }
   public static class Agitator{
@@ -86,13 +86,13 @@ public final class Constants {
     /*
     * To find these limits measure the starting angle relative to when the arm is parallel to the ground using a protractor.
     */
-    public static final Angle            softLowerLimit     = Degrees.of(-20);
-    public static final Angle            softUpperLimit     = Degrees.of(100);
+    public static final Angle            softLowerLimit     = Degrees.of(-10);
+    public static final Angle            softUpperLimit     = Degrees.of(125);
     /*
     * These are the real "limits" of the robot shown in simulation.
     */
     public static final Angle            hardLowerLimit     = Degrees.of(-30);
-    public static final Angle            hardUpperLimit     = Degrees.of(110);
+    public static final Angle            hardUpperLimit     = Degrees.of(145);
 // Intake
     public static double kP = 1;
     public static double kI = 0;
@@ -111,6 +111,8 @@ public final class Constants {
     public static final double kVSim = 0;
     public static final double kASim = 0;
     public static final double kGSim = 0;
+
+    public static final double tolerance = 2;
 
   }
 
@@ -135,7 +137,11 @@ public final class Constants {
 
 
   public static class TurretConstants {
+
     public static double wheelDiameter = 0;
+    public static Pose3d cameraOffsetFromRobotCenter = new Pose3d(new Translation3d(), new Rotation3d());
+    public static Translation3d turretPivotCenterFromRobotCenter = new Translation3d(Inches.of(0), Inches.of(0),Inches.of(0));
+
     public static class PivotConstants{
 
 
@@ -157,6 +163,7 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static Angle  softLimitMin       = Degrees.of(-30);
+
 
     }
 

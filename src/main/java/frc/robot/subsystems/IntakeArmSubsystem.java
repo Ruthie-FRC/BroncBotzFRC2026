@@ -24,8 +24,10 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
+import frc.robot.Setpoints.Intake;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.math.ExponentialProfilePIDController;
@@ -163,4 +165,9 @@ public class IntakeArmSubsystem extends SubsystemBase
     {
         return arm.sysId(Volts.of(3), Volts.of(3).per(Second), Second.of(30));
     }
-}
+
+  public Trigger atIntakeAngle(){
+    return arm.isNear(Intake.intakeAngle, Degrees.of(IntakeConstants.tolerance));
+  }
+    }
+

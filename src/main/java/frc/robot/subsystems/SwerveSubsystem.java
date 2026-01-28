@@ -65,161 +65,161 @@ public class SwerveSubsystem extends SubsystemBase {
 
   
   File directory = new File(Filesystem.getDeployDirectory(),"swerve");
-  SwerveDrive             swerveDrive;
-  // Limelight               limelight;  
-  // LimelightPoseEstimator  limelightPoseEstimator;
+  static SwerveDrive             swerveDrive;
+    Limelight               limelight;  
+    LimelightPoseEstimator  limelightPoseEstimator;
+    
+    
   
-  
-
-  public SwerveSubsystem() {
-//error catching
- try
-    {
-      swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.maxSpeed,
-                                                                  new Pose2d(new Translation2d(Meter.of(1),
-                                                                                                Meter.of(4)),
-                                                                                      Rotation2d.fromDegrees(0)));
-      // Alternative method if you don't want to supply the conversion factor via JSON files.
-      // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, angleConversionFactor, driveConversionFactor);
-    } catch (Exception e)
-    {
-      throw new RuntimeException(e);
+    public SwerveSubsystem() {
+  //error catching
+   try
+      {
+        swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.maxSpeed,
+                                                                    new Pose2d(new Translation2d(Meter.of(1),
+                                                                                                  Meter.of(4)),
+                                                                                        Rotation2d.fromDegrees(0)));
+        // Alternative method if you don't want to supply the conversion factor via JSON files.
+        // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, angleConversionFactor, driveConversionFactor);
+      } catch (Exception e)
+      {
+        throw new RuntimeException(e);
+      }
+      
+      setupPathPlanner();
+      setupLimelight();
     }
-    
-    setupPathPlanner();
-    //setupLimelight();
-  }
-
-  public void setupLimelight(){
-    // swerveDrive.stopOdometryThread();
-    // limelight.getSettings()
-    //          .withPipelineIndex(0)
-    //          .withCameraOffset(new Pose3d(Units.inchesToMeters(12),
-    //                                       Units.inchesToMeters(12),
-    //                                       Units.inchesToMeters(10.5),
-    //                                       new Rotation3d(0, 0, Units.degreesToRadians(45))))
-    //          .withArilTagIdFilter(List.of(17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0))
-    //          .save();
-    // limelightPoseEstimator = limelight.createPoseEstimator(EstimationMode.MEGATAG2);
-  }
+  
+    public void setupLimelight(){
+      swerveDrive.stopOdometryThread();
+      limelight.getSettings()
+               .withPipelineIndex(0)
+               .withCameraOffset(new Pose3d(Units.inchesToMeters(12),
+                                            Units.inchesToMeters(12),
+                                            Units.inchesToMeters(10.5),
+                                            new Rotation3d(0, 0, Units.degreesToRadians(45))))
+               .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+               .save();
+      limelightPoseEstimator = limelight.createPoseEstimator(EstimationMode.MEGATAG2);
+    }
+      /**
+     * Returns a Command that tells the robot to drive forward until the command ends.
+     *
+     * @return a Command that tells the robot to drive forward until the command ends
+     */
+    public Command driveForward()
+    {
+      return run(() -> {
+        swerveDrive.drive(new Translation2d(1, 0), 0, false, false);
+      }).finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
+    }
+  
+  
+      
     /**
-   * Returns a Command that tells the robot to drive forward until the command ends.
-   *
-   * @return a Command that tells the robot to drive forward until the command ends
-   */
-  public Command driveForward()
-  {
-    return run(() -> {
-      swerveDrive.drive(new Translation2d(1, 0), 0, false, false);
-    }).finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
-  }
-
-
-    
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
-  private int     outofAreaReading = 0;
-  private boolean initialReading = false;
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    // limelight.getSettings()
-    //          .withRobotOrientation(new Orientation3d(new Rotation3d(swerveDrive.getOdometryHeading()
-    //                                                                            .rotateBy(Rotation2d.kZero)),
-    //                                                  new AngularVelocity3d(DegreesPerSecond.of(0),
-    //                                                                        DegreesPerSecond.of(0),
-    //                                                                        DegreesPerSecond.of(0))))
-    //          .save();
-    // Optional<PoseEstimate>     poseEstimates = limelightPoseEstimator.getPoseEstimate();
-    // Optional<LimelightResults> results       = limelight.getLatestResults();
-//     if (results.isPresent()/* && poseEstimates.isPresent()*/)
-//     {
-//       LimelightResults result       = results.get();
-//       PoseEstimate     poseEstimate = poseEstimates.get();
-//       SmartDashboard.putNumber("Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
-//       SmartDashboard.putNumber("Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
-//       SmartDashboard.putNumber("Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
-//       SmartDashboard.putNumber("Avg Distance", poseEstimate.avgTagDist);
-//       SmartDashboard.putNumber("Avg Tag Area", poseEstimate.avgTagArea);
-//       SmartDashboard.putNumber("Odom Pose/x", swerveDrive.getPose().getX());
-//       SmartDashboard.putNumber("Odom Pose/y", swerveDrive.getPose().getY());
-//       SmartDashboard.putNumber("Odom Pose/degrees", swerveDrive.getPose().getRotation().getDegrees());
-//       SmartDashboard.putNumber("Limelight Pose/x", poseEstimate.pose.getX());
-//       SmartDashboard.putNumber("Limelight Pose/y", poseEstimate.pose.getY());
-//       SmartDashboard.putNumber("Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
-//       if (result.valid)
-//       {
-//         // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
-//         Pose2d usefulPose     = result.getBotPose2d(Alliance.Blue);
-//         double distanceToPose = usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
-//         if (distanceToPose < 0.5 || (outofAreaReading > 10) || (outofAreaReading > 10 && !initialReading))
-//         {
-//           if (!initialReading)
-//           {
-//             initialReading = true;
-//           }
-//           outofAreaReading = 0;
-//           // System.out.println(usefulPose.toString());
-//           swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
-//           // System.out.println(result.timestamp_LIMELIGHT_publish);
-//           // System.out.println(result.timestamp_RIOFPGA_capture);
-//           swerveDrive.addVisionMeasurement(usefulPose, Timer.getTimestamp());
-//         } else
-//         {
-//           outofAreaReading += 1;
-//         }
-// //        swerveDrive.addVisionMeasurement(estimatorPose, poseEstimate.timestampSeconds);
-//       }
-
-//     }
-
-  }
-
-  public Rotation2d getOdometryHeading(){
-    return swerveDrive.getOdometryHeading();
-  }
-
- /**
-   * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
-   * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
-   *
-   * @return The yaw angle
-   */
-  public Rotation2d getHeading()
-  {
-    return getPose().getRotation();
-  }
-
-  /**
-   * Gets the current pose (position and rotation) of the robot, as reported by odometry.
-   *
-   * @return The robot's pose
-   */
-  public Pose2d getPose()
-  {
-    return swerveDrive.getPose();
+     * Example command factory method.
+     *
+     * @return a command
+     */
+    public Command exampleMethodCommand() {
+      // Inline construction of command goes here.
+      // Subsystem::RunOnce implicitly requires `this` subsystem.
+      return runOnce(
+          () -> {
+            /* one-time action goes here */
+          });
+    }
+  
+    /**
+     * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+     *
+     * @return value of some boolean subsystem state, such as a digital sensor.
+     */
+    public boolean exampleCondition() {
+      // Query some boolean state, such as a digital sensor.
+      return false;
+    }
+  
+    private int     outofAreaReading = 0;
+    private boolean initialReading = false;
+    @Override
+    public void periodic() {
+      // This method will be called once per scheduler run
+      limelight.getSettings()
+               .withRobotOrientation(new Orientation3d(new Rotation3d(swerveDrive.getOdometryHeading()
+                                                                                 .rotateBy(Rotation2d.kZero)),
+                                                       new AngularVelocity3d(DegreesPerSecond.of(0),
+                                                                             DegreesPerSecond.of(0),
+                                                                             DegreesPerSecond.of(0))))
+               .save();
+      Optional<PoseEstimate>     poseEstimates = limelightPoseEstimator.getPoseEstimate();
+      Optional<LimelightResults> results       = limelight.getLatestResults();
+      if (results.isPresent()/* && poseEstimates.isPresent()*/)
+      {
+        LimelightResults result       = results.get();
+        PoseEstimate     poseEstimate = poseEstimates.get();
+        SmartDashboard.putNumber("Avg Tag Ambiguity", poseEstimate.getAvgTagAmbiguity());
+        SmartDashboard.putNumber("Min Tag Ambiguity", poseEstimate.getMinTagAmbiguity());
+        SmartDashboard.putNumber("Max Tag Ambiguity", poseEstimate.getMaxTagAmbiguity());
+        SmartDashboard.putNumber("Avg Distance", poseEstimate.avgTagDist);
+        SmartDashboard.putNumber("Avg Tag Area", poseEstimate.avgTagArea);
+        SmartDashboard.putNumber("Odom Pose/x", swerveDrive.getPose().getX());
+        SmartDashboard.putNumber("Odom Pose/y", swerveDrive.getPose().getY());
+        SmartDashboard.putNumber("Odom Pose/degrees", swerveDrive.getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Limelight Pose/x", poseEstimate.pose.getX());
+        SmartDashboard.putNumber("Limelight Pose/y", poseEstimate.pose.getY());
+        SmartDashboard.putNumber("Limelight Pose/degrees", poseEstimate.pose.toPose2d().getRotation().getDegrees());
+        if (result.valid)
+        {
+          // Pose2d estimatorPose = poseEstimate.pose.toPose2d();
+          Pose2d usefulPose     = result.getBotPose2d(Alliance.Blue);
+          double distanceToPose = usefulPose.getTranslation().getDistance(swerveDrive.getPose().getTranslation());
+          if (distanceToPose < 0.5 || (outofAreaReading > 10) || (outofAreaReading > 10 && !initialReading))
+          {
+            if (!initialReading)
+            {
+              initialReading = true;
+            }
+            outofAreaReading = 0;
+            // System.out.println(usefulPose.toString());
+            swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
+            // System.out.println(result.timestamp_LIMELIGHT_publish);
+            // System.out.println(result.timestamp_RIOFPGA_capture);
+            swerveDrive.addVisionMeasurement(usefulPose, result.timestamp_RIOFPGA_capture);
+          } else
+          {
+            outofAreaReading += 1;
+          }
+  //        swerveDrive.addVisionMeasurement(estimatorPose, poseEstimate.timestampSeconds);
+        }
+  
+      }
+  
+    }
+  
+    public Rotation2d getOdometryHeading(){
+      return swerveDrive.getOdometryHeading();
+    }
+  
+   /**
+     * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
+     * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
+     *
+     * @return The yaw angle
+     */
+    public static Rotation2d getHeading()
+    {
+      return getPose().getRotation();
+    }
+  
+    /**
+     * Gets the current pose (position and rotation) of the robot, as reported by odometry.
+     *
+     * @return The robot's pose
+     */
+    public static Pose2d getPose()
+    {
+      return swerveDrive.getPose();
   }
 
   public Rotation2d getRotation()
@@ -420,10 +420,12 @@ public void setupPathPlanner()
         * @throws org.json.simple.parser.ParseException 
       */
      private Command driveWithSetpointGenerator(Supplier<ChassisSpeeds> robotRelativeChassisSpeed)
-     throws IOException, ParseException, org.json.simple.parser.ParseException
+     throws IOException, ParseException
   {
+    try{
     SwerveSetpointGenerator setpointGenerator = new SwerveSetpointGenerator(RobotConfig.fromGUISettings(),
                                                                             swerveDrive.getMaximumChassisAngularVelocity());
+    
     AtomicReference<SwerveSetpoint> prevSetpoint
         = new AtomicReference<>(new SwerveSetpoint(swerveDrive.getRobotVelocity(),
                                                    swerveDrive.getStates(),
@@ -443,6 +445,10 @@ public void setupPathPlanner()
                       previousTime.set(newTime);
 
                     });
+                  }catch(Exception e)
+                  {
+                      return null;        
+                  }
   }
 
 
