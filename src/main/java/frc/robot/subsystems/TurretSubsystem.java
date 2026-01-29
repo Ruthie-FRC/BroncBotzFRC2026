@@ -28,10 +28,8 @@ import frc.robot.Setpoints.Turret;
 import frc.robot.Constants.CanIDConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.config.PivotConfig;
-import yams.mechanisms.positional.Arm;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -125,7 +123,7 @@ public class TurretSubsystem extends SubsystemBase
                                                      new AngularVelocity3d(DegreesPerSecond.of(0),
                                                                            DegreesPerSecond.of(0),
                                                                            DegreesPerSecond.of(0))))
-              .withCameraOffset(TurretConstants.cameraOffsetFromRobotCenter.rotateAround(TurretConstants.turretPivotCenterFromRobotCenter, new Rotation3d(0,Degrees.of(65).in(Radians), turret.getAngle().in(Radians))))
+              .withCameraOffset(TurretConstants.cameraOffsetFromRobotCenter.rotateAround(TurretConstants.turretPivotCenterFromRobotCenter, new Rotation3d(0,Degrees.of(0).in(Radians), turret.getAngle().in(Radians))))
              .save(); //camera pose is the camera pose from the center of robot
     Optional<PoseEstimate>     poseEstimates = limelightPoseEstimator.getPoseEstimate();
     Optional<LimelightResults> results       = limelight.getLatestResults();
