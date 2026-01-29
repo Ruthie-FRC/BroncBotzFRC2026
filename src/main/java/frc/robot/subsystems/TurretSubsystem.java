@@ -183,6 +183,6 @@ public class TurretSubsystem extends SubsystemBase
 
   public Command setAngle(Angle angle)
   {
-    return turret.setAngle(angle);
+    return turret.setAngle(angle).until(turret.isNear(angle, TurretConstants.PivotConstants.tolerance));
   }
 }

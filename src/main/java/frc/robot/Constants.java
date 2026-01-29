@@ -162,6 +162,7 @@ public final class Constants {
       public static final double kVSim = 0;
       public static final double kASim = 0;
       public static final double kGSim = 0;
+      public static final Angle tolerance = Degrees.of(2);
       public static Angle  softLimitMin       = Degrees.of(-30);
 
 
