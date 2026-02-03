@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.AllianceFlipUtil;
-import frc.robot.systems.field.FieldConstants.Reef;
-import frc.robot.systems.field.FieldConstants.ReefHeight;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +25,7 @@ public class TargetingSystem
 {
 
   private ReefBranch      targetBranch;
-  private ReefBranchLevel targetBranchLevel;
+  private Climb targetClimbLevel;
   private ReefBranchSide  targetReefBranchSide = ReefBranchSide.CLOSEST;
 
 
@@ -37,17 +35,17 @@ public class TargetingSystem
 
   private void initializeBranchPoses()
   {
-    reefBranches = new ArrayList<>();
-    reefPoseToBranchMap = new HashMap<>();
-    for (int branchPositionIndex = 0; branchPositionIndex < Reef.branchPositions.size(); branchPositionIndex++)
-    {
-      Map<ReefHeight, Pose3d> branchPosition = Reef.branchPositions.get(branchPositionIndex);
-      Pose2d                  targetPose     = branchPosition.get(ReefHeight.L4).toPose2d();
-      reefBranches.add(targetPose);
-      reefPoseToBranchMap.put(targetPose, ReefBranch.values()[branchPositionIndex]);
-      reefPoseToBranchMap.put(AllianceFlipUtil.flip(targetPose), ReefBranch.values()[branchPositionIndex]);
-    }
-    allianceRelativeReefBranches = reefBranches.stream().map(AllianceFlipUtil::apply).collect(Collectors.toList());
+    // reefBranches = new ArrayList<>();
+    // reefPoseToBranchMap = new HashMap<>();
+    // for (int branchPositionIndex = 0; branchPositionIndex < Reef.branchPositions.size(); branchPositionIndex++)
+    // {
+    //   Map<ReefHeight, Pose3d> branchPosition = Reef.branchPositions.get(branchPositionIndex);
+    //   Pose2d                  targetPose     = branchPosition.get(ReefHeight.L4).toPose2d();
+    //   reefBranches.add(targetPose);
+    //   reefPoseToBranchMap.put(targetPose, ReefBranch.values()[branchPositionIndex]);
+    //   reefPoseToBranchMap.put(AllianceFlipUtil.flip(targetPose), ReefBranch.values()[branchPositionIndex]);
+    // }
+    // allianceRelativeReefBranches = reefBranches.stream().map(AllianceFlipUtil::apply).collect(Collectors.toList());
   }
 
   private static int rightBranchOrdinal(ReefBranch branch)
@@ -91,13 +89,13 @@ public class TargetingSystem
     RobotModeTriggers.autonomous().onFalse(Commands.runOnce(this::initializeBranchPoses));
   }
 
-  public void setTarget(ReefBranch targetBranch, ReefBranchLevel targetBranchLevel)
+  public void setTarget(ReefBranch targetBranch, Climb targetBranchLevel)
   {
     this.targetBranch = targetBranch;
     this.targetBranchLevel = targetBranchLevel;
   }
 
-  public Command setTargetCommand(ReefBranch targetBranch, ReefBranchLevel targetBranchLevel)
+  public Command setTargetCommand(ReefBranch targetBranch, Climb targetBranchLevel)
   {
     return Commands.runOnce(() -> setTarget(targetBranch, targetBranchLevel));
   }
@@ -149,20 +147,20 @@ public class TargetingSystem
   }
 
 
-  // public Pose2d getCoralTargetPose()
-  // {
-  //   Pose2d scoringPose = Pose2d.kZero;
-  //   if (targetBranch != null)
-  //   // {
-  //   //   Pose2d startingPose = AllianceFlipUtil.apply(Reef.branchPositions.get(getTargetBranchOrdinal()).get(ReefHeight.L2)
-  //   //                                                                    .toPose2d());
-  //   //   SmartDashboard.putString("Targetted Coral Pose without Offset (Meters)", startingPose.toString());
-  //   //   scoringPose = startingPose.plus(AutoScoring.Reef.coralOffset);
-  //   //   SmartDashboard.putString("Targetted Coral Pose with Offset (Meters)", scoringPose.toString());
+  public Pose2d getCoralTargetPose()
+  {
+    Pose2d scoringPose = Pose2d.kZero;
+    if (targetBranch != null)
+    // {
+    //   Pose2d startingPose = AllianceFlipUtil.apply(Reef.branchPositions.get(getTargetBranchOrdinal()).get(ReefHeight.L2)
+    //                                                                    .toPose2d());
+    //   SmartDashboard.putString("Targetted Coral Pose without Offset (Meters)", startingPose.toString());
+    //   scoringPose = startingPose.plus(AutoScoring.Reef.coralOffset);
+    //   SmartDashboard.putString("Targetted Coral Pose with Offset (Meters)", scoringPose.toString());
 
-  //   // }
-  //   return scoringPose;
-  // }
+    // }
+    return scoringPose;
+  }
 
   public Pose2d getAlgaeTargetPose()
   {
@@ -239,9 +237,9 @@ public class TargetingSystem
   }
 
 
-  public enum ReefBranchLevel
+  public enum Climb
   {
-    L2, L3, L1, L4
+    L2, L3, L1
   }
 
   public enum ReefBranchSide
