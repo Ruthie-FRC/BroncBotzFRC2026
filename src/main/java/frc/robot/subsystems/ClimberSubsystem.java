@@ -14,11 +14,6 @@ import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.Second;
-import edu.wpi.first.units.measure.Angle;
-import static edu.wpi.first.units.Units.Volts;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import frc.robot.Constants;
@@ -26,8 +21,6 @@ import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.ClimberConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
@@ -47,88 +40,95 @@ import yams.motorcontrollers.local.SparkWrapper;
  */
 public class ClimberSubsystem extends SubsystemBase
 {
-    public static final SparkMax         armMotor           = new SparkMax(CanIDConstants.climberCanID, MotorType.kBrushless);
   /**
   * {@link SmartMotorControllerConfig} for the elevator motor.
   */
-  private final SmartMotorControllerConfig      motorConfig    = new SmartMotorControllerConfig(this)
+  private final SmartMotorControllerConfig      smcConfig    = new SmartMotorControllerConfig(this)
 
-      /*
-       * Basic Configuration options for the motor
-       */
-          .withControlMode(ControlMode.CLOSED_LOOP)
-          // Feedback Constants (PID Constants)
-          .withClosedLoopController(ClimberConstants.kP, ClimberConstants.kI, ClimberConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-          .withSimClosedLoopController(ClimberConstants.kPSim, ClimberConstants.kISim, ClimberConstants.kDSim, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-          // Feedforward Constants
-          .withFeedforward(new ArmFeedforward(ClimberConstants.kS, ClimberConstants.kG, ClimberConstants.kV))
-          .withSimFeedforward(new ArmFeedforward(ClimberConstants.kSSim, ClimberConstants.kGSim, ClimberConstants.kVSim))
-          // Telemetry name and verbosity level
-          .withTelemetry(ClimberConstants.motorTelemetryName, TelemetryVerbosity.HIGH)
-          // Gearing from the motor rotor to final shaft.
-          // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
-          // You could also use .withGearing(12) which does the same thing.
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-          // Motor properties to prevent over currenting.
-          .withMotorInverted(false)
-          .withIdleMode(MotorMode.BRAKE)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withExternalEncoder(armMotor.getAbsoluteEncoder())
-          .withExternalEncoderInverted(false)
-          .withUseExternalFeedbackEncoder(true)
-          .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
-          .withExternalEncoderZeroOffset(Degrees.of(0));
-          ;
+      .withControlMode(ControlMode.CLOSED_LOOP)
+      // Mechanism Circumference is the distance traveled by each mechanism rotation converting rotations to meters.
+      .withMechanismCircumference(Meters.of(Inches.of(0.25).in(Meters)*22))
+      // Feedback Constants (PID Constants)
+      .withClosedLoopController(ClimberConstants.kP, ClimberConstants.kI, ClimberConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+      .withSimClosedLoopController(ClimberConstants.kPSim, ClimberConstants.kISim, ClimberConstants.kDSim, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+      // Feedforward Constants
+      .withFeedforward(new ArmFeedforward(ClimberConstants.kS, ClimberConstants.kG, ClimberConstants.kV))
+      .withSimFeedforward(new ArmFeedforward(ClimberConstants.kSSim, ClimberConstants.kGSim, ClimberConstants.kVSim))
+      // Gearing from the motor rotor to final shaft.
+      // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
+      // You could also use .withGearing(12) which does the same thing.
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+      // Motor properties to prevent over currenting.
+      .withMotorInverted(false)
+      .withIdleMode(MotorMode.BRAKE)
+      .withStatorCurrentLimit(Amps.of(40))
+      .withClosedLoopRampRate(Seconds.of(0.25))
+      .withOpenLoopRampRate(Seconds.of(0.25));
 
           private SparkMax spark = new SparkMax(CanIDConstants.climberCanID, MotorType.kBrushless);
-          private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), motorConfig);
-          private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
-            // Soft limit is applied to the SmartMotorControllers PID
-            .withSoftLimits(Degrees.of(-20), Degrees.of(10))
-            // Hard limit is applied to the simulation.
-            .withHardLimit(Degrees.of(-30), Degrees.of(40))
-            // Starting position is where your arm starts
-            .withStartingPosition(Degrees.of(-5))
-            // Length and mass of your arm for sim.
-            .withLength(Feet.of(3))
-            .withMass(Pounds.of(1))
-            // Telemetry name and verbosity for the arm.
-            .withTelemetry("Arm", TelemetryVerbosity.HIGH);
+          private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
+          private ElevatorConfig elevconfig = new ElevatorConfig(sparkSmartMotorController)
+          .withStartingHeight(Meters.of(0.5))
+          .withHardLimits(Meters.of(0), Meters.of(3))
+          .withMass(Pounds.of(ClimberConstants.mass))
+          .withTelemetry("ElevatorMotor", TelemetryVerbosity.HIGH);
 
-    // Arm Mechanism
-    private Arm arm = new Arm(armCfg);
+  private Elevator elevator = new Elevator(elevconfig);
 
-    /**
-     * Set the angle of the arm.
-     * @param angle Angle to go to.
-     */
-    public Command setAngle(Angle angle) { return arm.setAngle(angle);}
-    /**
-     * Move the arm up and down.
-     * @param dutycycle [-1, 1] speed to set the arm too.
-     */
-    public Command set(double dutycycle) { return arm.set(dutycycle);}
-    /**
-     * Run sysId on the {@link Arm}
-     */
-    public Command sysId() { return arm.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
-  /// Generic Smart Motor Controller with our options and vendor motor.
+  /**
+   * Set the height of the elevator.
+   * @param angle Distance to go to.
+   */
+  public Command setHeight(Distance height) { return elevator.setHeight(height);}
 
-  public ClimberSubsystem()
-  {
+  /**
+   * Move the elevator up and down.
+   * @param dutycycle [-1, 1] speed to set the elevator too.
+   */
+  public Command set(double dutycycle) { return elevator.set(dutycycle);}
 
+  /**
+   * Run sysId on the {@link Elevator}
+   */
+  public Command sysId() { return elevator.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));}
+
+  /** Creates a new ExampleSubsystem. */
+  public ClimberSubsystem() {}
+
+  /**
+   * Example command factory method.
+   *
+   * @return a command
+   */
+  public Command exampleMethodCommand() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+        });
   }
 
-  public void periodic()
-  {
-    arm.updateTelemetry();
+  /**
+   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   *
+   * @return value of some boolean subsystem state, such as a digital sensor.
+   */
+  public boolean exampleCondition() {
+    // Query some boolean state, such as a digital sensor.
+    return false;
   }
 
-  public void simulationPeriodic()
-  {
-    arm.simIterate();
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    elevator.updateTelemetry();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
+    elevator.simIterate();
   }
 
 }

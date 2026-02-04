@@ -92,6 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
   
     public void setupLimelight(){
       swerveDrive.stopOdometryThread();
+      limelight = new Limelight("limelight");
       limelight.getSettings()
                .withPipelineIndex(0)
                .withCameraOffset(new Pose3d(Units.inchesToMeters(12),

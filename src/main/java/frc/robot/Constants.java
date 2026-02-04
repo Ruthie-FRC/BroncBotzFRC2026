@@ -43,7 +43,7 @@ public final class Constants {
 
   public static class CanIDConstants {
 
-    public static final int climberCanID = 10;
+    public static final int climberCanID = 11;
 
     public static final int intakeRollerID = 20;
     public static final int turretID = 30;
@@ -129,8 +129,8 @@ public final class Constants {
       public static double IntakeRollerIntakeSpeeds = .5;
       public static double IntakeRollerHoldSpeed = 0.3;
 
-      public static double kWristMomentOfInertia    = 0.0;
-      public static double kWristGearRatio          = 0.0;
+      public static double kWristMomentOfInertia    = 0.5;
+      public static double kWristGearRatio          = 3.0;
 
 
   }
@@ -188,8 +188,8 @@ public final class Constants {
       public static final double kVSim = 0;
       public static final double kASim = 0;
       public static final double kGSim = 0;
-
-      public static final String motorTelemetryName = "Arm Motor";
+      
+      public static final double mass = 15;
 
 
     }

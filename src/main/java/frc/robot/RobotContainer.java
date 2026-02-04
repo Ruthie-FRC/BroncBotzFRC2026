@@ -80,7 +80,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     defaultCommands();
-    climberSubsystem.setDefaultCommand(climberSubsystem.setAngle(Degrees.of(0)));
+    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Meters.of(0)));
     }
 
   public void defaultCommands(){
@@ -164,8 +164,8 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.button(3).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));
 
-    m_driverController.a().whileTrue(climberSubsystem.setAngle(Degrees.of(-5)));
-    m_driverController.b().whileTrue(climberSubsystem.setAngle(Degrees.of(15)));
+    m_driverController.a().whileTrue(climberSubsystem.setHeight((Meters.of(0.4))));
+    m_driverController.b().whileTrue(climberSubsystem.setHeight(Meters.of(0.8)));
     // Schedule `set` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.x().whileTrue(climberSubsystem.set(0.3));
