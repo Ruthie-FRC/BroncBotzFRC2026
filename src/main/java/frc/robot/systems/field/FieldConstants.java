@@ -5,17 +5,26 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.littletonrobotics.frc2026;
+package frc.robot.systems.field;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.Constants;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -228,6 +237,10 @@ public class FieldConstants {
         new Translation3d(LinesVertical.oppHubCenter, 0, openingHeight);
   }
 
+    public static final ArrayList<Pose3d> TrenchPose =
+        new ArrayList<>(4); // Starting at the right branch facing the driver station in clockwise
+
+
   /** Tower related constants */
   public static class Tower {
     // Dimensions
@@ -307,5 +320,61 @@ public class FieldConstants {
         new Translation2d(0, AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(29).get().getY());
   }
 
- 
+  @RequiredArgsConstructor
+  public enum FieldType {
+    ANDYMARK("andymark"),
+    WELDED("welded");
+
+    @Getter private final String jsonFolder;
   }
+
+  public enum AprilTagLayoutType {
+    OFFICIAL("2026-official"),
+    NONE("2026-none");
+
+    private final String name;
+    private volatile AprilTagFieldLayout layout;
+    private volatile String layoutString;
+
+    AprilTagLayoutType(String name) {
+      this.name = name;
+    }
+
+    public AprilTagFieldLayout getLayout() {
+      if (layout == null) {
+        synchronized (this) {
+          if (layout == null) {
+            try {
+              Path p =
+                  Constants.disableHAL
+                      ? Path.of(
+                          "src",
+                          "main",
+                          "deploy",
+                          "apriltags",
+                          fieldType.getJsonFolder(),
+                          name + ".json")
+                      : Path.of(
+                          Filesystem.getDeployDirectory().getPath(),
+                          "apriltags",
+                          fieldType.getJsonFolder(),
+                          name + ".json");
+              layout = new AprilTagFieldLayout(p);
+              layoutString = new ObjectMapper().writeValueAsString(layout);
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        }
+      }
+      return layout;
+    }
+
+    public String getLayoutString() {
+      if (layoutString == null) {
+        getLayout();
+      }
+      return layoutString;
+    }
+  }
+}

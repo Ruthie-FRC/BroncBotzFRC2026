@@ -1,10 +1,21 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2025-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -17,17 +28,6 @@ import frc.robot.subsystems.TurretSubsystem;
 import swervelib.SwerveInputStream;
 import yams.units.YUnits;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Degrees;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import frc.robot.Setpoints.Turret.Hood;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -35,26 +35,11 @@ import frc.robot.Setpoints.Turret.Hood;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 
-
 /**
- *
- * TO DO:
- * - CAN ID
- * - Change CLIMBER SUBSYSTEM into an ARM
- * - MOVE all Variables into the contants file
- *  -go through subsystem
- *  - YAMS
- *   - Climber an ARM - contants
- * - Think about setpoints we need (Scoring angle)
- *  - Sourish, John
- *
- *
- *
+ * TO DO: - CAN ID - Change CLIMBER SUBSYSTEM into an ARM - MOVE all Variables into the contants
+ * file -go through subsystem - YAMS - Climber an ARM - contants - Think about setpoints we need
+ * (Scoring angle) - Sourish, John
  */
-
-
-
-
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
@@ -70,87 +55,79 @@ public class RobotContainer {
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
 
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public RobotContainer() {
+  public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     defaultCommands();
     climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Meters.of(0)));
-    }
-
-  public void defaultCommands(){
-    drivebase.setDefaultCommand(!RobotBase.isSimulation() ? driveFieldOrientedAngularVelocity : driveFieldOrientedDirectAngleKeyboard);
-    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
-    
-    turretFlywheelSubsystem.setDefaultCommand(turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
-    turretSubsystem.setDefaultCommand(turretSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
-    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
-
-    intakeArmSubsystem.setDefaultCommand(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
-    
   }
 
+  public void defaultCommands() {
+    drivebase.setDefaultCommand(
+        !RobotBase.isSimulation()
+            ? driveFieldOrientedAngularVelocity
+            : driveFieldOrientedDirectAngleKeyboard);
+    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
 
-      SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                    () -> m_driverController.getLeftY() * -1,
-                                                                    () -> m_driverController.getLeftX() * -1)
-                                                                    .withControllerRotationAxis(m_driverController::getRightX)
-                                                                    .deadband(OperatorConstants.DEADBAND)
-                                                                    .scaleTranslation(0.8)
-                                                                    .allianceRelativeControl(true);
+    turretFlywheelSubsystem.setDefaultCommand(
+        turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    turretSubsystem.setDefaultCommand(
+        turretSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
 
+    intakeArmSubsystem.setDefaultCommand(
+        intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+  }
 
-      SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(m_driverController::getRightX, 
-                                                                                                m_driverController::getRightY)
-                                                                                                .headingWhile(true);                                               
+  SwerveInputStream driveAngularVelocity =
+      SwerveInputStream.of(
+              drivebase.getSwerveDrive(),
+              () -> m_driverController.getLeftY() * -1,
+              () -> m_driverController.getLeftX() * -1)
+          .withControllerRotationAxis(m_driverController::getRightX)
+          .deadband(OperatorConstants.DEADBAND)
+          .scaleTranslation(0.8)
+          .allianceRelativeControl(true);
 
+  SwerveInputStream driveDirectAngle =
+      driveAngularVelocity
+          .copy()
+          .withControllerHeadingAxis(m_driverController::getRightX, m_driverController::getRightY)
+          .headingWhile(true);
 
-    Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
 
-    Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
-// simulation stuff
+  // simulation stuff
 
-    SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-    () -> -m_driverController.getLeftY(),
-    () -> -m_driverController.getLeftX())
-    .withControllerRotationAxis(() -> m_driverController.getRawAxis(
-    2))
-    .deadband(OperatorConstants.DEADBAND)
-    .scaleTranslation(0.8)
-    .allianceRelativeControl(true);
-    // Derive the heading axis with math!
-    SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
-            .withControllerHeadingAxis(() ->
-                                          Math.sin(
-                                              m_driverController.getRawAxis(
-                                                  2) *
-                                              Math.PI) *
-                                          (Math.PI *
-                                            2),
-                                      () ->
-                                          Math.cos(
-                                              m_driverController.getRawAxis(
-                                                  2) *
-                                              Math.PI) *
-                                          (Math.PI *
-                                            2))
-            .headingWhile(true)
-            .translationHeadingOffset(true)
-            .translationHeadingOffset(Rotation2d.fromDegrees(
-                0));
+  SwerveInputStream driveAngularVelocityKeyboard =
+      SwerveInputStream.of(
+              drivebase.getSwerveDrive(),
+              () -> -m_driverController.getLeftY(),
+              () -> -m_driverController.getLeftX())
+          .withControllerRotationAxis(() -> m_driverController.getRawAxis(2))
+          .deadband(OperatorConstants.DEADBAND)
+          .scaleTranslation(0.8)
+          .allianceRelativeControl(true);
+  // Derive the heading axis with math!
+  SwerveInputStream driveDirectAngleKeyboard =
+      driveAngularVelocityKeyboard
+          .copy()
+          .withControllerHeadingAxis(
+              () -> Math.sin(m_driverController.getRawAxis(2) * Math.PI) * (Math.PI * 2),
+              () -> Math.cos(m_driverController.getRawAxis(2) * Math.PI) * (Math.PI * 2))
+          .headingWhile(true)
+          .translationHeadingOffset(true)
+          .translationHeadingOffset(Rotation2d.fromDegrees(0));
 
-
-
-    Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
-
- 
+  Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -170,7 +147,6 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.x().whileTrue(climberSubsystem.set(0.3));
     m_driverController.y().whileTrue(climberSubsystem.set(-0.3));
-
   }
 
   /**
@@ -181,5 +157,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return drivebase.getAutonomousCommand("New Auto");
-    }
+  }
 }

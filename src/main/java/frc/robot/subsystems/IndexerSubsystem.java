@@ -1,3 +1,10 @@
+// Copyright (c) 2025-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
+
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
@@ -11,16 +18,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
-
 import java.util.function.Supplier;
-
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -34,34 +38,38 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IndexerSubsystem extends SubsystemBase {
 
-  private final SparkMax flywheelMotor = new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
+  private final SparkMax flywheelMotor =
+      new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
 
-  private final SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
-      .withClosedLoopController(0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-      .withIdleMode(MotorMode.COAST)
-      .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
-      .withStatorCurrentLimit(Amps.of(40))
-      .withMotorInverted(false)
-      .withClosedLoopRampRate(Seconds.of(0.25))
-      .withOpenLoopRampRate(Seconds.of(0.25))
-      .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
-      .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
-      .withControlMode(ControlMode.CLOSED_LOOP);
+  private final SmartMotorControllerConfig motorConfig =
+      new SmartMotorControllerConfig(this)
+          .withClosedLoopController(
+              0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+          .withIdleMode(MotorMode.COAST)
+          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withStatorCurrentLimit(Amps.of(40))
+          .withMotorInverted(false)
+          .withClosedLoopRampRate(Seconds.of(0.25))
+          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+          .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+          .withControlMode(ControlMode.CLOSED_LOOP);
 
-  private final SmartMotorController motor = new SparkWrapper(flywheelMotor, DCMotor.getNEO(1), motorConfig);
+  private final SmartMotorController motor =
+      new SparkWrapper(flywheelMotor, DCMotor.getNEO(1), motorConfig);
 
-  private final FlyWheelConfig flywheelConfig = new FlyWheelConfig(motor)
-      .withDiameter(Inches.of(4))
-      .withMass(Pounds.of(1))
-      .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
-      .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-      .withSpeedometerSimulation(RPM.of(7500));
+  private final FlyWheelConfig flywheelConfig =
+      new FlyWheelConfig(motor)
+          .withDiameter(Inches.of(4))
+          .withMass(Pounds.of(1))
+          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
+          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          .withSpeedometerSimulation(RPM.of(7500));
 
   private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
 
-  public IndexerSubsystem() {
-  }
+  public IndexerSubsystem() {}
 
   public AngularVelocity getVelocity() {
     return flywheel.getSpeed();
