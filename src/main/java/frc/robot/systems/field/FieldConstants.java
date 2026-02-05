@@ -11,9 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -22,9 +19,6 @@ import frc.robot.Constants;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -237,9 +231,8 @@ public class FieldConstants {
         new Translation3d(LinesVertical.oppHubCenter, 0, openingHeight);
   }
 
-    public static final ArrayList<Pose3d> TrenchPose =
-        new ArrayList<>(4); // Starting at the right branch facing the driver station in clockwise
-
+  public static final ArrayList<Pose3d> TrenchPose =
+      new ArrayList<>(4); // Starting at the right branch facing the driver station in clockwise
 
   /** Tower related constants */
   public static class Tower {

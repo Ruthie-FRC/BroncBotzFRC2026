@@ -1,10 +1,3 @@
-// Copyright (c) 2025-2026 Littleton Robotics
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
-
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
@@ -99,8 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 Units.inchesToMeters(12),
                 Units.inchesToMeters(10.5),
                 new Rotation3d(0, 0, Units.degreesToRadians(45))))
-        .withAprilTagIdFilter(
-            List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
         .save();
     limelightPoseEstimator = limelight.createPoseEstimator(EstimationMode.MEGATAG2);
   }
