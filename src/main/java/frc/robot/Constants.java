@@ -3,14 +3,22 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilogram;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.PoundInch;
+import static edu.wpi.first.units.Units.PoundInches;
 import static edu.wpi.first.units.Units.Pounds;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.MomentOfInertiaUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
+import edu.wpi.first.units.measure.MutMomentOfInertia;
 import yams.gearing.MechanismGearing;
 
 /**
@@ -169,5 +177,23 @@ public final class Constants {
     public static final double kGSim = 0;
 
     public static final double mass = 15;
+  }
+
+  public static class HoodConstants{
+
+    public static final Angle hardLimitMin = Degrees.of(20);
+    public static final Angle hardLimitMax = Degrees.of(45);
+    public static final Distance length = Inches.of(7.5);
+    public static final Angle softLimitMin = Degrees.of(22);
+    public static final Angle softLimitMax = Degrees.of(44);
+//    public static final Mass poundsOfHood =
+//    public static final MomentOfInertia MOI2 = KilogramSquareMeters.of(maxSpeed);
+//    public static final MomentOfInertia MOI = PoundInches.of(306.068).times(Inches.of(2));
+//    public static final MomentOfInertia MOI3 = Pounds.of(306.068).times(Units.inchesToMeters(1);
+
+    
+    
+    //.per(Inches).per(Inches).in(KilogramSquareMeters);
+
   }
 }

@@ -9,13 +9,18 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.MomentOfInertiaUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
+import frc.robot.Constants.HoodConstants;
+
 import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -27,16 +32,17 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
-  private final SparkMax hoodMotor = new SparkMax(CanIDConstants.hoodID, MotorType.kBrushless);
+  private final TalonFX hoodMotor = new TalonFX(CanIDConstants.hoodID);
 
   private final SmartMotorControllerConfig hoodMotorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
               0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-          .withIdleMode(MotorMode.COAST)
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(24,54)))
+          .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
@@ -47,15 +53,16 @@ public class HoodSubsystem extends SubsystemBase {
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController hoodSMC =
-      new SparkWrapper(hoodMotor, DCMotor.getNeo550(1), hoodMotorConfig);
+      new TalonFXWrapper(hoodMotor, DCMotor.getKrakenX60(1), hoodMotorConfig);//Change: field oriented control?
 
   private final ArmConfig hoodConfig =
       new ArmConfig(hoodSMC)
           .withTelemetry("HoodMech", TelemetryVerbosity.HIGH)
-          .withSoftLimits(Degrees.of(5), Degrees.of(100))
-          .withHardLimit(
-              Degrees.of(0), Degrees.of(120)); // The Hood can be modeled as an arm since it has a
-  // gravitational force acted upon based on the angle its in
+          .withSoftLimits(HoodConstants.softLimitMin, HoodConstants.softLimitMax)//soft limit?
+          .withHardLimit(HoodConstants.hardLimitMin, HoodConstants.hardLimitMax)
+          .withLength(HoodConstants.length)
+          .withStartingPosition(HoodConstants.hardLimitMin)
+          .withMOI(MomentOfInertiaUnit.combine(null, null)));
 
   private final Arm hood = new Arm(hoodConfig);
 
