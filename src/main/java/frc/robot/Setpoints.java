@@ -1,15 +1,20 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import yams.units.YUnits;
+
+import static edu.wpi.first.units.Units.*;
 
 public class Setpoints {
 
-  public static class Climber {}
+  public static class Climber {
+      public static Distance startHeight = Meters.of(0);
+      public static Distance lowHeight = Meters.of(0.6);
+      public static Distance highHeight = Meters.of(0.9);
+
+  }
 
   public static class Intake {
 
@@ -26,15 +31,15 @@ public class Setpoints {
 
     public static class Hood {
       public static final Angle startHoodAngle = Degrees.of(30);
-      public static final Angle lowerHoodAngle = Degrees.of(0);
-      public static final Angle higherHoodAngle = Degrees.of(60);
+      public static final Angle lowerHoodAngle = Degrees.of(20);
+      public static final Angle higherHoodAngle = Degrees.of(45);
     }
 
     public static class Pivot {
       // these are random, check before running on real robot to avoid breaking
-      public static final Angle startTurretAngle = Degree.of(180);
-      public static final Angle leftTurretAngle = Degree.of(90);
-      public static final Angle rightTurretAngle = Degree.of(270);
+      public static final Angle startTurretAngle = Degree.of(0);
+      public static final Angle leftTurretLimit = Degree.of(-135);
+      public static final Angle rightTurretLimit = Degree.of(135);
     }
 
     public static class Flywheel {

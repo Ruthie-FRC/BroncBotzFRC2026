@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Turret.Hood;
+import frc.robot.Setpoints.Turret.Pivot;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -60,15 +62,14 @@ public class RobotContainer {
 
     turretFlywheelSubsystem.setDefaultCommand(
         turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+
     turretSubsystem.setDefaultCommand(
-        turretSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
-    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Setpoints.Turret.Hood.startHoodAngle));
+        turretSubsystem.setAngle(Pivot.startTurretAngle));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
 
     intakeArmSubsystem.setDefaultCommand(
         intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
-
-
-    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Meters.of(0)));
+    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 
   SwerveInputStream driveAngularVelocity =
@@ -126,10 +127,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-      String testingMode = "None";
+      String testingMode = "Turret";
 
       if (testingMode.equals("Turret")){
         //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+          m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.startHoodAngle));
+          m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));
+          m_driverController.button(3).whileTrue(turretSubsystem.setAngle(Pivot.startTurretAngle));
+          m_driverController.button(4).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
+          m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
+
+          m_driverController.button(6).whileTrue(turretSubsystem.set(0.3));
+          m_driverController.button(7).whileTrue(turretSubsystem.set(-0.3));
+
 
       }
 
@@ -140,9 +150,6 @@ public class RobotContainer {
           m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
       }
 
-
-      m_driverController.a().whileTrue(climberSubsystem.setHeight((Meters.of(0.4))));
-      m_driverController.b().whileTrue(climberSubsystem.setHeight(Meters.of(0.8)));
 
 
 

@@ -128,11 +128,11 @@ public final class Constants {
 
     public static class PivotConstants {
 
-      public static double kP = 1;
+      public static double kP = 5;
       public static double kD = 0;
       public static double kI = 0;
 
-      public static double kPSim = 1;
+      public static double kPSim = 5;
       public static double kISim = 0;
       public static double kDSim = 0;
 
@@ -170,7 +170,9 @@ public final class Constants {
     public static final double kASim = 0;
     public static final double kGSim = 0;
 
-    public static final double mass = 15;
+    public static final Mass mass = Pounds.of(15);
+    public static final Distance hardLimitMin = Meters.of(0);
+    public static final Distance hardLimitMax = Meters.of(3);
   }
 
   public static class HoodConstants{

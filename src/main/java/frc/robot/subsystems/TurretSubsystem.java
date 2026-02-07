@@ -84,7 +84,6 @@ public class TurretSubsystem extends SubsystemBase {
               PivotConstants.kD,
               DegreesPerSecond.of(180),
               DegreesPerSecondPerSecond.of(90))
-          .withSoftLimit(Degrees.of(-30), Degrees.of(100))
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
           .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("TurretMotor", TelemetryVerbosity.HIGH)
@@ -109,8 +108,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   private final PivotConfig m_config =
       new PivotConfig(motor)
-          .withHardLimit(Degrees.of(-100), Degrees.of(200))
-          .withTelemetry("ArmExample", TelemetryVerbosity.HIGH)
+          .withHardLimit(Degrees.of(-140), Degrees.of(140))
+          .withSoftLimits(Degrees.of(-135), Degrees.of(135))
+          .withTelemetry("TurretPivot", TelemetryVerbosity.HIGH)
           .withStartingPosition(Degrees.of(0))
           .withMechanismPositionConfig(robotToMechanism)
           .withMOI(Meter.of(0.001), Pounds.of(3));
@@ -122,7 +122,7 @@ public class TurretSubsystem extends SubsystemBase {
       absPositionASignal = (getAbsoluteEncoderWithOffset());
       absPositionBSignal = cancoderB.getPosition();
 
-      easyCRTConfig = buildEasyCrtConfig();
+      easyCRTConfig = buildEasyCrtConfig(); 
       logCrtConfigTelemetry();
       SmartDashboard.putBoolean(RERUN_SEED, false);
 
@@ -238,10 +238,6 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void simulationPeriodic() {
     turret.simIterate();
-  }
-
-  public Command turretCmd(double dutycycle) {
-    return turret.set(dutycycle);
   }
 
   public Command sysId() {
