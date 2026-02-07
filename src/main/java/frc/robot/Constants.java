@@ -1,14 +1,5 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Kilogram;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.PoundInch;
-import static edu.wpi.first.units.Units.PoundInches;
-import static edu.wpi.first.units.Units.Pounds;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -20,6 +11,8 @@ import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.MutMomentOfInertia;
 import yams.gearing.MechanismGearing;
+
+import static edu.wpi.first.units.Units.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -154,15 +147,16 @@ public final class Constants {
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
       public static Angle softLimitMin = Degrees.of(-30);
+      public static double EncoderAOffset = (0);
     }
   }
 
   public static class ClimberConstants {
-    public static final double kP = 1;
+    public static final double kP = 8;
     public static final double kI = 0;
     public static final double kD = 0;
 
-    public static final double kPSim = 1;
+    public static final double kPSim = 8;
     public static final double kISim = 0;
     public static final double kDSim = 0;
 
@@ -186,11 +180,8 @@ public final class Constants {
     public static final Distance length = Inches.of(7.5);
     public static final Angle softLimitMin = Degrees.of(22);
     public static final Angle softLimitMax = Degrees.of(44);
-//    public static final Mass poundsOfHood =
-//    public static final MomentOfInertia MOI2 = KilogramSquareMeters.of(maxSpeed);
-//    public static final MomentOfInertia MOI = PoundInches.of(306.068).times(Inches.of(2));
-//    public static final MomentOfInertia MOI3 = Pounds.of(306.068).times(Units.inchesToMeters(1);
-
+    public static final MomentOfInertia MOIInKilogram =
+            KilogramSquareMeters.of(Pounds.of(306.068).in(Kilograms) * Inches.of(1).in(Meters) * Inches.of(1).in(Meters));
     
     
     //.per(Inches).per(Inches).in(KilogramSquareMeters);

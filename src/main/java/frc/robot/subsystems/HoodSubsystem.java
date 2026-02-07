@@ -1,13 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
@@ -34,6 +26,8 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
+import static edu.wpi.first.units.Units.*;
+
 public class HoodSubsystem extends SubsystemBase {
   private final TalonFX hoodMotor = new TalonFX(CanIDConstants.hoodID);
 
@@ -50,7 +44,8 @@ public class HoodSubsystem extends SubsystemBase {
           .withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
-          .withControlMode(ControlMode.CLOSED_LOOP);
+          .withControlMode(ControlMode.CLOSED_LOOP)
+          .withMomentOfInertia(Inches.of(4),Pound.of(4));
 
   private final SmartMotorController hoodSMC =
       new TalonFXWrapper(hoodMotor, DCMotor.getKrakenX60(1), hoodMotorConfig);//Change: field oriented control?
@@ -62,7 +57,7 @@ public class HoodSubsystem extends SubsystemBase {
           .withHardLimit(HoodConstants.hardLimitMin, HoodConstants.hardLimitMax)
           .withLength(HoodConstants.length)
           .withStartingPosition(HoodConstants.hardLimitMin)
-          .withMOI(MomentOfInertiaUnit.combine(null, null)));
+          .withMOI(HoodConstants.MOIInKilogram);
 
   private final Arm hood = new Arm(hoodConfig);
 

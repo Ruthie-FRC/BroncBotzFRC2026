@@ -21,18 +21,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import swervelib.SwerveInputStream;
 import yams.units.YUnits;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 
-/**
- * TO DO: - CAN ID - Change CLIMBER SUBSYSTEM into an ARM - MOVE all Variables into the contants
- * file -go through subsystem - YAMS - Climber an ARM - contants - Think about setpoints we need
- * (Scoring angle) - Sourish, John
- */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
@@ -57,8 +46,9 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     defaultCommands();
-    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Meters.of(0)));
   }
+
+
 
   public void defaultCommands() {
     drivebase.setDefaultCommand(
@@ -76,6 +66,9 @@ public class RobotContainer {
 
     intakeArmSubsystem.setDefaultCommand(
         intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+
+
+    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Meters.of(0)));
   }
 
   SwerveInputStream driveAngularVelocity =
@@ -132,14 +125,28 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.button(3).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));
 
-    m_driverController.a().whileTrue(climberSubsystem.setHeight((Meters.of(0.4))));
-    m_driverController.b().whileTrue(climberSubsystem.setHeight(Meters.of(0.8)));
-    // Schedule `set` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.x().whileTrue(climberSubsystem.set(0.3));
-    m_driverController.y().whileTrue(climberSubsystem.set(-0.3));
+      String testingMode = "None";
+
+      if (testingMode.equals("Turret")){
+        //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+
+      }
+
+      if(testingMode.equals("Elevator")){
+          m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
+          m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
+          m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
+          m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
+      }
+
+
+      m_driverController.a().whileTrue(climberSubsystem.setHeight((Meters.of(0.4))));
+      m_driverController.b().whileTrue(climberSubsystem.setHeight(Meters.of(0.8)));
+
+
+
+
   }
 
   /**
@@ -151,4 +158,6 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return drivebase.getAutonomousCommand("New Auto");
   }
+
+
 }
