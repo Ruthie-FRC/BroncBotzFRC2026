@@ -131,14 +131,17 @@ public class RobotContainer {
 
       if (testingMode.equals("Turret")){
         //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
-          m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.startHoodAngle));
-          m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));
-          m_driverController.button(3).whileTrue(turretSubsystem.setAngle(Pivot.startTurretAngle));
-          m_driverController.button(4).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
-          m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
+          m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
+          m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
+          m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
+          m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
 
-          m_driverController.button(6).whileTrue(turretSubsystem.set(0.3));
-          m_driverController.button(7).whileTrue(turretSubsystem.set(-0.3));
+          m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
+          m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
+
+          m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
+          m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
+          
 
 
       }
@@ -149,6 +152,18 @@ public class RobotContainer {
           m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
           m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
       }
+
+      if(testingMode.equals("IntakeArm")){//not working
+          m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
+          m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
+          m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
+          m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
+          
+      }
+
+
+
+
 
 
 

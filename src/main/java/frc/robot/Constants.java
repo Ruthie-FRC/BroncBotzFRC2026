@@ -58,11 +58,8 @@ public final class Constants {
 
   public static class IntakeConstants {
 
-    public static final String motorTelemetryName = "ExponentiallyProfiledArmMotor";
-    public static final String mechTelemetryName = "ExponentiallyProfiledArm";
-
     public static final MechanismGearing gearing = new MechanismGearing(7);
-    public static final Mass weight = Pounds.of(10);
+    public static final Mass weight = Pounds.of(8);
     public static final Distance length = Feet.of(2);
     /*
      * Using the protractor, where 0deg on the protractor is when the arm is parallel to the ground,
@@ -80,11 +77,11 @@ public final class Constants {
     public static final Angle hardLowerLimit = Degrees.of(-30);
     public static final Angle hardUpperLimit = Degrees.of(145);
     // Intake
-    public static double kP = 1;
+    public static double kP = 10;
     public static double kI = 0;
     public static double kD = 0;
 
-    public static double kPSim = 1;
+    public static double kPSim = 10;
     public static double kISim = 0;
     public static double kDSim = 0;
 
