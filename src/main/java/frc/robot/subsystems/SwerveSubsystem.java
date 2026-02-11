@@ -6,6 +6,14 @@ import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Second;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
@@ -16,32 +24,31 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AlignmentConstants.DriveToPose;
+import frc.robot.systems.ShooterTargetingSystem;
 import frc.robot.Constants;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -50,17 +57,33 @@ import limelight.networktables.LimelightResults;
 import limelight.networktables.Orientation3d;
 import limelight.networktables.PoseEstimate;
 import swervelib.SwerveDrive;
+import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   File directory = new File(Filesystem.getDeployDirectory(), "swerve");
 
+  private TurretVisualizer turretVisualizer;
+  private ShooterTargetingSystem shooterAimer;
+
   static SwerveDrive swerveDrive;
   Limelight limelight;
   LimelightPoseEstimator limelightPoseEstimator;
 
+  private final StructPublisher<Pose2d> questPublisher =
+    NetworkTableInstance.getDefault()
+        .getTable("Drive")
+        .getStructTopic("Quest Robot Pose", Pose2d.struct)
+        .publish();
+
+  Field2d m_field2d = new Field2d();
+
   public SwerveSubsystem() {
+
+    SmartDashboard.putData("RealField", m_field2d);
+    Pose3d initialPose = new Pose3d();
+
     // error catching
     try {
       swerveDrive =
@@ -75,6 +98,17 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
+    turretVisualizer =
+    new TurretVisualizer(
+        () -> new Pose3d(swerveDrive.getPose()), () -> swerveDrive.getFieldVelocity());
+    shooterAimer =
+        new ShooterTargetingSystem(
+            new Transform3d(
+                0, // back from robot center
+                0, // centered left/right
+                0.451739, // up from the floor reference
+                new Rotation3d()));
 
     setupPathPlanner();
     setupLimelight();
@@ -492,6 +526,68 @@ public class SwerveSubsystem extends SubsystemBase {
                 false,
                 true));
   }
+
+  
+  /**
+   * Get the chassis speeds based on controller input of 2 joysticks. One for speeds in which
+   * direction. The other for the angle of the robot.
+   *
+   * @param xInput X joystick input for the robot to move in the X direction.
+   * @param yInput Y joystick input for the robot to move in the Y direction.
+   * @param headingX X joystick which controls the angle of the robot.
+   * @param headingY Y joystick which controls the angle of the robot.
+   * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
+   */
+  public ChassisSpeeds getTargetSpeeds(
+      double xInput, double yInput, double headingX, double headingY) {
+    Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
+    return swerveDrive.swerveController.getTargetSpeeds(
+        scaledInputs.getX(),
+        scaledInputs.getY(),
+        headingX,
+        headingY,
+        getHeading().getRadians(),
+        Constants.maxSpeed);
+  }
+
+  /**
+   * Get the chassis speeds based on controller input of 1 joystick and one angle. Control the robot
+   * at an offset of 90deg.
+   *
+   * @param xInput X joystick input for the robot to move in the X direction.
+   * @param yInput Y joystick input for the robot to move in the Y direction.
+   * @param angle The angle in as a {@link Rotation2d}.
+   * @return {@link ChassisSpeeds} which can be sent to the Swerve Drive.
+   */
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle) {
+    Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
+
+    return swerveDrive.swerveController.getTargetSpeeds(
+        scaledInputs.getX(),
+        scaledInputs.getY(),
+        angle.getRadians(),
+        getHeading().getRadians(),
+        Constants.maxSpeed);
+  }
+
+  /**
+   * Gets the current field-relative velocity (x, y and omega) of the robot
+   *
+   * @return A ChassisSpeeds object of the current field-relative velocity
+   */
+  public ChassisSpeeds getFieldVelocity() {
+    return swerveDrive.getFieldVelocity();
+  }
+
+  /**
+   * Gets the current velocity (x, y and omega) of the robot
+   *
+   * @return A {@link ChassisSpeeds} object of the current velocity
+   */
+  public ChassisSpeeds getRobotVelocity() {
+    return swerveDrive.getRobotVelocity();
+  }
+
 
   public void zeroGyro() {
     swerveDrive.zeroGyro();
