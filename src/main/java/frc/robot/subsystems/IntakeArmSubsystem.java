@@ -7,9 +7,12 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
@@ -83,18 +86,24 @@ public class IntakeArmSubsystem extends SubsystemBase {
                   0.25)) // Prevents our motor from rapid demand changes that could cause dramatic
           // voltage drops, and current draw.
           .withOpenLoopRampRate(Seconds.of(0.25)) // Same as above
-          .withTelemetry(
-              IntakeConstants.motorTelemetryName,
-              TelemetryVerbosity
-                  .HIGH) // Could have more fine-grained control over what gets reported with
           // SmartMotorControllerTelemetryConfig
           .withClosedLoopController(pidController)
+          .withSimClosedLoopController(new ExponentialProfilePIDController(IntakeConstants.kPSim, 
+                                                                            IntakeConstants.kISim, 
+                                                                            IntakeConstants.kDSim, 
+                                                                            ExponentialProfilePIDController.createArmConstraints(
+                                                                                Volts.of(12),
+                                                                                dcMotor,
+                                                                                IntakeConstants.weight,
+                                                                                IntakeConstants.length,
+                                                                                IntakeConstants.gearing)))
           .withFeedforward(armFeedforward)
+          .withSimFeedforward(new ArmFeedforward(IntakeConstants.kSSim, IntakeConstants.kGSim, IntakeConstants.kVSim, IntakeConstants.kASim) )
           .withSoftLimit(IntakeConstants.softLowerLimit, IntakeConstants.softUpperLimit)
           .withExternalEncoder(armMotor.getAbsoluteEncoder())
           .withExternalEncoderInverted(false)
           .withUseExternalFeedbackEncoder(true)
-          .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+          .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(3,4)))
           .withExternalEncoderZeroOffset(Degrees.of(0));
 
   // encoder here
@@ -115,7 +124,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
           // using an absolute encoder.
           // .withHorizontalZero(Degrees.of(0)) // The horizontal zero should ONLY be defined if you
           // ARE using an absolute encoder.
-          .withTelemetry(IntakeConstants.mechTelemetryName, TelemetryVerbosity.HIGH)
+          .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
           /*
            * Simulation configuration options for the arm.
            */
@@ -178,12 +187,19 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public Command setAngle(Angle angle) {
     return arm.setAngle(angle);
   }
+  public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
+    return arm.set(dutyCycleSupplier);
+  }
+
+  public Command setDutyCycle(double dutyCycle) {
+    return arm.set(dutyCycle);
+  }
 
   public Command sysId() {
     return arm.sysId(Volts.of(3), Volts.of(3).per(Second), Second.of(30));
   }
 
   public Trigger atIntakeAngle() {
-    return arm.isNear(Intake.intakeAngle, Degrees.of(IntakeConstants.tolerance));
+    return arm.isNear(Intake.intakeArmAngleIn, Degrees.of(IntakeConstants.tolerance));
   }
 }
