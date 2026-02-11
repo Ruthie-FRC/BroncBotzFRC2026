@@ -47,8 +47,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AlignmentConstants.DriveToPose;
-import frc.robot.systems.ShooterTargetingSystem;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
+import frc.robot.systems.ShooterTargetingSystem;
+import frc.robot.systems.ShooterTargetingSystem.Shot;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.LimelightPoseEstimator;
@@ -224,6 +226,29 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+    public void intakeFuel() {
+
+    System.out.println("before intakeFuel = " + RobotContainer.timerThing.get());
+    turretVisualizer.intakeFuel();
+    System.out.println("after intakeFuel = " + RobotContainer.timerThing.get());
+
+    RobotContainer.timerThing.reset();
+  }
+
+  public void launchFuel(){
+        Shot shot = ShooterTargetingSystem.getShotData(getPose(), getFieldVelocity(), 0);
+
+    System.out.println("before launchFuel = " + RobotContainer.timerThing.get());
+    turretVisualizer.launchFuel(shot.getVelocity(), shot.getPitchAngle(), shot.getAngle());
+    System.out.println("after launchFuel = " + RobotContainer.timerThing.get());
+
+    turretVisualizer.updateFuel(shot.getVelocity(), shot.getPitchAngle(), shot.getAngle());
+    System.out.println("after updateFuel = " + RobotContainer.timerThing.get());
+    RobotContainer.timerThing.reset();
+  }
+  
+
+
   public Rotation2d getOdometryHeading() {
     return swerveDrive.getOdometryHeading();
   }
@@ -238,6 +263,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public static Rotation2d getHeading() {
     return getPose().getRotation();
   }
+  
 
   /**
    * Gets the current pose (position and rotation) of the robot, as reported by odometry.
