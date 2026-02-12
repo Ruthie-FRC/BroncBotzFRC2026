@@ -129,7 +129,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-      String testingMode = "Turret";
+      String testingMode = "IntakeArm";
 
       if (testingMode.equals("Turret")){
         //TODO :: Add commands that control hood angles, Velocity, and pivot with sim

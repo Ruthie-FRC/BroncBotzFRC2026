@@ -10,6 +10,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.MutMomentOfInertia;
+import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 
 import static edu.wpi.first.units.Units.*;
@@ -58,9 +59,9 @@ public final class Constants {
 
   public static class IntakeConstants {
 
-    public static final MechanismGearing gearing = new MechanismGearing(7);
+    public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("9:1"));
     public static final Mass weight = Pounds.of(8);
-    public static final Distance length = Feet.of(2);
+    public static final Distance length = Feet.of(1);
     /*
      * Using the protractor, where 0deg on the protractor is when the arm is parallel to the ground,
      * you can measure where the starting angle should be.
