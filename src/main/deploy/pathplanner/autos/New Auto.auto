@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Basic Path"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "climb"
+          }
         }
       ]
     }
