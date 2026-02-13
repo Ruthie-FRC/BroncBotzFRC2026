@@ -2,11 +2,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Radians;
+import static org.junit.jupiter.api.DynamicTest.stream;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -21,6 +26,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TurretFlywheelSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import swervelib.SwerveDrive;
 import swervelib.SwerveInputStream;
 import yams.units.YUnits;
 
@@ -166,7 +172,15 @@ public class RobotContainer {
 
 
 
+    // var topRightOfTrench = new Pose2d().getTranslation();
+    // var bottomLeftOfTrench = new Pose2d().getTranslation();
 
+    // SwerveDrive drive;
+    // SwerveInputStream stream;
+    // var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
+    // new Trigger(()->trenchRight.contains(drive.getPose().getTranslation()))
+    // .whileTrue(Commands.run(()->driveAngularVelocity.withControllerHeadingAxis(()->Math.cos(Degrees.of(30).in(Radians)),()-> Math.cos(Degrees.of(30).in(Radians))).headingWhile(true))
+    // .finallyDo(()->stream.headingWhile(false)));
 
 
 

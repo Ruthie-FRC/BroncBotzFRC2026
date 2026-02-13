@@ -6,10 +6,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.MomentOfInertiaUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.MutMomentOfInertia;
+import edu.wpi.first.wpilibj.RobotBase;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 
@@ -55,6 +57,7 @@ public final class Constants {
     public static double kS = 0.27937;
     public static double kV = 0.089836;
     public static double kA = 0.014557;
+    public static double AgitatorRollerIntakeSpeeds = .5;
   }
 
   public static class IntakeConstants {
@@ -98,6 +101,49 @@ public final class Constants {
 
     public static final double tolerance = 2;
   }
+
+
+  public static class GroundConstants {
+  public static final double kP = 0; // radians to rotations
+  public static final double kI = 0;
+  public static final double kD = 0;
+
+
+
+  public static final double ksimP = 120;
+  public static final double ksimI = 0;
+  public static final double ksimD = 8;
+
+
+  public static final double kS = 0;
+  public static final double kG = 0 ;
+  public static final double kV = 0 ;
+
+  public static final double ksimS = 0.1;
+  public static final double ksimG = 4.3;
+  public static final double ksimV = 1;
+
+
+  public static final String[] gearbox = {"16.0:1.0"};
+  public static final String[] sprocket = {"42:22"};
+  public static final Current statorCurrentLimit = Amps.of(60);
+
+  public static final Angle softLimitMin = Degrees.of(0);
+  public static final Angle softLimitMax = Degrees.of(145);
+  public static final Angle hardLimitMin = Degrees.of(0);
+  public static final Angle hardLimitMax = Degrees.of(145);
+
+  public static final Distance armLength = Meters.of(0.3511296);
+  public static final Mass armMass =  Pounds.of(10);
+  
+  public static final Angle startingPosition = Degrees.of(145); // setting position of relative encoder
+  //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
+  public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+
+  public static final Angle kStartingPose = Degrees.of(145);
+
+
+}
 
   public static class IntakeRollerConstants {
     public static double kP = 0.2;

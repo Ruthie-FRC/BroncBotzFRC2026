@@ -17,7 +17,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Agitator;
 import frc.robot.Constants.CanIDConstants;
+import frc.robot.Constants.IntakeRollerConstants;
+
 import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -95,4 +98,13 @@ public class AgitatorSubsystem extends SubsystemBase {
   public Command sysId() {
     return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
   }
+
+    public Command out() {
+    return setDutyCycle(-Agitator.AgitatorRollerIntakeSpeeds);
+  }
+
+  public Command in() {
+    return setDutyCycle(Agitator.AgitatorRollerIntakeSpeeds);
+  }
+
 }
