@@ -50,56 +50,31 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-    defaultCommands();
-  }
 
-
-
-  public void defaultCommands() {
-    drivebase.setDefaultCommand(
-        !RobotBase.isSimulation()
-            ? driveFieldOrientedAngularVelocity
-            : driveFieldOrientedDirectAngleKeyboard);
-    // agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    // indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
-
-    // turretFlywheelSubsystem.setDefaultCommand(
-    //     turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
-
-    // turretSubsystem.setDefaultCommand(
-    //     turretSubsystem.setAngle(Pivot.startTurretAngle));
-    // hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
-
-    // intakeArmSubsystem.setDefaultCommand(
-    //     intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
-    // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
-  }
-
+      /**
+   * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular
+   * velocity.
+   */
   SwerveInputStream driveAngularVelocity =
       SwerveInputStream.of(
               drivebase.getSwerveDrive(),
               () -> m_driverController.getLeftY() * -1,
               () -> m_driverController.getLeftX() * -1)
-          .withControllerRotationAxis(m_driverController::getRightX)
+          .withControllerRotationAxis(() -> m_driverController.getRightX() * -1)
           .deadband(OperatorConstants.DEADBAND)
           .scaleTranslation(0.8)
           .allianceRelativeControl(true);
 
+  /** Clone's the angular velocity input stream and converts it to a fieldRelative input stream. */
   SwerveInputStream driveDirectAngle =
       driveAngularVelocity
           .copy()
           .withControllerHeadingAxis(m_driverController::getRightX, m_driverController::getRightY)
           .headingWhile(true);
 
-  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-
-  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-
-  // simulation stuff
+  /** Clone's the angular velocity input stream and converts it to a robotRelative input stream. */
+  SwerveInputStream driveRobotOriented =
+      driveAngularVelocity.copy().robotRelative(true).allianceRelativeControl(false);
 
   SwerveInputStream driveAngularVelocityKeyboard =
       SwerveInputStream.of(
@@ -121,8 +96,47 @@ public class RobotContainer {
           .translationHeadingOffset(true)
           .translationHeadingOffset(Rotation2d.fromDegrees(0));
 
+ Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
+ Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+
   Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
+    // Configure the trigger bindings
+    configureBindings();
+    defaultCommands();
+  }
+
+
+
+  public void defaultCommands() {
+
+      drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
+
+    //  if (RobotBase.isSimulation()) {
+    //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
+    // } else {
+    // }
+
+    // agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    // indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+
+    // turretFlywheelSubsystem.setDefaultCommand(
+    //     turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+
+    // turretSubsystem.setDefaultCommand(
+    //     turretSubsystem.setAngle(Pivot.startTurretAngle));
+    // hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
+
+    // intakeArmSubsystem.setDefaultCommand(
+    //     intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+    // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
+  }
+
+  
+
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -133,6 +147,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
 
     //   String testingMode = "IntakeArm";
 
