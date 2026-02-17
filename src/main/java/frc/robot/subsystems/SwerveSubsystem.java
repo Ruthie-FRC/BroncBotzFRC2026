@@ -73,18 +73,8 @@ public class SwerveSubsystem extends SubsystemBase {
   Limelight limelight;
   LimelightPoseEstimator limelightPoseEstimator;
 
-  private final StructPublisher<Pose2d> questPublisher =
-    NetworkTableInstance.getDefault()
-        .getTable("Drive")
-        .getStructTopic("Quest Robot Pose", Pose2d.struct)
-        .publish();
-
-  Field2d m_field2d = new Field2d();
 
   public SwerveSubsystem() {
-
-    SmartDashboard.putData("RealField", m_field2d);
-    Pose3d initialPose = new Pose3d();
 
     // error catching
     try {
@@ -93,7 +83,7 @@ public class SwerveSubsystem extends SubsystemBase {
               .createSwerveDrive(
                   Constants.maxSpeed,
                   new Pose2d(
-                      new Translation2d(Meter.of(1), Meter.of(4)), Rotation2d.fromDegrees(0)));
+                      new Translation2d(Meter.of(3), Meter.of(4)), Rotation2d.fromDegrees(0)));
       // Alternative method if you don't want to supply the conversion factor via JSON files.
       // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed,
       // angleConversionFactor, driveConversionFactor);
@@ -247,8 +237,6 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotContainer.timerThing.reset();
   }
   
-
-
   public Rotation2d getOdometryHeading() {
     return swerveDrive.getOdometryHeading();
   }
@@ -264,7 +252,6 @@ public class SwerveSubsystem extends SubsystemBase {
     return getPose().getRotation();
   }
   
-
   /**
    * Gets the current pose (position and rotation) of the robot, as reported by odometry.
    *
@@ -463,6 +450,7 @@ public class SwerveSubsystem extends SubsystemBase {
       throws IOException, ParseException {
     try {
       SwerveSetpointGenerator setpointGenerator =
+
           new SwerveSetpointGenerator(
               RobotConfig.fromGUISettings(), swerveDrive.getMaximumChassisAngularVelocity());
 
