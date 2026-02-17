@@ -60,59 +60,57 @@ public final class Constants {
     public static double AgitatorRollerIntakeSpeeds = .5;
   }
 
-  public static class IntakeConstants {
+  // public static class IntakeConstants {
 
-    public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("9:1"));
-    public static final Mass weight = Pounds.of(8);
-    public static final Distance length = Feet.of(1);
-    /*
-     * Using the protractor, where 0deg on the protractor is when the arm is parallel to the ground,
-     * you can measure where the starting angle should be.
-     */
-    public static final Angle startingAngle = Degrees.of(30);
-    /*
-     * To find these limits measure the starting angle relative to when the arm is parallel to the ground using a protractor.
-     */
-    public static final Angle softLowerLimit = Degrees.of(-10);
-    public static final Angle softUpperLimit = Degrees.of(125);
-    /*
-     * These are the real "limits" of the robot shown in simulation.
-     */
-    public static final Angle hardLowerLimit = Degrees.of(-30);
-    public static final Angle hardUpperLimit = Degrees.of(145);
-    // Intake
-    public static double kP = 10;
-    public static double kI = 0;
-    public static double kD = 0;
+  //   public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("9:1"));
+  //   public static final Mass weight = Pounds.of(8);
+  //   public static final Distance length = Feet.of(1);
+  //   /*
+  //    * Using the protractor, where 0deg on the protractor is when the arm is parallel to the ground,
+  //    * you can measure where the starting angle should be.
+  //    */
+  //   public static final Angle startingAngle = Degrees.of(30);
+  //   /*
+  //    * To find these limits measure the starting angle relative to when the arm is parallel to the ground using a protractor.
+  //    */
+  //   public static final Angle softLowerLimit = Degrees.of(-10);
+  //   public static final Angle softUpperLimit = Degrees.of(125);
+  //   /*
+  //    * These are the real "limits" of the robot shown in simulation.
+  //    */
+  //   public static final Angle hardLowerLimit = Degrees.of(-30);
+  //   public static final Angle hardUpperLimit = Degrees.of(145);
+  //   // Intake
+  //   public static double kP = 10;
+  //   public static double kI = 0;
+  //   public static double kD = 0;
 
-    public static double kPSim = 10;
-    public static double kISim = 0;
-    public static double kDSim = 0;
+  //   public static double kPSim = 10;
+  //   public static double kISim = 0;
+  //   public static double kDSim = 0;
 
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
-    public static final double kG = 0;
+  //   public static final double kS = 0;
+  //   public static final double kV = 0;
+  //   public static final double kA = 0;
+  //   public static final double kG = 0;
 
-    public static final double kSSim = 0;
-    public static final double kVSim = 0;
-    public static final double kASim = 0;
-    public static final double kGSim = 0;
+  //   public static final double kSSim = 0;
+  //   public static final double kVSim = 0;
+  //   public static final double kASim = 0;
+  //   public static final double kGSim = 0;
 
-    public static final double tolerance = 2;
-  }
+  //   public static final double tolerance = 2;
+  // }
 
 
   public static class GroundConstants {
-  public static final double kP = 0; // radians to rotations
+  public static final double kP = 20; // radians to rotations
   public static final double kI = 0;
   public static final double kD = 0;
 
-
-
-  public static final double ksimP = 120;
+  public static final double ksimP = 20;
   public static final double ksimI = 0;
-  public static final double ksimD = 8;
+  public static final double ksimD = 0;
 
 
   public static final double kS = 0;
@@ -124,24 +122,21 @@ public final class Constants {
   public static final double ksimV = 1;
 
 
-  public static final String[] gearbox = {"16.0:1.0"};
-  public static final String[] sprocket = {"42:22"};
-  public static final Current statorCurrentLimit = Amps.of(60);
+  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("36:1"));
 
-  public static final Angle softLimitMin = Degrees.of(0);
-  public static final Angle softLimitMax = Degrees.of(145);
-  public static final Angle hardLimitMin = Degrees.of(0);
-  public static final Angle hardLimitMax = Degrees.of(145);
+  public static final Mass weight = Pounds.of(5.44);
+  public static final Distance length = Feet.of(18.77);
 
-  public static final Distance armLength = Meters.of(0.3511296);
-  public static final Mass armMass =  Pounds.of(10);
-  
-  public static final Angle startingPosition = Degrees.of(145); // setting position of relative encoder
+  public static final Angle softLowerLimit = Degrees.of(1);
+  public static final Angle softUpperLimit = Degrees.of(60);
+  public static final Angle hardLowerLimit = Degrees.of(0);
+  public static final Angle hardUpperLimit = Degrees.of(61.945);
+
+  public static final Angle startingPosition = Degrees.of(60); 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
-  public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+  //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
 
-  public static final Angle kStartingPose = Degrees.of(145);
-
+  //public static final Angle kStartingPose = Degrees.of(145);
 
 }
 

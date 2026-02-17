@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Setpoints;
 import frc.robot.Constants.GroundConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Setpoints.Intake;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -226,8 +225,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
   // Vendor motor controller object
   private SparkMax m_motor = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
 
-
-
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
@@ -236,16 +233,14 @@ public class IntakeArmSubsystem extends SubsystemBase {
   // Feedforward Constants
   .withFeedforward(new ArmFeedforward(GroundConstants.kS, GroundConstants.kG, GroundConstants.kV))
   .withSimFeedforward(new ArmFeedforward(GroundConstants.ksimS, GroundConstants.ksimG, GroundConstants.ksimV))
-  // Telemetry name and verbosity level
-  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withGearing(new MechanismGearing(new GearBox(GroundConstants.gearbox), new Sprocket(GroundConstants.sprocket)))
+  .withGearing(GroundConstants.gearing)
   // Motor properties to prevent over currenting.
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
-  .withStartingPosition(GroundConstants.kStartingPose)
-  .withStatorCurrentLimit(GroundConstants.statorCurrentLimit)
+  .withStartingPosition(GroundConstants.startingPosition)
+  .withStatorCurrentLimit(Amps.of(40))
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
   ;
@@ -257,13 +252,13 @@ public class IntakeArmSubsystem extends SubsystemBase {
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
-  .withSoftLimits(GroundConstants.softLimitMin, GroundConstants.softLimitMax)
+  .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
   // Hard limit is applied to the simulation.
-  .withHardLimit(GroundConstants.hardLimitMin, GroundConstants.hardLimitMax)
+  .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
 
   // Length and mass of your arm for sim.
-  .withLength(GroundConstants.armLength)
-  .withMass(GroundConstants.armMass)
+  .withLength(GroundConstants.length)
+  .withMass(GroundConstants.weight)
   // Telemetry name and verbosity for the arm.
   .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
 
