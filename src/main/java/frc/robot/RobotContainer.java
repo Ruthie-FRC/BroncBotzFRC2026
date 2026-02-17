@@ -3,7 +3,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
-import static org.junit.jupiter.api.DynamicTest.stream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
@@ -34,17 +33,17 @@ import yams.units.YUnits;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
-  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+//   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
-  private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
-  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+//   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
+//   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
 
-  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
-  private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
+//   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
+//   private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
+//   private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
 
-  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
+//   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+//   private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
 
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -65,19 +64,19 @@ public class RobotContainer {
         !RobotBase.isSimulation()
             ? driveFieldOrientedAngularVelocity
             : driveFieldOrientedDirectAngleKeyboard);
-    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+    // agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    // indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
 
-    turretFlywheelSubsystem.setDefaultCommand(
-        turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    // turretFlywheelSubsystem.setDefaultCommand(
+    //     turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
 
-    turretSubsystem.setDefaultCommand(
-        turretSubsystem.setAngle(Pivot.startTurretAngle));
-    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
+    // turretSubsystem.setDefaultCommand(
+    //     turretSubsystem.setAngle(Pivot.startTurretAngle));
+    // hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
 
-    intakeArmSubsystem.setDefaultCommand(
-        intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
-    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
+    // intakeArmSubsystem.setDefaultCommand(
+    //     intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+    // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 
   SwerveInputStream driveAngularVelocity =
@@ -135,39 +134,39 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-      String testingMode = "IntakeArm";
+    //   String testingMode = "IntakeArm";
 
-      if (testingMode.equals("Turret")){
-        //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
-          m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
-          m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
-          m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
-          m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
+    //   if (testingMode.equals("Turret")){
+    //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+    //       m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
+    //       m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
+    //       m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
+    //       m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
 
-          m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
-          m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
+    //       m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
+    //       m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
 
-          m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
-          m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
+    //       m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
+    //       m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
           
 
 
-      }
+    //   }
 
-      if(testingMode.equals("Elevator")){
-          m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
-          m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
-          m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
-          m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
-      }
+    //   if(testingMode.equals("Elevator")){
+    //       m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
+    //       m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
+    //       m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
+    //       m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
+    //   }
 
-      if(testingMode.equals("IntakeArm")){//not working
-          m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
-          m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
-          m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
-          m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
+    //   if(testingMode.equals("IntakeArm")){//not working
+    //       m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
+    //       m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
+    //       m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
+    //       m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
           
-      }
+    //   }
 
 
 
