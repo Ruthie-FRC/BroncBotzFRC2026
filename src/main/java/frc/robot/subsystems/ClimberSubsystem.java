@@ -121,6 +121,9 @@ public class ClimberSubsystem extends SubsystemBase {
           /* one-time action goes here */
         });
   }
+  public Command climb() {
+    return null;
+  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
