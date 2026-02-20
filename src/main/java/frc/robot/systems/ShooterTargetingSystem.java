@@ -1,10 +1,16 @@
 package frc.robot.systems;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.InchesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,15 +18,18 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TurretFlywheelSubsystem;
@@ -41,6 +50,54 @@ public class ShooterTargetingSystem {
   Transform2d ROBOT_TO_TURRET_2D;
   Pose2d goalLocation;
   Translation2d shotVec;
+
+  public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
+        return Meters.of(robot.getTranslation().getDistance(target.toTranslation2d()));
+    }
+
+    // see https://www.desmos.com/geometry/l4edywkmha
+    public static Angle calculateAngleFromVelocity(Pose2d robot, LinearVelocity velocity, Translation3d target) {
+        double g = MetersPerSecondPerSecond.of(9.81).in(InchesPerSecondPerSecond);
+        double vel = velocity.in(InchesPerSecond);
+        double x_dist = getDistanceToTarget(robot, target).in(Inches);
+        double y_dist = target.getMeasureZ()
+                .minus(TurretConstants.turretPivotCenterFromRobotCenter.getMeasureZ())
+                .in(Inches);
+        double angle = Math.atan(
+                ((vel * vel) + Math.sqrt(Math.pow(vel, 4) - g * (g * x_dist * x_dist + 2 * y_dist * vel * vel)))
+                        / (g * x_dist));
+        return Radians.of(angle);
+    }
+
+    public static AngularVelocity linearToAngularVelocity(LinearVelocity vel, Distance radius) {
+        return RadiansPerSecond.of(vel.in(MetersPerSecond) / radius.in(Meters));
+    }
+
+    public static LinearVelocity angularToLinearVelocity(AngularVelocity vel, Distance radius) {
+        return MetersPerSecond.of(vel.in(RadiansPerSecond) * radius.in(Meters));
+    }
+
+    // // calculates the angle of a turret relative to the robot to hit a target
+    // public static Angle calculateAzimuthAngle(Pose2d robot, Translation3d target, Angle currentAngle) {
+    //     Translation2d turretTranslation = new Pose3d(robot)
+    //             .transformBy(TurretConstants.turretPivotCenterFromRobotCenter)
+    //             .toPose2d()
+    //             .getTranslation();
+
+    //     Translation2d direction = target.toTranslation2d().minus(turretTranslation);
+    //     return calculateAzimuthAngle(robot, direction.getAngle().getMeasure(), currentAngle);
+    // }
+
+    // // calculates the angle of a turret relative to the robot to hit a target
+    // public static Angle calculateAzimuthAngle(Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
+    //     double angle = MathUtil.inputModulus(
+    //             new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(), -0.5, 0.5);
+    //     double current = currentAngle.in(Rotations);
+    //     if (current > 0 && angle + 1 <= Turr.in(Rotations)) angle += 1;
+    //     if (current < 0 && angle - 1 >= MIN_TURN_ANGLE.in(Rotations)) angle -= 1;
+    //     Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
+    //     return Rotations.of(angle);
+    // }
 
   private final StructPublisher<Pose2d> shotVecPublisher =
     NetworkTableInstance.getDefault()
@@ -99,32 +156,14 @@ public class ShooterTargetingSystem {
             + "x3 = " + x3 + "\n" + "y3 = " + y3);
     double a =
         (y1 * (x2 - x3) + y2 * (-x1 + x3) + y3 * (x1 - x2)) / ((x1 - x2) * (x1 - x3) * (x2 - x3));
-    // double a=(y1*(x2-x3)+y2*(-x1+x3)+y3*(x1-x2))/((x1-x2)*(x1-x3)*(x2-x3))
+  
     double b =
         (-y1 * (x2 - x3) * (x2 + x3) + y2 * (x1 + x3) * (x1 - x3) - y3 * (x1 - x2) * (x1 + x2))
             / ((x1 - x2) * (x1 - x3) * (x2 - x3));
-    // double c = (y1*x2*x3*(x2-x3)-y2*x1*x3*(x1-x3)+y3*x1*x2*(x1-x2))/((x1-x2)*(x1-x3)*(x2-x3));
-    // double xIntercept = (-b-Math.sqrt(b^2-4*a*(c-y1)))/(2*a);
 
-    // Distance FIELD_LENGTH = Inches.of(650.12);
-    // Distance FIELD_WIDTH = Inches.of(316.64);
-    // ShotData calculatedShot =
-    //     iterativeMovingShotFromFunnelClearance(
-    //         robotPose,
-    //         robotSpeed,
-    //         new Translation3d(
-    //             Inches.of(650.12).minus(Inches.of(181.56)),
-    //             Inches.of(316.64).div(2),
-    //             Inches.of(56.4)),
-    //         3);
 
     Angle turretPitchAngle = Angle.ofBaseUnits(Math.atan(2 * a * x1 + b), Radians);
-    // turretPitchAngle = calculatedShot.getHoodAngle().magnitude();
-    // initialVelocity = calculatedShot.getExitVelocity().magnitude();
-    // System.out.println(Math.atan(2 * a * x1 + b));
-    // System.out.println(Math.sqrt((-9.81) / (2 * a * Math.pow(Math.cos(turretPitchAngle), 2))));
-    // System.out.println(calculatedShot.getTarget());
-    // velocity = (xIntercept-x1)/Math.cos(turretPitchAngle);
+
     LinearVelocity initialVelocity =
         LinearVelocity.ofBaseUnits(
             Math.sqrt(

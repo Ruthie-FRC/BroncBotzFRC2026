@@ -1,38 +1,26 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radians;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rectangle2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Setpoints.Turret.Hood;
-import frc.robot.Setpoints.Turret.Pivot;
-import frc.robot.subsystems.AgitatorSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TurretFlywheelSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
-import swervelib.SwerveDrive;
+import frc.robot.subsystems.TurretVisualizer;
 import swervelib.SwerveInputStream;
-import yams.units.YUnits;
+import utils.FuelSim;
 
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
+  private final TurretVisualizer turretVisualizer =
+      new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
 //   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
 //   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
@@ -148,7 +136,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-
+    if (Robot.isSimulation()){
+      configureFuelSim();
+    }
     //   String testingMode = "IntakeArm";
 
     //   if (testingMode.equals("Turret")){
@@ -199,6 +189,34 @@ public class RobotContainer {
 
 
 
+  }
+   private void configureFuelSim() {
+    FuelSim instance = FuelSim.getInstance();
+    instance.spawnStartingFuel();
+    instance.registerRobot(
+        Units.inchesToMeters(30), // Dimensions.FULL_WIDTH.in(Meters)
+        Units.inchesToMeters(30), // Dimensions.FULL_LENGTH.in(Meters)
+        Units.inchesToMeters(4), // Dimensions.BUMPER_HEIGHT.in(Meters)
+        drivebase::getPose,
+        drivebase::getFieldVelocity);
+    instance.registerIntake(
+        -Units.inchesToMeters(15), // -Dimensions.FULL_LENGTH.div(2).in(Meters),
+        Units.inchesToMeters(15), // Dimensions.FULL_LENGTH.div(2).in(Meters),
+        -Units.inchesToMeters(
+            15 + 7), // -Dimensions.FULL_WIDTH.div(2).plus(Inches.of(7)).in(Meters),
+        -Units.inchesToMeters(15), // -Dimensions.FULL_WIDTH.div(2).in(Meters),
+        () -> true,
+        () -> turretVisualizer.intakeFuel());
+
+    instance.start();
+    SmartDashboard.putData(
+        Commands.runOnce(
+                () -> {
+                  FuelSim.getInstance().clearFuel();
+                  FuelSim.getInstance().spawnStartingFuel();
+                })
+            .withName("Reset Fuel")
+            .ignoringDisable(true));
   }
 
   /**

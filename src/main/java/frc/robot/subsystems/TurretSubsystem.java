@@ -190,7 +190,7 @@ public class TurretSubsystem extends SubsystemBase {
                     DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
         .withCameraOffset(
             TurretConstants.cameraOffsetFromRobotCenter.rotateAround(
-                TurretConstants.turretPivotCenterFromRobotCenter,
+                TurretConstants.turretPivotCenterFromCameraCenter,
                 new Rotation3d(0, Degrees.of(0).in(Radians), turret.getAngle().in(Radians))))
         .save(); // camera pose is the camera pose from the center of robot
     Optional<PoseEstimate> poseEstimates = limelightPoseEstimator.getPoseEstimate();

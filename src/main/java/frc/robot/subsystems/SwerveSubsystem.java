@@ -74,8 +74,12 @@ public class SwerveSubsystem extends SubsystemBase {
   LimelightPoseEstimator limelightPoseEstimator;
 
 
+ Field2d m_field2d = new Field2d();
+
   public SwerveSubsystem() {
 
+    Pose3d initialPose = new Pose3d();
+    
     // error catching
     try {
       swerveDrive =
@@ -249,7 +253,7 @@ public class SwerveSubsystem extends SubsystemBase {
    *
    * @return The yaw angle
    */
-  public static Rotation2d getHeading() {
+  public  Rotation2d getHeading() {
     return getPose().getRotation();
   }
   
@@ -258,7 +262,7 @@ public class SwerveSubsystem extends SubsystemBase {
    *
    * @return The robot's pose
    */
-  public static Pose2d getPose() {
+  public Pose2d getPose() {
     return swerveDrive.getPose();
   }
 
@@ -527,6 +531,16 @@ public class SwerveSubsystem extends SubsystemBase {
         () -> {
           swerveDrive.drive(driveAngularVelocity.get());
         });
+  }
+
+    /**
+   * Gets the current 3d pose (position and rotation) of the robot, as reported by odometry.
+   * Transforms into a 3d pose assuming on the XY plane.
+   *
+   * @return
+   */
+  public Pose3d getPose3d() {
+    return new Pose3d(swerveDrive.getPose());
   }
 
   public Command rotateToHeading(Rotation2d rotation2d) {
