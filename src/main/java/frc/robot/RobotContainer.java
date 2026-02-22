@@ -102,24 +102,24 @@ public class RobotContainer {
 
       drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
-    //  if (RobotBase.isSimulation()) {
-    //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
-    // } else {
-    // }
+     if (RobotBase.isSimulation()) {
+      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
+    } else {
+    }
 
-    // agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    // indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
 
-    // turretFlywheelSubsystem.setDefaultCommand(
-    //     turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    turretFlywheelSubsystem.setDefaultCommand(
+        turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
 
-    // turretSubsystem.setDefaultCommand(
-    //     turretSubsystem.setAngle(Pivot.startTurretAngle));
-    // hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
+    turretSubsystem.setDefaultCommand(
+        turretSubsystem.setAngle(Pivot.startTurretAngle));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
 
-    // intakeArmSubsystem.setDefaultCommand(
-    //     intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
-    // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
+    intakeArmSubsystem.setDefaultCommand(
+        intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+    climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 
   
@@ -139,52 +139,52 @@ public class RobotContainer {
     if (Robot.isSimulation()){
       configureFuelSim();
     }
-    //   String testingMode = "IntakeArm";
+      String testingMode = "IntakeArm";
 
-    //   if (testingMode.equals("Turret")){
-    //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
-    //       m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
-    //       m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
-    //       m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
-    //       m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
+      if (testingMode.equals("Turret")){
+        //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+          m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
+          m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
+          m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
+          m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
 
-    //       m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
-    //       m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
+          m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
+          m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));
 
-    //       m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
-    //       m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
+          m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
+          m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
           
 
 
-    //   }
+      }
 
-    //   if(testingMode.equals("Elevator")){
-    //       m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
-    //       m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
-    //       m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
-    //       m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
-    //   }
+      if(testingMode.equals("Elevator")){
+          m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
+          m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
+          m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
+          m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
+      }
 
-    //   if(testingMode.equals("IntakeArm")){//not working
-    //       m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
-    //       m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
-    //       m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
-    //       m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
+      if(testingMode.equals("IntakeArm")){//not working
+          m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
+          m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
+          m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
+          m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
           
-    //   }
+      }
 
 
 
 
-    // var topRightOfTrench = new Pose2d().getTranslation();
-    // var bottomLeftOfTrench = new Pose2d().getTranslation();
+    var topRightOfTrench = new Pose2d().getTranslation();
+    var bottomLeftOfTrench = new Pose2d().getTranslation();
 
-    // SwerveDrive drive;
-    // SwerveInputStream stream;
-    // var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
-    // new Trigger(()->trenchRight.contains(drive.getPose().getTranslation()))
-    // .whileTrue(Commands.run(()->driveAngularVelocity.withControllerHeadingAxis(()->Math.cos(Degrees.of(30).in(Radians)),()-> Math.cos(Degrees.of(30).in(Radians))).headingWhile(true))
-    // .finallyDo(()->stream.headingWhile(false)));
+    SwerveDrive drive;
+    SwerveInputStream stream;
+    var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
+    new Trigger(()->trenchRight.contains(drive.getPose().getTranslation()))
+    .whileTrue(Commands.run(()->driveAngularVelocity.withControllerHeadingAxis(()->Math.cos(Degrees.of(30).in(Radians)),()-> Math.cos(Degrees.of(30).in(Radians))).headingWhile(true))
+    .finallyDo(()->stream.headingWhile(false)));
 
 
 
