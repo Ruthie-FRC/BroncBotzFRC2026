@@ -134,8 +134,8 @@ public final class Constants {
     public static double wheelDiameter = 0;
     public static Pose3d cameraOffsetFromRobotCenter =
         new Pose3d( new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
-    public static Transform3d turretPivotCenterFromRobotCenter =
-        new Transform3d( new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
+    public static Translation3d turretPivotCenterFromRobotCenter =
+        new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0));
 
     public static class PivotConstants {
 
@@ -157,11 +157,7 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
-      public static Angle softLimitMin = Degrees.of(-105);
-      public static Angle softLimitMax = Degrees.of(105);
-
-      public static Angle hardLimitMin = Degrees.of(-115);
-      public static Angle hardLimitMax = Degrees.of(115);
+      public static Angle softLimitMin = Degrees.of(-30);
       public static double EncoderAOffset = (0);
     }
   }
