@@ -69,8 +69,10 @@ public final class Constants {
     public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("3:1"));
     public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("5:1"));
 
-    public static double indexerSpeed = 0.5;
-    public static double indexerSpeedOut = -0.5;
+    public static double indexerVoltage = 4;
+    public static double indexerVoltageOut = -4;
+    public static double kickerVoltage = 4;
+    public static double kickerVoltageReverse = -4;
 
   }
 

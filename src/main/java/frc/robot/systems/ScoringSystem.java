@@ -3,13 +3,13 @@ package frc.robot.systems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.HoodSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TurretFlywheelSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.Turret.HoodSubsystem;
+import frc.robot.subsystems.Turret.IndexerSubsystem;
+import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
+import frc.robot.subsystems.Turret.TurretSubsystem;
 import frc.robot.systems.ShooterTargetingSystem.Shot;
 
 public class ScoringSystem {
@@ -44,7 +44,7 @@ public class ScoringSystem {
   private Command score() {
     // this one included turret tracking
     Shot shot = ShooterTargetingSystem.getShotData(m_swerve.getPose(), m_swerve.getFieldVelocity(), 0); 
-    return 
+    return
     Commands.parallel(m_turret.setAngle(shot.getAngle()), m_hood.setAngle(shot.getAngle()), m_flywheel.setVelocity(shot.getVelocity()));
   }
 

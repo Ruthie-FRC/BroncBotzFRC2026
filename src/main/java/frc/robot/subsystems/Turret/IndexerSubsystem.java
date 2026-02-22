@@ -1,5 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Turret;
 
+import static edu.wpi.first.units.Units.Amp;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
@@ -14,11 +15,12 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
-import frc.robot.Constants.TurretConstants;
+import frc.robot.Constants.IndexerConstants;
+
 import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -32,28 +34,34 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 import yams.units.YUnits;
 
-public class TurretFlywheelSubsystem extends SubsystemBase {
+public class IndexerSubsystem extends SubsystemBase {
 
   private final SparkMax flywheelMotor =
-      new SparkMax(CanIDConstants.turretFlywheelID, MotorType.kBrushless);
+      new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+              1, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+          .withGearing(IndexerConstants.gearingIndexer)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
-          .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
+
+
+
 
   private final SmartMotorController motor =
       new SparkWrapper(flywheelMotor, DCMotor.getNEO(1), motorConfig);
+
+
+
 
   private final FlyWheelConfig flywheelConfig =
       new FlyWheelConfig(motor)
@@ -63,36 +71,55 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
           .withSoftLimit(RPM.of(-5000), RPM.of(5000))
           .withSpeedometerSimulation(RPM.of(7500));
 
-  private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
+  private final FlyWheel indexflywheel = new FlyWheel(flywheelConfig);
 
-  public TurretFlywheelSubsystem() {}
 
+
+  public IndexerSubsystem() {}
+
+
+  //INDEXER COMMANDS
   public AngularVelocity getVelocity() {
-    return flywheel.getSpeed();
+    return indexflywheel.getSpeed();
   }
 
   public Command setVelocity(AngularVelocity speed) {
-    return flywheel.setSpeed(speed);
+    return indexflywheel.setSpeed(speed);
   }
 
-  public Command setVelocity(LinearVelocity speed) {
-    return flywheel.setSpeed(
-        RPM.of(speed.in(YUnits.SandwichPerSecond) * TurretConstants.wheelDiameter));
-  }
-
-  public Command setDutyCycle(double dutyCycle) {
-    return flywheel.set(dutyCycle);
+  public Command setDutyCycleIndex(double dutyCycle) {
+    return indexflywheel.set(dutyCycle);
   }
 
   public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return flywheel.setSpeed(speed);
+    return indexflywheel.setSpeed(speed);
   }
 
   public Command setDutyCycle(Supplier<Double> dutyCycle) {
-    return flywheel.set(dutyCycle);
+    return indexflywheel.set(dutyCycle);
   }
 
+  public Command setIndexerVoltage(double volts){
+    return indexflywheel.setVoltage(Volts.of(volts));
+  }
+
+  public Command indexIn(){
+    return setIndexerVoltage(IndexerConstants.indexerVoltage);
+  }
+
+  public Command indexOut(){
+    return setIndexerVoltage(IndexerConstants.indexerVoltageOut);
+  }
+
+  
+
+
+  //
+
+
+
+
   public Command sysId() {
-    return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+    return indexflywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
   }
 }

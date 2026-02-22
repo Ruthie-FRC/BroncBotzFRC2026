@@ -3,11 +3,11 @@ package frc.robot.systems;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Agitator;
 import frc.robot.subsystems.AgitatorSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.Turret.IndexerSubsystem;
+import frc.robot.subsystems.Turret.TurretSubsystem;
 
 public class LoadingSystem {
 
