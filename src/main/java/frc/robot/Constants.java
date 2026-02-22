@@ -159,7 +159,8 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
-      public static Angle softLimitMin = Degrees.of(-30);
+      public static Angle softLimitMin = Degrees.of(-105);
+      public static Angle softLimitMax = Degrees.of(105);
       public static double EncoderAOffset = (0);
     }
   }
