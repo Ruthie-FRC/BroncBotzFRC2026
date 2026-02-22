@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Turret;
 
-import static edu.wpi.first.units.Units.Amp;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
@@ -15,15 +14,12 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.IndexerConstants;
 
 import java.util.function.Supplier;
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -32,7 +28,6 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
-import yams.units.YUnits;
 
 public class IndexerSubsystem extends SubsystemBase {
 
@@ -95,7 +90,7 @@ public class IndexerSubsystem extends SubsystemBase {
     return indexflywheel.setSpeed(speed);
   }
 
-  public Command setDutyCycle(Supplier<Double> dutyCycle) {
+  public Command setDutyCycle(int dutyCycle) {
     return indexflywheel.set(dutyCycle);
   }
 

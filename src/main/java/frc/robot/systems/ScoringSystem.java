@@ -42,7 +42,9 @@ public class ScoringSystem {
   }
   
 
-
+  private Command aim(){
+    return null;
+  }
   
 
   private Command score() {
