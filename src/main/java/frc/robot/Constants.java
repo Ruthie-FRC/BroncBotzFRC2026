@@ -136,8 +136,8 @@ public final class Constants {
     public static double wheelDiameter = 0;
     public static Pose3d cameraOffsetFromRobotCenter =
         new Pose3d( new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
-    public static Translation3d turretPivotCenterFromRobotCenter =
-        new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0));
+    public static Transform3d turretPivotCenterFromRobotCenter =
+        new Transform3d(new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
 
     public static class PivotConstants {
 
