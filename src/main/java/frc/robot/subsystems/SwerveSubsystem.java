@@ -170,7 +170,6 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    swerveDrive.updateOdometry();
     limelight
         .getSettings()
         .withRobotOrientation(
