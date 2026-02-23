@@ -32,8 +32,8 @@ import yams.units.YUnits;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
-  private final TurretVisualizer turretVisualizer =
-      new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
+  // private final TurretVisualizer turretVisualizer =
+  //     new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
 
   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
@@ -149,7 +149,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     if (Robot.isSimulation()){
-      configureFuelSim();
+     // configureFuelSim();
     }
     //   String testingMode = "IntakeArm";
 
@@ -202,34 +202,34 @@ public class RobotContainer {
 
 
   }
-   private void configureFuelSim() {
-    FuelSim instance = FuelSim.getInstance();
-    instance.spawnStartingFuel();
-    instance.registerRobot(
-        Units.inchesToMeters(30), // Dimensions.FULL_WIDTH.in(Meters)
-        Units.inchesToMeters(30), // Dimensions.FULL_LENGTH.in(Meters)
-        Units.inchesToMeters(4), // Dimensions.BUMPER_HEIGHT.in(Meters)
-        drivebase::getPose,
-        drivebase::getFieldVelocity);
-    instance.registerIntake(
-        -Units.inchesToMeters(15), // -Dimensions.FULL_LENGTH.div(2).in(Meters),
-        Units.inchesToMeters(15), // Dimensions.FULL_LENGTH.div(2).in(Meters),
-        -Units.inchesToMeters(
-            15 + 7), // -Dimensions.FULL_WIDTH.div(2).plus(Inches.of(7)).in(Meters),
-        -Units.inchesToMeters(15), // -Dimensions.FULL_WIDTH.div(2).in(Meters),
-        () -> true,
-        () -> turretVisualizer.intakeFuel());
+  //  private void configureFuelSim() {
+  //   FuelSim instance = FuelSim.getInstance();
+  //   instance.spawnStartingFuel();
+  //   instance.registerRobot(
+  //       Units.inchesToMeters(30), // Dimensions.FULL_WIDTH.in(Meters)
+  //       Units.inchesToMeters(30), // Dimensions.FULL_LENGTH.in(Meters)
+  //       Units.inchesToMeters(4), // Dimensions.BUMPER_HEIGHT.in(Meters)
+  //       drivebase::getPose,
+  //       drivebase::getFieldVelocity);
+  //   instance.registerIntake(
+  //       -Units.inchesToMeters(15), // -Dimensions.FULL_LENGTH.div(2).in(Meters),
+  //       Units.inchesToMeters(15), // Dimensions.FULL_LENGTH.div(2).in(Meters),
+  //       -Units.inchesToMeters(
+  //           15 + 7), // -Dimensions.FULL_WIDTH.div(2).plus(Inches.of(7)).in(Meters),
+  //       -Units.inchesToMeters(15), // -Dimensions.FULL_WIDTH.div(2).in(Meters),
+  //       () -> true,
+  //       () -> turretVisualizer.intakeFuel());
 
-    instance.start();
-    SmartDashboard.putData(
-        Commands.runOnce(
-                () -> {
-                  FuelSim.getInstance().clearFuel();
-                  FuelSim.getInstance().spawnStartingFuel();
-                })
-            .withName("Reset Fuel")
-            .ignoringDisable(true));
-  }
+  //   instance.start();
+  //   SmartDashboard.putData(
+  //       Commands.runOnce(
+  //               () -> {
+  //                 FuelSim.getInstance().clearFuel();
+  //                 FuelSim.getInstance().spawnStartingFuel();
+  //               })
+  //           .withName("Reset Fuel")
+  //           .ignoringDisable(true));
+ // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -31,8 +31,8 @@ public class LoadingSystem {
       m_agitator = agitator;
     }
   
-    private Command intakeDown(){
-      return null;
+  private Command intakeDown(){
+    return null;
   }
 
   private Command intakeBalls() {
