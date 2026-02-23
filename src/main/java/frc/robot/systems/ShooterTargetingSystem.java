@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.MathUtil;
@@ -30,10 +31,11 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.TurretConstants;
-import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.Constants.TurretConstants.PivotConstants;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TurretFlywheelSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.Turret.HoodSubsystem;
+import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
+import frc.robot.subsystems.Turret.TurretSubsystem;
 
 public class ShooterTargetingSystem {
 
@@ -77,27 +79,27 @@ public class ShooterTargetingSystem {
         return MetersPerSecond.of(vel.in(RadiansPerSecond) * radius.in(Meters));
     }
 
-    // // calculates the angle of a turret relative to the robot to hit a target
-    // public static Angle calculateAzimuthAngle(Pose2d robot, Translation3d target, Angle currentAngle) {
-    //     Translation2d turretTranslation = new Pose3d(robot)
-    //             .transformBy(TurretConstants.turretPivotCenterFromRobotCenter)
-    //             .toPose2d()
-    //             .getTranslation();
+    // calculates the angle of a turret relative to the robot to hit a target
+    public static Angle calculateAzimuthAngle(Pose2d robot, Translation3d target, Angle currentAngle) {
+        Translation2d turretTranslation = new Pose3d(robot)
+                .transformBy(TurretConstants.turretPivotCenterFromRobotCenter)
+                .toPose2d()
+                .getTranslation();
 
-    //     Translation2d direction = target.toTranslation2d().minus(turretTranslation);
-    //     return calculateAzimuthAngle(robot, direction.getAngle().getMeasure(), currentAngle);
-    // }
+        Translation2d direction = target.toTranslation2d().minus(turretTranslation);
+        return calculateAzimuthAngle(robot, direction.getAngle().getMeasure(), currentAngle);
+    }
 
-    // // calculates the angle of a turret relative to the robot to hit a target
-    // public static Angle calculateAzimuthAngle(Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
-    //     double angle = MathUtil.inputModulus(
-    //             new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(), -0.5, 0.5);
-    //     double current = currentAngle.in(Rotations);
-    //     if (current > 0 && angle + 1 <= Turr.in(Rotations)) angle += 1;
-    //     if (current < 0 && angle - 1 >= MIN_TURN_ANGLE.in(Rotations)) angle -= 1;
-    //     Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
-    //     return Rotations.of(angle);
-    // }
+    // calculates the angle of a turret relative to the robot to hit a target
+    public static Angle calculateAzimuthAngle(Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
+        double angle = MathUtil.inputModulus(
+                new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(), -0.5, 0.5);
+        double current = currentAngle.in(Rotations);
+        if (current > 0 && angle + 1 <= PivotConstants.softLimitMin.in(Rotations)) angle += 1;
+        if (current < 0 && angle - 1 >= PivotConstants.softLimitMax.in(Rotations)) angle -= 1;
+        // Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
+        return Rotations.of(angle);
+    }
 
   private final StructPublisher<Pose2d> shotVecPublisher =
     NetworkTableInstance.getDefault()

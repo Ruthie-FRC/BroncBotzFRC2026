@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AlignmentConstants.DriveToPose;
+import frc.robot.subsystems.Turret.TurretVisualizer;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.systems.ShooterTargetingSystem;
@@ -69,7 +70,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private TurretVisualizer turretVisualizer;
   private ShooterTargetingSystem shooterAimer;
 
-  static SwerveDrive swerveDrive;
+  public static SwerveDrive swerveDrive;
   Limelight limelight;
   LimelightPoseEstimator limelightPoseEstimator;
 

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -10,10 +12,21 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Setpoints.Turret.Hood;
+import frc.robot.Setpoints.Turret.Pivot;
+import frc.robot.subsystems.AgitatorSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TurretVisualizer;
+import frc.robot.subsystems.Turret.HoodSubsystem;
+import frc.robot.subsystems.Turret.IndexerSubsystem;
+import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
+import frc.robot.subsystems.Turret.TurretSubsystem;
+import frc.robot.subsystems.Turret.TurretVisualizer;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
+import yams.units.YUnits;
 
 
 public class RobotContainer {
@@ -21,17 +34,16 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
   private final TurretVisualizer turretVisualizer =
       new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
-//   private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
-//   private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
-//   private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
+  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
 
-//   private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-//   private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
-//   private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
+  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
+  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
+  private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
 
-//   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-//   private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
+  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+  private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
 
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -107,18 +119,18 @@ public class RobotContainer {
     // } else {
     // }
 
-    // agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    // indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
+    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
 
-    // turretFlywheelSubsystem.setDefaultCommand(
-    //     turretFlywheelSubsystem.setVelocity(YUnits.SandwichPerSecond.of(0)));
+    turretFlywheelSubsystem.setDefaultCommand(
+        turretFlywheelSubsystem.setDutyCycle(0));
 
-    // turretSubsystem.setDefaultCommand(
-    //     turretSubsystem.setAngle(Pivot.startTurretAngle));
-    // hoodSubsystem.setDefaultCommand(hoodSubsystem.setAngle(Hood.startHoodAngle));
+    turretSubsystem.setDefaultCommand(
+        turretSubsystem.set(0));
+    hoodSubsystem.setDefaultCommand(hoodSubsystem.setDutyCycle(0));
 
-    // intakeArmSubsystem.setDefaultCommand(
-    //     intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmStartAngle));
+    intakeArmSubsystem.setDefaultCommand(
+        intakeArmSubsystem.set(0));
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 

@@ -69,8 +69,10 @@ public final class Constants {
     public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("3:1"));
     public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("5:1"));
 
-    public static double indexerSpeed = 0.5;
-    public static double indexerSpeedOut = -0.5;
+    public static double indexerVoltage = 4;
+    public static double indexerVoltageOut = -4;
+    public static double kickerVoltage = 4;
+    public static double kickerVoltageReverse = -4;
 
   }
 
@@ -134,8 +136,8 @@ public final class Constants {
     public static double wheelDiameter = 0;
     public static Pose3d cameraOffsetFromRobotCenter =
         new Pose3d( new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
-    public static Translation3d turretPivotCenterFromRobotCenter =
-        new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0));
+    public static Transform3d turretPivotCenterFromRobotCenter =
+        new Transform3d(new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
 
     public static class PivotConstants {
 
@@ -157,7 +159,8 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
-      public static Angle softLimitMin = Degrees.of(-30);
+      public static Angle softLimitMin = Degrees.of(-105);
+      public static Angle softLimitMax = Degrees.of(105);
       public static double EncoderAOffset = (0);
     }
   }
