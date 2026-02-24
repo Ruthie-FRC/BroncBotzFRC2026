@@ -347,10 +347,10 @@ public class TurretSubsystem extends SubsystemBase {
         return new EasyCRTConfig(
                 () -> Rotations.of(getAbsoluteEncoderWithOffset()),
                 () -> Rotations.of(cancoderB.getPosition()))
-                .withCommonDriveGear(1, 200, 19, 21)
-                .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(-0.650758))
+                .withCommonDriveGear(1, 160, 19, 21)
+                .withAbsoluteEncoderOffsets(Rotations.of(0), Rotations.of(-0.650758)) //We gotta find this
                 .withAbsoluteEncoderInversions(false, false)
-                .withMechanismRange(Rotations.of(-0.6), Rotations.of(0.6))
+                .withMechanismRange(PivotConstants.softLimitMin, PivotConstants.softLimitMax)
                 .withMatchTolerance(Rotations.of(0.05))
                 .withCrtGearRecommendationConstraints(1.2, 15, 60, 40);
         // } else {
