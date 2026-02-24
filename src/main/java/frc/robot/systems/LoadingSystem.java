@@ -1,6 +1,7 @@
 package frc.robot.systems;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Setpoints;
 import frc.robot.Constants.Agitator;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -32,7 +33,7 @@ public class LoadingSystem {
     }
   
   private Command intakeDown(){
-    return null;
+    return m_intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut);
   }
 
   private Command intakeBalls() {
