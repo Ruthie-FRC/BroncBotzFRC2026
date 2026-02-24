@@ -2,10 +2,12 @@ package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Setpoints;
 import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.HoodConstants;
 
@@ -13,7 +15,10 @@ import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.config.MechanismPositionConfig;
+import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Arm;
+import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -39,22 +44,21 @@ public class HoodSubsystem extends SubsystemBase {
           .withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
-          .withControlMode(ControlMode.CLOSED_LOOP)
-          .withMomentOfInertia(Inches.of(4),Pound.of(4));
+          .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController hoodSMC =
       new TalonFXWrapper(hoodMotor, DCMotor.getKrakenX60(1), hoodMotorConfig);//Change: field oriented control?
 
-  private final ArmConfig hoodConfig =
-      new ArmConfig(hoodSMC)
-          .withTelemetry("HoodMech", TelemetryVerbosity.HIGH)
-          .withSoftLimits(HoodConstants.softLimitMin, HoodConstants.softLimitMax)//soft limit?
+  private final PivotConfig m_config =
+          new PivotConfig(hoodSMC)
           .withHardLimit(HoodConstants.hardLimitMin, HoodConstants.hardLimitMax)
-          .withLength(HoodConstants.length)
-          .withStartingPosition(HoodConstants.hardLimitMin)
-          .withMOI(HoodConstants.MOIInKilogram);
+          .withSoftLimits(HoodConstants.softLimitMin, HoodConstants.softLimitMax)
+          .withTelemetry("HoodMech", TelemetryVerbosity.HIGH)
+          .withStartingPosition(Setpoints.Intake.intakeArmStartAngle)
+          .withMOI(Meter.of(0.001), Pounds.of(3));//need double check
 
-  private final Arm hood = new Arm(hoodConfig);
+  private final Pivot hood = new Pivot(m_config);
+
 
   public HoodSubsystem() {}
 
