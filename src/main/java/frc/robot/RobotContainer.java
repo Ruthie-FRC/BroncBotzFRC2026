@@ -25,9 +25,12 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Turret.HoodSubsystem;
 import frc.robot.subsystems.Turret.IndexerSubsystem;
+import frc.robot.subsystems.Turret.KickerSubsystem;
 import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
 import frc.robot.subsystems.Turret.TurretSubsystem;
 import frc.robot.subsystems.Turret.TurretVisualizer;
+import frc.robot.systems.LoadingSystem;
+import frc.robot.systems.ScoringSystem;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
 import yams.units.YUnits;
@@ -41,15 +44,19 @@ public class RobotContainer {
   // private final TurretVisualizer turretVisualizer =
   //     new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
 
-  private final IntakeRollerSubsystem intakeRollerSubsystem = new IntakeRollerSubsystem();
-  private final IntakeArmSubsystem intakeArmSubsystem = new IntakeArmSubsystem();
+  private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
+  private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
 
-  private final TurretSubsystem turretSubsystem = new TurretSubsystem();
-  private final HoodSubsystem hoodSubsystem = new HoodSubsystem();
-  private final TurretFlywheelSubsystem turretFlywheelSubsystem = new TurretFlywheelSubsystem();
+  private final TurretSubsystem turret = new TurretSubsystem();
+  private final HoodSubsystem hood = new HoodSubsystem();
+  private final TurretFlywheelSubsystem turretFlywheel = new TurretFlywheelSubsystem();
 
-  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final AgitatorSubsystem agitatorSubsystem = new AgitatorSubsystem();
+  private final IndexerSubsystem indexer = new IndexerSubsystem();
+  private final AgitatorSubsystem agitator = new AgitatorSubsystem();
+  private final KickerSubsystem kicker = new KickerSubsystem();
+
+  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator);
+  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker);
 
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -127,18 +134,20 @@ public class RobotContainer {
     // } else {
     // }
 
-    agitatorSubsystem.setDefaultCommand(agitatorSubsystem.setDutyCycle(0));
-    indexerSubsystem.setDefaultCommand(indexerSubsystem.setDutyCycle(0));
+    agitator.setDefaultCommand(agitator.setDutyCycle(0));
+    indexer.setDefaultCommand(indexer.setDutyCycle(0));
 
-    turretFlywheelSubsystem.setDefaultCommand(
-        turretFlywheelSubsystem.setDutyCycle(0));
+    turretFlywheel.setDefaultCommand(
+        turretFlywheel.setDutyCycle(0));
 
-    turretSubsystem.setDefaultCommand(
-        turretSubsystem.set(0));
-    hoodSubsystem.setDefaultCommand(hoodSubsystem.setDutyCycle(0));
+    turret.setDefaultCommand(
+        turret.set(0));
+    hood.setDefaultCommand(hood.setDutyCycle(0));
 
-    intakeArmSubsystem.setDefaultCommand(
-        intakeArmSubsystem.set(0));
+    intakeArm.setDefaultCommand(
+        intakeArm.set(0));
+
+    
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 
@@ -155,6 +164,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    m_driverController.button(1).whileTrue(null);
 
     if (Robot.isSimulation()){
      // configureFuelSim();
