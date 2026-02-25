@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -94,7 +95,7 @@ public class TurretSubsystem extends SubsystemBase {
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new ArmFeedforward(0, 0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
