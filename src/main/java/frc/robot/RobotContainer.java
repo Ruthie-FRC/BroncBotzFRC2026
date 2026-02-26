@@ -165,19 +165,22 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_driverController.button(1).whileTrue(null);
+   // m_driverController.button(1).whileTrue(null);
 
     if (Robot.isSimulation()){
      // configureFuelSim();
     }
-    //   String testingMode = "IntakeArm";
+      String testingMode = "Turret";
 
-    //   if (testingMode.equals("Turret")){
-    //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
-    //       m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
-    //       m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
-    //       m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
-    //       m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
+      if (testingMode.equals("Turret")){
+         //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+          m_driverController.button(1).whileTrue(hood.setAngle(Hood.lowerHoodAngle));//not working
+          m_driverController.button(2).whileTrue(hood.setAngle(Hood.higherHoodAngle));
+          m_driverController.button(3).whileTrue(hood.setAngle(Degrees.of(25)));
+          m_driverController.button(4).whileTrue(hood.setAngle(Degrees.of(40)));
+          //m_driverController.button(3).whileTrue(hood.setDutyCycle(1.0));
+          //m_driverController.button(4).whileTrue(hood.setDutyCycle(-1.0));
+        }
 
     //       m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
     //       m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));

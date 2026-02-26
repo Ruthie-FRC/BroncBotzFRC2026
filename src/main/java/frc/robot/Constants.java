@@ -145,7 +145,7 @@ public final class Constants {
       public static double kD = 0;
       public static double kI = 0;
 
-      public static double kPSim = 5;
+      public static double kPSim = 0.4;
       public static double kISim = 0;
       public static double kDSim = 0;
 
@@ -198,6 +198,12 @@ public final class Constants {
     public static final Angle softLimitMax = Degrees.of(44);
     public static final MomentOfInertia MOIInKilogram =
             KilogramSquareMeters.of(Pounds.of(306.068).in(Kilograms) * Inches.of(1).in(Meters) * Inches.of(1).in(Meters));
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kPSim = 0.85;
+    public static final double kISim = 0;
+    public static final double kDSim = 0;
     
     
     //.per(Inches).per(Inches).in(KilogramSquareMeters);

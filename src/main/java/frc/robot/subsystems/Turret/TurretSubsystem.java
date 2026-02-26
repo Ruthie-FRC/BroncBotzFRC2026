@@ -81,6 +81,12 @@ public class TurretSubsystem extends SubsystemBase {
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
+            .withSimClosedLoopController(
+                PivotConstants.kPSim,
+              PivotConstants.kISim,
+              PivotConstants.kDSim,
+              DegreesPerSecond.of(180),
+              DegreesPerSecondPerSecond.of(90))
           .withClosedLoopController(
               PivotConstants.kP,
               PivotConstants.kI,
@@ -95,7 +101,7 @@ public class TurretSubsystem extends SubsystemBase {
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(1, 1, 1, 10))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
@@ -111,12 +117,12 @@ public class TurretSubsystem extends SubsystemBase {
 
   private final PivotConfig m_config =
       new PivotConfig(motor)
-          .withHardLimit(Degrees.of(-140), Degrees.of(140))
+          .withHardLimit(Degrees.of(-155), Degrees.of(155))
           .withSoftLimits(Degrees.of(-135), Degrees.of(135))
           .withTelemetry("TurretPivot", TelemetryVerbosity.HIGH)
           .withStartingPosition(Degrees.of(0))
           .withMechanismPositionConfig(robotToMechanism)
-          .withMOI(Meter.of(0.001), Pounds.of(3));
+          .withMOI(Meter.of(0.001), Pounds.of(8));
 
   private final Pivot turret = new Pivot(m_config);
 
