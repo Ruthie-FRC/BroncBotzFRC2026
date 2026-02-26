@@ -95,6 +95,18 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
     return flywheel.set(dutyCycle);
   }
 
+    public void setRPM(LinearVelocity newHorizontalSpeed)
+  {
+    flywheel.setMeasurementVelocitySetpoint(newHorizontalSpeed);
+  }
+
+  public boolean readyToShoot(AngularVelocity tolerance)
+  {
+    if (motor.getMechanismSetpointVelocity().isEmpty())
+    {return false;}
+    return motor.getMechanismVelocity().isNear(motor.getMechanismSetpointVelocity().orElseThrow(), tolerance);
+  }
+
   public Command sysId() {
     return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
   }
