@@ -51,6 +51,8 @@ public final class Constants {
     public static final int turretFlywheelID = 36;
 
     public static final int intakeArmID = 40;
+
+    public static final int intakeArmFollowerID = 41;
   }
 
   public static class Agitator {

@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
@@ -48,7 +50,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   // Vendor motor controller object
   private SparkMax m_motor = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
-
+  private SparkMax m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID, MotorType.kBrushless);
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
@@ -67,6 +69,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withStatorCurrentLimit(Amps.of(40))
   .withClosedLoopRampRate(Seconds.of(0.25))
   .withOpenLoopRampRate(Seconds.of(0.25))
+   .withFollowers(Pair.of(m_followerMotor, true))
   .withExternalEncoder(m_motor.getAbsoluteEncoder())
   .withExternalEncoderInverted(false)
   .withUseExternalFeedbackEncoder(true)
@@ -77,7 +80,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(1), smcConfig);
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
