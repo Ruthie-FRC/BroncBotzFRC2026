@@ -17,7 +17,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
-import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.TurretConstants.IndexerConstants;
 
 import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -105,10 +105,6 @@ public class IndexerSubsystem extends SubsystemBase {
   public Command indexOut(){
     return setIndexerVoltage(IndexerConstants.indexerVoltageOut);
   }
-
-  
-
-
   //
 
 

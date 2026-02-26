@@ -165,6 +165,18 @@ public final class Constants {
       public static Angle softLimitMax = Degrees.of(105);
       public static double EncoderAOffset = (0);
     }
+    public static class IndexerConstants {
+      public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("3:1"));
+      public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("5:1"));
+
+      public static double indexerVoltage = 4;
+      public static double indexerVoltageOut = -4;
+    }
+    
+    public static class KickerConstants{
+      public static double kickerVoltage = 4;
+      public static double kickerVoltageReverse = -4;
+    }
   }
 
   public static class ClimberConstants {
