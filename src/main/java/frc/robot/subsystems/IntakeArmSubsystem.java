@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -148,6 +149,11 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public Angle getAngle() {
     return m_Arm.getAngle();
   }
+
+
+public BooleanSupplier aroundAngle(Angle angle) {
+  return m_Arm.isNear(angle, GroundConstants.tolerationAngle);
+}
 
 }
 

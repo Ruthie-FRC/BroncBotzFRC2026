@@ -55,7 +55,7 @@ public class RobotContainer {
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem kicker = new KickerSubsystem();
 
-  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator);
+  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
   private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker);
 
   public static Timer timerThing = new Timer();
@@ -136,17 +136,10 @@ public class RobotContainer {
 
     agitator.setDefaultCommand(agitator.setDutyCycle(0));
     indexer.setDefaultCommand(indexer.setDutyCycle(0));
-
-    turretFlywheel.setDefaultCommand(
-        turretFlywheel.setDutyCycle(0));
-
-    turret.setDefaultCommand(
-        turret.set(0));
+    turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+    turret.setDefaultCommand(turret.set(0));
     hood.setDefaultCommand(hood.setDutyCycle(0));
-
-    intakeArm.setDefaultCommand(
-        intakeArm.set(0));
-
+    intakeArm.setDefaultCommand(intakeArm.set(0));//if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -164,23 +157,24 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-   // m_driverController.button(1).whileTrue(null);
+    m_driverController.button(1).whileTrue(loading.intakeBalls());
+    m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
+    m_driverController.button(3).whileTrue(loading.transferBalls());
+    m_driverController.button(4).whileTrue(loading.intakeDown());
+    m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+    m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
 
     if (Robot.isSimulation()){
      // configureFuelSim();
     }
-      String testingMode = "Turret";
+    //   String testingMode = "IntakeArm";
 
-      if (testingMode.equals("Turret")){
-         //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
-          m_driverController.button(1).whileTrue(hood.setAngle(Hood.lowerHoodAngle));//not working
-          m_driverController.button(2).whileTrue(hood.setAngle(Hood.higherHoodAngle));
-          m_driverController.button(3).whileTrue(hood.setAngle(Degrees.of(25)));
-          m_driverController.button(4).whileTrue(hood.setAngle(Degrees.of(40)));
-          //m_driverController.button(3).whileTrue(hood.setDutyCycle(1.0));
-          //m_driverController.button(4).whileTrue(hood.setDutyCycle(-1.0));
-        }
+    //   if (testingMode.equals("Turret")){
+    //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
+    //       m_driverController.button(1).whileTrue(hoodSubsystem.setAngle(Hood.lowerHoodAngle));//not working
+    //       m_driverController.button(2).whileTrue(hoodSubsystem.setAngle(Hood.higherHoodAngle));//not working
+    //       m_driverController.button(3).whileTrue(hoodSubsystem.setDutyCycle(1.0));
+    //       m_driverController.button(4).whileTrue(hoodSubsystem.setDutyCycle(-1.0));
 
     //       m_driverController.button(5).whileTrue(turretSubsystem.setAngle(Pivot.leftTurretLimit));
     //       m_driverController.button(6).whileTrue(turretSubsystem.setAngle(Pivot.rightTurretLimit));

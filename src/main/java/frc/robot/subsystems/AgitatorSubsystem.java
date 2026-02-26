@@ -107,4 +107,8 @@ public class AgitatorSubsystem extends SubsystemBase {
     return setDutyCycle(Agitator.AgitatorRollerIntakeSpeeds);
   }
 
+  public Command stop() {
+    return setDutyCycle(0);
+  }
+
 }

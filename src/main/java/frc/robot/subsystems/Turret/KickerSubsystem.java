@@ -71,4 +71,8 @@ public class KickerSubsystem extends SubsystemBase{
     public Command kickerUnshoot(){
       return setKickerVolts(KickerConstants.kickerVoltageReverse);
     }
+
+    public Command kickerStop(){
+      return setKickerVolts(0);
+    }
 }

@@ -98,17 +98,17 @@ public class IndexerSubsystem extends SubsystemBase {
     return indexflywheel.setVoltage(Volts.of(volts));
   }
 
-  public Command indexIn(){
+  public Command indexShoot(){
     return setIndexerVoltage(IndexerConstants.indexerVoltage);
   }
 
-  public Command indexOut(){
+  public Command indexUnshoot(){
     return setIndexerVoltage(IndexerConstants.indexerVoltageOut);
   }
-  //
-
-
-
+  
+  public Command indexStop(){
+    return setIndexerVoltage(0);
+  }
 
   public Command sysId() {
     return indexflywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));

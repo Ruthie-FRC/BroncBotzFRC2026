@@ -110,6 +110,7 @@ public final class Constants {
   public static final Angle startingPosition = Degrees.of(60); 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
+  public static final Angle  tolerationAngle = Degrees.of(5);
 
   //public static final Angle kStartingPose = Degrees.of(145);
 

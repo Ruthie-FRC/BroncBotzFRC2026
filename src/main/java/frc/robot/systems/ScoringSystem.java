@@ -50,7 +50,7 @@ public class ScoringSystem {
   private Command score() {
     // this one included turret tracking
     Shot shot = ShooterTargetingSystem.getShotData(m_swerve.getPose(), m_swerve.getFieldVelocity(), 0); 
-    return Commands.parallel(m_turret.setAngle(shot.getAngle()), m_hood.setAngle(shot.getAngle()), m_flywheel.setVelocity(shot.getVelocity()), m_indexer.indexIn(), m_kicker.kickerShoot());
+    return Commands.parallel(m_turret.setAngle(shot.getAngle()), m_hood.setAngle(shot.getAngle()), m_flywheel.setVelocity(shot.getVelocity()), m_indexer.indexShoot(), m_kicker.kickerShoot());
   }
 
   private Command shootBall() {

@@ -83,10 +83,16 @@ public class IntakeRollerSubsystem extends SubsystemBase {
     return setIntakeRoller(IntakeRollerConstants.IntakeRollerIntakeSpeeds);
   }
 
+  public Command stop() {
+  return setIntakeRoller(0);
+}
+
   public Command hold(BooleanSupplier fuel) {
     return run(
         () ->
             m_rollerMotor.set(
                 fuel.getAsBoolean() ? IntakeRollerConstants.IntakeRollerHoldSpeed : 0));
   }
+
+
 }
