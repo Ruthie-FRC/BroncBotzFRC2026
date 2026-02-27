@@ -139,7 +139,7 @@ public class RobotContainer {
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     turret.setDefaultCommand(turret.set(0));
     hood.setDefaultCommand(hood.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.set(0));//if not intaking, the arm is at max
+    intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }

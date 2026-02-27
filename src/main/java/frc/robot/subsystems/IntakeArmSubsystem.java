@@ -114,9 +114,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
     return arm.setAngle(angle);
     //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
     }
-  public Command setAngle(Supplier<Angle> angleSupplier){
-    return arm.setAngle(angleSupplier);
-  }
+
 
   public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
     return arm.set(dutyCycleSupplier);

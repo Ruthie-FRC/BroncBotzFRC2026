@@ -104,10 +104,10 @@ public final class Constants {
 
   public static final Angle softLowerLimit = Degrees.of(1);
   public static final Angle softUpperLimit = Degrees.of(60);
-  public static final Angle hardLowerLimit = Degrees.of(0);
-  public static final Angle hardUpperLimit = Degrees.of(70);
+  public static final Angle hardLowerLimit = Degrees.of(-90);
+  public static final Angle hardUpperLimit = Degrees.of(90);
 
-  public static final Angle startingPosition = Degrees.of(0); 
+  public static final Angle startingPosition = Degrees.of(45); 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
   public static final Angle  tolerationAngle = Degrees.of(5);
@@ -121,7 +121,7 @@ public final class Constants {
     public static double kI = 0;
     public static double kD = 0;
 
-    public static double kPSim = 0.2;
+    public static double kPSim = 5;
     public static double kISim = 0;
     public static double kDSim = 0;
 
