@@ -83,7 +83,7 @@ public final class Constants {
   public static final double kI = 0;
   public static final double kD = 0;
 
-  public static final double ksimP = 2;
+  public static final double ksimP = 3;
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 

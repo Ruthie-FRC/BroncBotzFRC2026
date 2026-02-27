@@ -199,13 +199,11 @@ public class RobotContainer {
        if(testingMode.equals("IntakeArm")){//not working
            m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
            m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
-           m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(0)));
-           m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(50)));}
            
            m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
            m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
           
-    //   }
+   }
 
 
 
