@@ -157,12 +157,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.button(1).whileTrue(loading.intakeBalls());
-    m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
-    m_driverController.button(3).whileTrue(loading.transferBalls());
-    m_driverController.button(4).whileTrue(loading.intakeDown());
-    m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-    m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+    // m_driverController.button(1).whileTrue(loading.intakeBalls());
+    // m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
+    // m_driverController.button(3).whileTrue(loading.transferBalls());
+    // m_driverController.button(4).whileTrue(loading.intakeDown());
+    // m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+    // m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
 
     if (Robot.isSimulation()){
      // configureFuelSim();
@@ -194,8 +194,8 @@ public class RobotContainer {
     //   }
 
     //   if(testingMode.equals("IntakeArm")){//not working
-    //       m_driverController.button(1).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleIn));
-    //       m_driverController.button(2).whileTrue(intakeArmSubsystem.setAngle(Setpoints.Intake.intakeArmAngleOut));
+          m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+          m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
     //       m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
     //       m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
           
