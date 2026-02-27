@@ -157,17 +157,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // m_driverController.button(1).whileTrue(loading.intakeBalls());
-    // m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
-    // m_driverController.button(3).whileTrue(loading.transferBalls());
-    // m_driverController.button(4).whileTrue(loading.intakeDown());
-    // m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-    // m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+    m_driverController.button(1).whileTrue(loading.intakeBalls());
+    m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
+    m_driverController.button(3).whileTrue(loading.transferBalls());
+    m_driverController.button(4).whileTrue(loading.intakeDown());
+    //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+    //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+   // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
+    //m_driverController.button(8).whileTrue(intakeArm.setAngle(Degrees.of(55)));
+    
 
     if (Robot.isSimulation()){
      // configureFuelSim();
     }
-    //   String testingMode = "IntakeArm";
+       String testingMode = "IntakeArm";
 
     //   if (testingMode.equals("Turret")){
     //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
@@ -193,11 +196,14 @@ public class RobotContainer {
     //       m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
     //   }
 
-    //   if(testingMode.equals("IntakeArm")){//not working
-          m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-          m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
-    //       m_driverController.button(3).whileTrue(intakeArmSubsystem.setDutyCycle(0.8));
-    //       m_driverController.button(4).whileTrue(intakeArmSubsystem.setDutyCycle(-0.8));
+       if(testingMode.equals("IntakeArm")){//not working
+           m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+           m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+           m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(0)));
+           m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(50)));}
+           
+           m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
+           m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
           
     //   }
 

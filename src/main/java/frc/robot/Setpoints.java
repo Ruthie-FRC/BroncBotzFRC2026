@@ -18,9 +18,9 @@ public class Setpoints {
 
   public static class Intake {
 
-    public static Angle intakeArmStartAngle = Degrees.of(60);
-    public static Angle intakeArmAngleIn = Degrees.of(2);
-    public static Angle intakeArmAngleOut = Degrees.of(60);
+    public static Angle intakeArmStartAngle = Degrees.of(45);
+    public static Angle intakeArmAngleIn = Degrees.of(10);
+    public static Angle intakeArmAngleOut = Degrees.of(50);
 
   }
 

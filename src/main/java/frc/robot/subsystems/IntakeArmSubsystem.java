@@ -75,7 +75,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withExternalEncoderInverted(false)
   .withUseExternalFeedbackEncoder(true)
   .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(3,4)))
-  .withExternalEncoderZeroOffset(Degrees.of(0));
+  .withExternalEncoderZeroOffset(Degrees.of(0))
+  .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH);
   
   
   //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
@@ -97,7 +98,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   
   // Arm Mechanism
-  private Arm m_Arm = new Arm(armCfg);
+  private Arm arm = new Arm(armCfg);
 
   /** Creates a new ExampleSubsystem. */
   public IntakeArmSubsystem() {
@@ -110,22 +111,32 @@ public class IntakeArmSubsystem extends SubsystemBase {
    * @param angle Angle to go to.
    */
   public Command setAngle(Angle angle) {
-    return m_Arm.setAngle(angle);
+    return arm.setAngle(angle);
     //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
-}
+    }
+  public Command setAngle(Supplier<Angle> angleSupplier){
+    return arm.setAngle(angleSupplier);
+  }
 
+  public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
+    return arm.set(dutyCycleSupplier);
+  }
+  
+  public Command setDutyCycle(double dutyCycle) {
+    return arm.set(dutyCycle);
+  }
   /**
    * Move the arm up and down.
    * @param dutycycle [-1, 1] speed to set the arm too.
    */
-  public Command set(double dutycycle) { return m_Arm.set(dutycycle);} //sparkMaxController.getDutyCycle();
+  public Command set(double dutycycle) { return arm.set(dutycycle);} //sparkMaxController.getDutyCycle();
   //DutyCycleEncoder m_encoderFR = new DutyCycleEncoder(0, 4.0, 2.0); 0-DIO channel 0
 
   /**
    * Run sysId on the {@link Arm}
    */
   public Command sysId() { 
-    return m_Arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
+    return arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
   }
 
 
@@ -137,22 +148,22 @@ public class IntakeArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_Arm.updateTelemetry();
+    arm.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-    m_Arm.simIterate();
+    arm.simIterate();
   }
 
   public Angle getAngle() {
-    return m_Arm.getAngle();
+    return arm.getAngle();
   }
 
 
 public BooleanSupplier aroundAngle(Angle angle) {
-  return m_Arm.isNear(angle, GroundConstants.tolerationAngle);
+  return arm.isNear(angle, GroundConstants.tolerationAngle);
 }
 
 }

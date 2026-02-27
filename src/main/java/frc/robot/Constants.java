@@ -79,11 +79,11 @@ public final class Constants {
   }
 
   public static class GroundConstants {
-  public static final double kP = 1000; // radians to rotations
+  public static final double kP = 0; // radians to rotations
   public static final double kI = 0;
   public static final double kD = 0;
 
-  public static final double ksimP = 20;
+  public static final double ksimP = 2;
   public static final double ksimI = 0;
   public static final double ksimD = 0;
 
@@ -92,22 +92,22 @@ public final class Constants {
   public static final double kG = 0 ;
   public static final double kV = 0 ;
 
-  public static final double ksimS = 0.1;
-  public static final double ksimG = 4.3;
-  public static final double ksimV = 1;
+  public static final double ksimS = 0;
+  public static final double ksimG = 5;
+  public static final double ksimV = 0;
 
 
   public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("36:1"));
 
   public static final Mass weight = Pounds.of(5.44);
-  public static final Distance length = Feet.of(2);
+  public static final Distance length = Inches.of(18.77);
 
   public static final Angle softLowerLimit = Degrees.of(1);
   public static final Angle softUpperLimit = Degrees.of(60);
-  public static final Angle hardLowerLimit = Degrees.of(-20);
-  public static final Angle hardUpperLimit = Degrees.of(70.945);
+  public static final Angle hardLowerLimit = Degrees.of(0);
+  public static final Angle hardUpperLimit = Degrees.of(70);
 
-  public static final Angle startingPosition = Degrees.of(20); 
+  public static final Angle startingPosition = Degrees.of(0); 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
   public static final Angle  tolerationAngle = Degrees.of(5);
