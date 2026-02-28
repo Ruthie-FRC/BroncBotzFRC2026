@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -21,6 +23,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.Setpoints.Turret.Pivot;
 import frc.robot.commands.AlignToGoal;
+import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -119,10 +122,9 @@ public class RobotContainer {
 
 
  
-
-  private final AlignToGoal aim = new AlignToGoal(drivebase, turretFlywheel, driveAngularVelocity, FieldConstants.Hub.HubPose);
+  private final ShootOnTheMoveCommand SOTM = new ShootOnTheMoveCommand((Supplier<Pose2d>) drivebase.getPoseSuppler(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
   private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
-  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, aim, );
+  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, SOTM);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings

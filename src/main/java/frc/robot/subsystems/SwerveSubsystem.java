@@ -269,6 +269,11 @@ public class SwerveSubsystem extends SubsystemBase {
     return swerveDrive.getPose();
   }
 
+    public <Supplier>Pose2d getPoseSuppler() {
+    return swerveDrive.getPose();
+  }
+
+
   public Rotation2d getRotation() {
     return swerveDrive.getYaw();
   }

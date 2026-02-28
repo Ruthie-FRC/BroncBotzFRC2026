@@ -39,7 +39,7 @@ public class ScoringSystem {
       IntakeArmSubsystem intakeArm,
       IntakeRollerSubsystem intakeRoller,
       SwerveSubsystem swerve,
-      TurretSubsystem turret, HoodSubsystem hood, KickerSubsystem kicker, AlignToGoal aimer, ShootOnTheMoveCommand sotm) {
+      TurretSubsystem turret, HoodSubsystem hood, KickerSubsystem kicker, ShootOnTheMoveCommand sotm) {
     m_indexer = indexer;
     m_intakeArm = intakeArm;
     m_intakeRollers = intakeRoller;
@@ -47,13 +47,13 @@ public class ScoringSystem {
     m_turret = turret;
     m_hood = hood;
     m_kicker = kicker;
-    aim = aimer;
+  
     SOTM = sotm;
   }
   
 
   private Command aim(){
-    return aim;
+    return null;
   }
   
 
