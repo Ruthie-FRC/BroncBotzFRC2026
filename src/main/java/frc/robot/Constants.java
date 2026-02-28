@@ -43,16 +43,17 @@ public final class Constants {
 
     public static final int intakeRollerID = 20;
     public static final int turretID = 30;
+    public static final int turretFlywheelID = 36;
+    public static final int turretFlywheelFollowerID = 37;
+    
     public static final int hoodID = 31;
     public static final int agitatorID = 32;
     //public static final int indexerID = 33;
     public static final int indexerflywheelID = 34;
     public static final int kickerflywheelID = 35;
-    public static final int turretFlywheelID = 36;
-    public static final int turretFlywheelFollowerID = 37;
+    
 
     public static final int intakeArmID = 40;
-
     public static final int intakeArmFollowerID = 41;
   }
 
