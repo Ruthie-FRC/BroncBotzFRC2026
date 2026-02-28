@@ -162,8 +162,10 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
-      public static Angle softLimitMin = Degrees.of(-105);
-      public static Angle softLimitMax = Degrees.of(105);
+      // public static Angle softLimitMin = Degrees.of(-105);
+      // public static Angle softLimitMax = Degrees.of(105);//change it back!
+      public static Angle softLimitMin = Degrees.of(-70);//for testing
+      public static Angle softLimitMax = Degrees.of(70);
       public static double EncoderAOffset = (0);
     }
     public static class IndexerConstants {
