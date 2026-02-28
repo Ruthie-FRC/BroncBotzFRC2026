@@ -55,8 +55,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(GroundConstants.kP, GroundConstants.kI, GroundConstants.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  .withSimClosedLoopController(GroundConstants.ksimP, GroundConstants.ksimI, GroundConstants.ksimD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withClosedLoopController(GroundConstants.kP, GroundConstants.kI, GroundConstants.kD)
+  .withSimClosedLoopController(GroundConstants.ksimP, GroundConstants.ksimI, GroundConstants.ksimD)
   // Feedforward Constants
   .withFeedforward(new ArmFeedforward(GroundConstants.kS, GroundConstants.kG, GroundConstants.kV))
   .withSimFeedforward(new ArmFeedforward(GroundConstants.ksimS, GroundConstants.ksimG, GroundConstants.ksimV))
@@ -91,7 +91,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
   // Hard limit is applied to the simulation.
   .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
-  .withHorizontalZero(Degrees.of(15))
+  .withStartingPosition(Degrees.of(0))
+  // .withHorizontalZero(Degrees.of(15))
 
   // Length and mass of your arm for sim.
   .withLength(GroundConstants.length)

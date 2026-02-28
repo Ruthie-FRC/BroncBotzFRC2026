@@ -45,7 +45,7 @@ public final class Constants {
     public static final int turretID = 30;
     public static final int hoodID = 31;
     public static final int agitatorID = 32;
-    public static final int indexerID = 33;
+    //public static final int indexerID = 33;
     public static final int indexerflywheelID = 34;
     public static final int kickerflywheelID = 35;
     public static final int turretFlywheelID = 36;
@@ -93,7 +93,7 @@ public final class Constants {
   public static final double kV = 0 ;
 
   public static final double ksimS = 0;
-  public static final double ksimG = 0.5;
+  public static final double ksimG = 0;
   public static final double ksimV = 0;
 
 

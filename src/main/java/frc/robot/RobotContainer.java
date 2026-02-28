@@ -122,9 +122,9 @@ public class RobotContainer {
 
 
  
-  private final ShootOnTheMoveCommand SOTM = new ShootOnTheMoveCommand((Supplier<Pose2d>) drivebase.getPoseSuppler(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
+  //private final ShootOnTheMoveCommand SOTM = new ShootOnTheMoveCommand((Supplier<Pose2d>) drivebase.getPoseSuppler(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
   private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
-  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, SOTM);
+  //private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, SOTM);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -150,7 +150,7 @@ public class RobotContainer {
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     turret.setDefaultCommand(turret.set(0));
     hood.setDefaultCommand(hood.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
+    //intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -210,6 +210,8 @@ public class RobotContainer {
        if(testingMode.equals("IntakeArm")){//not working
            m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
            m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+           //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
+           //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
            m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
            m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
           
