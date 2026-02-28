@@ -62,8 +62,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withSimFeedforward(new ArmFeedforward(GroundConstants.ksimS, GroundConstants.ksimG, GroundConstants.ksimV))
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
+  .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
   .withGearing(GroundConstants.gearing)
-  // Motor properties to prevent over currenting.
+  // Motor properties to prevent over currenting
   .withMotorInverted(false)
   .withIdleMode(MotorMode.BRAKE)
   .withStartingPosition(GroundConstants.startingPosition)
@@ -74,21 +75,23 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withExternalEncoder(m_motor.getAbsoluteEncoder())
   .withExternalEncoderInverted(false)
   .withUseExternalFeedbackEncoder(true)
-  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(3,4)))
-  .withExternalEncoderZeroOffset(Degrees.of(0))
-  .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH);
+  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1,1)))
+  .withExternalEncoderZeroOffset(Degrees.of(0));
   
   
-  //.withZeroOffset(Degrees.of(0));-same thing as ArmConfig.withHorizontalZero()
+  
+  //-same thing as ArmConfig.withHorizontalZero()
   
   // Create our SmartMotorController from our Spark and config with the NEO.
   private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
+  
  
   private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
   // Soft limit is applied to the SmartMotorControllers PID
   .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
   // Hard limit is applied to the simulation.
   .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
+  .withHorizontalZero(Degrees.of(15))
 
   // Length and mass of your arm for sim.
   .withLength(GroundConstants.length)
@@ -110,11 +113,15 @@ public class IntakeArmSubsystem extends SubsystemBase {
    * Set the angle of the arm.
    * @param angle Angle to go to.
    */
+  
   public Command setAngle(Angle angle) {
     return arm.setAngle(angle);
     //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
-    }
-
+  }
+  
+  public Command setAngle(Supplier<Angle> angleSupplier) {
+    return arm.setAngle(angleSupplier);
+  }
 
   public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
     return arm.set(dutyCycleSupplier);
