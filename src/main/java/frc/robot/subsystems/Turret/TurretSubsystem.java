@@ -56,6 +56,7 @@ public class TurretSubsystem extends SubsystemBase {
     private static final String RERUN_SEED = "Turret/CRT/RerunSeed";
 
     private SparkMax turretMotor = new SparkMax(CanIDConstants.turretID, MotorType.kBrushless);
+    
     private final AbsoluteEncoder cancoderB = turretMotor.getAbsoluteEncoder(); // 20t B SparkFlex
     private final DutyCycleEncoder cancoderA = new DutyCycleEncoder(0); // 19 A rio
     // Create a timer to delay CRT run until encoders are ready

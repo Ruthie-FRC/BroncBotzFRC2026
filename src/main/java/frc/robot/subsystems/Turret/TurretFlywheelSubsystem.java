@@ -12,6 +12,8 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -39,7 +41,8 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
 
   private final TalonFX flywheelMotor =
       new TalonFX(CanIDConstants.turretFlywheelID);
-
+  private final TalonFX flywheelFollowerMotor = 
+      new TalonFX(CanIDConstants.turretFlywheelFollowerID);
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
@@ -53,10 +56,11 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
           .withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+          .withFollowers(Pair.of(flywheelFollowerMotor, true))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
-      new TalonFXWrapper(flywheelMotor, DCMotor.getKrakenX60(1), motorConfig);
+      new TalonFXWrapper(flywheelMotor, DCMotor.getKrakenX60(2), motorConfig);
 
   private final FlyWheelConfig flywheelConfig =
       new FlyWheelConfig(motor)
