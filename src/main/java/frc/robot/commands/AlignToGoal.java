@@ -61,12 +61,12 @@ public class AlignToGoal extends Command
   private final SimpleMotorFeedforward feedforward             = new SimpleMotorFeedforward(0, 0, 0);
 
 
-  public AlignToGoal(SwerveSubsystem swerveSubsystem, TurretFlywheelSubsystem shooter, SwerveInputStream inputStream,
+  public AlignToGoal(SwerveSubsystem swerveSubsystem, TurretFlywheelSubsystem shooter, SwerveInputStream driveAngularVelocity,
                      Pose2d targetPose)
   {
     this.swerveSubsystem = swerveSubsystem;
     this.shooterSubsystem = shooter;
-    this.inputStream = inputStream;
+    this.inputStream = driveAngularVelocity;
     this.targetPose = targetPose;
     pidController.setTolerance(setpointTolerance.in(Radians));
     // each subsystem used by the command must be passed into the

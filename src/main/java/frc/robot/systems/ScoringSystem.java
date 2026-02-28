@@ -1,9 +1,15 @@
 package frc.robot.systems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Setpoints.Indexer;
+import frc.robot.commands.AlignToGoal;
+import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -24,14 +30,16 @@ public class ScoringSystem {
   private HoodSubsystem m_hood;
   private TurretFlywheelSubsystem m_flywheel;
   private KickerSubsystem m_kicker;
-  private ShooterTargetingSystem m_shooterAimer;
+  private ShooterTargetingSystem m_shooterAimer; 
+  private AlignToGoal aim;
+  private ShootOnTheMoveCommand SOTM;
 
   public ScoringSystem(
       IndexerSubsystem indexer,
       IntakeArmSubsystem intakeArm,
       IntakeRollerSubsystem intakeRoller,
       SwerveSubsystem swerve,
-      TurretSubsystem turret, HoodSubsystem hood, KickerSubsystem kicker) {
+      TurretSubsystem turret, HoodSubsystem hood, KickerSubsystem kicker, AlignToGoal aimer, ShootOnTheMoveCommand sotm) {
     m_indexer = indexer;
     m_intakeArm = intakeArm;
     m_intakeRollers = intakeRoller;
@@ -39,22 +47,24 @@ public class ScoringSystem {
     m_turret = turret;
     m_hood = hood;
     m_kicker = kicker;
+    aim = aimer;
+    SOTM = sotm;
   }
   
 
   private Command aim(){
-    return null;
+    return aim;
   }
   
 
   private Command score() {
     // this one included turret tracking
-    Shot shot = ShooterTargetingSystem.getShotData(m_swerve.getPose(), m_swerve.getFieldVelocity(), 0); 
-    return Commands.parallel(m_turret.setAngle(shot.getAngle()), m_hood.setAngle(shot.getAngle()), m_flywheel.setVelocity(shot.getVelocity()), m_indexer.indexShoot(), m_kicker.kickerShoot());
+    return SOTM;
   }
 
   private Command shootBall() {
+
     // just transfer and shoot
-    return null;
+    return m_turret.setAngle(Degrees.zero()).alongWith(m_flywheel.setVelocity(MetersPerSecond.of(8.44)), m_kicker.kickerShoot(), m_indexer.indexShoot());
   }
 }

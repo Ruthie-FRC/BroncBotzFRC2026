@@ -5,8 +5,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.Setpoints.Turret.Pivot;
+import frc.robot.commands.AlignToGoal;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -31,6 +34,7 @@ import frc.robot.subsystems.Turret.TurretSubsystem;
 import frc.robot.subsystems.Turret.TurretVisualizer;
 import frc.robot.systems.LoadingSystem;
 import frc.robot.systems.ScoringSystem;
+import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
 import yams.units.YUnits;
@@ -55,8 +59,7 @@ public class RobotContainer {
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem kicker = new KickerSubsystem();
 
-  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
-  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker);
+
 
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -114,6 +117,12 @@ public class RobotContainer {
 
   Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
+
+ 
+
+  private final AlignToGoal aim = new AlignToGoal(drivebase, turretFlywheel, driveAngularVelocity, FieldConstants.Hub.HubPose);
+  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
+  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, aim, );
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings

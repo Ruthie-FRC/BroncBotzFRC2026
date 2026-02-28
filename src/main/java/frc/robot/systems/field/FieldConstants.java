@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -92,6 +93,11 @@ public class FieldConstants {
     public static final double innerHeight = Units.inchesToMeters(56.5);
 
     // Relevant reference points on alliance side
+    public static final Pose2d HubPose = new Pose2d(new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
+            fieldWidth / 2.0), new Rotation2d());
+
+            
+
     public static final Translation3d topCenterPoint =
         new Translation3d(
             AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
