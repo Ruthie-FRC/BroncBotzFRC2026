@@ -122,7 +122,8 @@ public class RobotContainer {
 
 
  
-  private final ShootOnTheMoveCommand SOTM = new ShootOnTheMoveCommand(drivebase.getPoseSupplier(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
+  private final ShootOnTheMoveCommand SOTM =
+         new ShootOnTheMoveCommand(drivebase.getPoseSupplier(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
   private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
   private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, SOTM);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

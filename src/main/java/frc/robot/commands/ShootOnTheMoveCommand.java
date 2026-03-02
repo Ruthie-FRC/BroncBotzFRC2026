@@ -5,12 +5,15 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.HoodConstants;
+import frc.robot.Constants.TurretConstants.PivotConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Turret.HoodSubsystem;
 import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
@@ -48,7 +51,7 @@ public class ShootOnTheMoveCommand extends Command
   public ShootOnTheMoveCommand(Supplier<Pose2d> currentPose, Supplier<ChassisSpeeds> fieldOrientedChassisSpeeds,
                                Pose2d goal, TurretSubsystem turret, HoodSubsystem hood, TurretFlywheelSubsystem shooter)
   {
-    m_shooter = shooter;
+    m_shooter = shooter; //flywheel
     m_turret = turret;
     m_hood = hood;
 
@@ -60,6 +63,7 @@ public class ShootOnTheMoveCommand extends Command
     this.goalPose = goal;
 
     // Test Results
+    //MAKE MORE POINTS FOR DISTANCE, FLYWHEEL SPEED, HOOD ANGLE
     for (var entry : List.of(Pair.of(Meters.of(1), RPM.of((1000))),
                              Pair.of(Meters.of(2), RPM.of(2000)),
                              Pair.of(Meters.of(3), RPM.of(3000)))
@@ -113,10 +117,14 @@ public class ShootOnTheMoveCommand extends Command
     // Clamp to avoid domain errors if we need more speed than possible
     double ratio    = Math.min(newHorizontalSpeed / totalExitVelocity, 1.0);
     double newPitch = Math.acos(ratio);
+    double clampedPitch = MathUtil.clamp(newPitch, HoodConstants.softLimitMin.in(Degrees), HoodConstants.softLimitMax.in(Degrees));
+    double clampedTurretAngle = MathUtil.clamp(turretAngle, PivotConstants.softLimitMin.in(Degrees), PivotConstants.softLimitMax.in(Degrees));
+    //Drive team can move robot 
+
 
     // 7. SET OUTPUTS
-    m_turret.setAngle(Degrees.of(turretAngle)); // Could also just set the swerveDrive to point towards this angle like AlignToGoal
-    m_hood.setAngle(Degrees.of(Math.toDegrees(newPitch)));
+    m_turret.setAngle(Degrees.of(clampedTurretAngle)); // Could also just set the swerveDrive to point towards this angle like AlignToGoal
+    m_hood.setAngle(Degrees.of(Math.toDegrees(clampedPitch)));
     m_shooter.setRPM(MetersPerSecond.of(totalExitVelocity));
 
   }
