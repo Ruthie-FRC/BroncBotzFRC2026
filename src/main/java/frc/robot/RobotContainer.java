@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,7 +23,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.Setpoints.Turret.Pivot;
 import frc.robot.commands.AlignToGoal;
-import frc.robot.commands.ShootOnTheMoveCommand;
+//import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -41,6 +40,7 @@ import frc.robot.systems.ScoringSystem;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
+import yams.mechanisms.swerve.SwerveDrive;
 import yams.units.YUnits;
 
 
@@ -52,16 +52,16 @@ public class RobotContainer {
   // private final TurretVisualizer turretVisualizer =
   //     new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
 
-  private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
-  private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
+  // private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
+  // private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
 
-  private final TurretSubsystem turret = new TurretSubsystem();
-  private final HoodSubsystem hood = new HoodSubsystem();
-  private final TurretFlywheelSubsystem turretFlywheel = new TurretFlywheelSubsystem();
+  // private final TurretSubsystem turret = new TurretSubsystem();
+  // private final HoodSubsystem hood = new HoodSubsystem();
+  // private final TurretFlywheelSubsystem turretFlywheel = new TurretFlywheelSubsystem();
 
-  private final IndexerSubsystem indexer = new IndexerSubsystem();
-  private final AgitatorSubsystem agitator = new AgitatorSubsystem();
-  private final KickerSubsystem kicker = new KickerSubsystem();
+  // private final IndexerSubsystem indexer = new IndexerSubsystem();
+  // private final AgitatorSubsystem agitator = new AgitatorSubsystem();
+  // private final KickerSubsystem kicker = new KickerSubsystem();
 
 
 
@@ -121,12 +121,12 @@ public class RobotContainer {
 
   Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
-
+// public ShootOnTheMoveCommand(TurretSubsystem turret, TurretFlywheelSubsystem shooter, HoodSubsystem hood,  SwerveDrive swerveDrive)
  
-  private final ShootOnTheMoveCommand SOTM =
-         new ShootOnTheMoveCommand(drivebase.getPoseSupplier(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
-  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
-  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, turretFlywheel, hood, kicker, SOTM);
+  // private final ShootOnTheMoveCommand SOTM =
+  //        new ShootOnTheMoveCommand(turret, turretFlywheel, hood, drivebase.getSwerveDrive());
+ // private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
+  //private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, hood, kicker, SOTM);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -147,12 +147,12 @@ public class RobotContainer {
     // } else {
     // }
 
-    agitator.setDefaultCommand(agitator.setDutyCycle(0));
-    indexer.setDefaultCommand(indexer.setDutyCycle(0));
-    turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
-    turret.setDefaultCommand(turret.set(0));
-    hood.setDefaultCommand(hood.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
+    // agitator.setDefaultCommand(agitator.setDutyCycle(0));
+    // indexer.setDefaultCommand(indexer.setDutyCycle(0));
+    // turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+    // turret.setDefaultCommand(turret.set(0));
+    // hood.setDefaultCommand(hood.setDutyCycle(0));
+    //intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -170,12 +170,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.button(1).whileTrue(loading.intakeBalls());
-    m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
-    m_driverController.button(3).whileTrue(loading.transferBalls());
-    m_driverController.button(4).whileTrue(loading.intakeDown());
-    m_driverController.button(5).whileTrue(scoring.score());
-    m_driverController.button(6).whileTrue(scoring.shootBall());
+    // m_driverController.button(1).whileTrue(loading.intakeBalls());
+    // m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
+    // m_driverController.button(3).whileTrue(loading.transferBalls());
+    // m_driverController.button(4).whileTrue(loading.intakeDown());
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
@@ -212,12 +210,12 @@ public class RobotContainer {
     //   }
 
        if(testingMode.equals("IntakeArm")){//not working
-           m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-           m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
-           //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
-           //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
-           m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
-           m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
+          //  m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+          //  m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+          //  //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
+          //  //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
+          //  m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
+          //  m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
           
    }
 

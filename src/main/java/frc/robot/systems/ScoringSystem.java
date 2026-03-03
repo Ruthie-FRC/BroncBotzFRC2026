@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Setpoints.Indexer;
 import frc.robot.Setpoints.Turret.Flywheel;
 import frc.robot.commands.AlignToGoal;
-import frc.robot.commands.ShootOnTheMoveCommand;
+//import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -34,14 +34,14 @@ public class ScoringSystem {
   private KickerSubsystem m_kicker;
   private ShooterTargetingSystem m_shooterAimer; 
   private AlignToGoal aim;
-  private ShootOnTheMoveCommand SOTM;
+  //private ShootOnTheMoveCommand SOTM;
 
   public ScoringSystem(
       IndexerSubsystem indexer,
       IntakeArmSubsystem intakeArm,
       IntakeRollerSubsystem intakeRoller,
       SwerveSubsystem swerve,
-      TurretSubsystem turret, TurretFlywheelSubsystem turretFlywheel, HoodSubsystem hood, KickerSubsystem kicker, ShootOnTheMoveCommand sotm) {
+      TurretSubsystem turret, TurretFlywheelSubsystem turretFlywheel, HoodSubsystem hood, KickerSubsystem kicker) {
     m_indexer = indexer;
     m_intakeArm = intakeArm;
     m_intakeRollers = intakeRoller;
@@ -50,7 +50,7 @@ public class ScoringSystem {
     m_hood = hood;
     m_kicker = kicker;
     m_flywheel = turretFlywheel;
-    SOTM = sotm;
+    //SOTM = sotm;
   }
   
 
@@ -59,10 +59,10 @@ public class ScoringSystem {
   }
   
 
-  public Command score() {
-    // this one included turret tracking
-    return SOTM;
-  }
+  // public Command score() {
+  //   // this one included turret tracking
+  //   return SOTM;
+  // }
 
   public Command shootBall() {
 
