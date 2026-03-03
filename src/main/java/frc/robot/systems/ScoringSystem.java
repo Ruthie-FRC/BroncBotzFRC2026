@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Setpoints.Indexer;
+import frc.robot.Setpoints.Turret.Flywheel;
 import frc.robot.commands.AlignToGoal;
 import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.Turret.KickerSubsystem;
 import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
 import frc.robot.subsystems.Turret.TurretSubsystem;
 import frc.robot.systems.ShooterTargetingSystem.Shot;
+import yams.mechanisms.velocity.FlyWheel;
 
 public class ScoringSystem {
 
@@ -39,7 +41,7 @@ public class ScoringSystem {
       IntakeArmSubsystem intakeArm,
       IntakeRollerSubsystem intakeRoller,
       SwerveSubsystem swerve,
-      TurretSubsystem turret, HoodSubsystem hood, KickerSubsystem kicker, ShootOnTheMoveCommand sotm) {
+      TurretSubsystem turret, TurretFlywheelSubsystem turretFlywheel, HoodSubsystem hood, KickerSubsystem kicker, ShootOnTheMoveCommand sotm) {
     m_indexer = indexer;
     m_intakeArm = intakeArm;
     m_intakeRollers = intakeRoller;
@@ -47,22 +49,22 @@ public class ScoringSystem {
     m_turret = turret;
     m_hood = hood;
     m_kicker = kicker;
-  
+    m_flywheel = turretFlywheel;
     SOTM = sotm;
   }
   
 
-  private Command aim(){
+  public Command aim(){
     return null;
   }
   
 
-  private Command score() {
+  public Command score() {
     // this one included turret tracking
     return SOTM;
   }
 
-  private Command shootBall() {
+  public Command shootBall() {
 
     // just transfer and shoot
     return m_turret.setAngle(Degrees.zero()).alongWith(m_flywheel.setVelocity(MetersPerSecond.of(8.44)), m_kicker.kickerShoot(), m_indexer.indexShoot());

@@ -270,7 +270,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Supplier<Pose2d> getPoseSupplier() {
-    return ()->swerveDrive.getPose();
+    return ()-> swerveDrive.getPose();
   }
 
 
