@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meter;
@@ -36,6 +37,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -139,7 +141,19 @@ public class SwerveSubsystem extends SubsystemBase {
         })
         .finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
   }
-
+  public Command turnRight() {
+    return run(() -> {
+          swerveDrive.drive(new Translation2d(0, 0), getHeadingDegrees() + 90.0, false, false);
+        })
+        .finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
+  }
+  public Command turnLeft() {
+    return run(() -> {
+          swerveDrive.drive(new Translation2d(0, 0), getHeadingDegrees() - 90.0, false, false);
+        })
+        .finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
+  }
+  
   /**
    * Example command factory method.
    *
@@ -166,6 +180,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private int outofAreaReading = 0;
   private boolean initialReading = false;
+
 
   @Override
   public void periodic() {
@@ -258,6 +273,16 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public  Rotation2d getHeading() {
     return getPose().getRotation();
+  }
+    /**
+   * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the
+   * underlying drivebase. Note, this is not the raw gyro reading, this may be corrected from calls
+   * to resetOdometry().
+   *
+   * @return The yaw angle
+   */
+  public double getHeadingDegrees() {
+    return getPose().getRotation().getDegrees();
   }
   
   /**
@@ -631,4 +656,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public void zeroGyro() {
     swerveDrive.zeroGyro();
   }
+
+
 }
