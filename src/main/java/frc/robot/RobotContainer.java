@@ -69,6 +69,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_operatorController = 
+        new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
 
       /**
@@ -176,6 +178,9 @@ public class RobotContainer {
     m_driverController.button(4).whileTrue(loading.intakeDown());
     m_driverController.button(5).whileTrue(scoring.score());
     m_driverController.button(6).whileTrue(scoring.shootBall());
+    
+    
+
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
