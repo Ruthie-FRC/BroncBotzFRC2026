@@ -26,6 +26,7 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
+import edu.wpi.first.cscore.CameraServerJNI.TelemetryKind;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -64,6 +65,8 @@ import limelight.networktables.PoseEstimate;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -80,7 +83,7 @@ public class SwerveSubsystem extends SubsystemBase {
  Field2d m_field2d = new Field2d();
 
   public SwerveSubsystem() {
-
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     Pose3d initialPose = new Pose3d();
     
     // error catching
@@ -185,7 +188,6 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
     swerveDrive.updateOdometry();
     
     limelight

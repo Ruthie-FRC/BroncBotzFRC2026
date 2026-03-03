@@ -75,7 +75,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   .withExternalEncoder(m_motor.getAbsoluteEncoder())
   .withExternalEncoderInverted(false)
   .withUseExternalFeedbackEncoder(true)
-  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1,1)))
+  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(36,1)))
   .withExternalEncoderZeroOffset(Degrees.of(0));
   
   
