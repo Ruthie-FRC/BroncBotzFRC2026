@@ -649,7 +649,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Gets the current velocity (x, y and omega) of the robot
    *
-   * @return A {@link ChassisSpeeds} object of the current velocity
+   * @return A {@link ChassisSpeeds} object of the current robot-relative velocity
    */
   public ChassisSpeeds getRobotVelocity() {
     return swerveDrive.getRobotVelocity();

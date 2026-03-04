@@ -121,4 +121,8 @@ public class HoodSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     hood.simIterate();
   }
+
+  public void setAngleSetpoint(Angle measure){
+       hood.setMechanismPositionSetpoint(measure);
+  }
 }

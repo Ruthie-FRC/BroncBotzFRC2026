@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -113,5 +114,14 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
 
   public Command sysId() {
     return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+  }
+
+  public void setVelocitySetpoint(AngularVelocity speed){
+    flywheel.setMechanismVelocitySetpoint(speed);
+  }
+
+  public void setDutyCycleSetpoint(double dutyCycle)
+  {
+    flywheel.setDutyCycleSetpoint(dutyCycle);
   }
 }

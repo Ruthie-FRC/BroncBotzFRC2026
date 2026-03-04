@@ -13,7 +13,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -127,6 +130,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   private final Pivot turret = new Pivot(m_config);
 
+  // Robot to turret transform, from center of robot to turret.
+  private final Transform3d roboToTurret = new Transform3d(Feet.of(-1.5), Feet.of(0), Feet.of(0.5), Rotation3d.kZero);
 
   public TurretSubsystem() {
       absPositionASignal = (getAbsoluteEncoderWithOffset());
@@ -137,6 +142,30 @@ public class TurretSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean(RERUN_SEED, false);
 
       setupLimelight();
+  }
+  public Pose2d getPose(Pose2d robotPose)
+  {
+    return robotPose.plus(new Transform2d(
+        roboToTurret.getTranslation().toTranslation2d(), roboToTurret.getRotation().toRotation2d()));
+  }
+
+  public ChassisSpeeds getVelocity(ChassisSpeeds robotVelocity, Angle robotAngle)
+  {
+    var robotAngleRads = robotAngle.in(Radians);
+    double turretVelocityX =
+        robotVelocity.vxMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+          * (roboToTurret.getY() * Math.cos(robotAngleRads)
+             - roboToTurret.getX() * Math.sin(robotAngleRads));
+    double turretVelocityY =
+        robotVelocity.vyMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+          * (roboToTurret.getX() * Math.cos(robotAngleRads)
+             - roboToTurret.getY() * Math.sin(robotAngleRads));
+
+    return new ChassisSpeeds(turretVelocityX,
+                             turretVelocityY,
+                             robotVelocity.omegaRadiansPerSecond + motor.getMechanismVelocity().in(RadiansPerSecond));
   }
 
   public void setupLimelight() {
@@ -403,4 +432,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     private static record AbsSensorRead(boolean ok, double absA, double absB, String status) {}
+
+    public void setAngleSetpoint(Angle measure){
+        turret.setMechanismPositionSetpoint(measure);
+    }
 }
