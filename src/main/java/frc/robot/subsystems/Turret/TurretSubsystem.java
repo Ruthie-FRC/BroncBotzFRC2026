@@ -149,9 +149,11 @@ public class TurretSubsystem extends SubsystemBase {
         roboToTurret.getTranslation().toTranslation2d(), roboToTurret.getRotation().toRotation2d()));
   }
 
-  public ChassisSpeeds getVelocity(ChassisSpeeds robotVelocity, Angle robotAngle)
+  public ChassisSpeeds getVelocity(ChassisSpeeds robotVelocity, Angle robotAngle)//the robot heading angle is in regards to the x axis(+x is up, +y is left)
   {
     var robotAngleRads = robotAngle.in(Radians);
+    // rotational linear velocity at turret (v = ω × r)
+    // vTurretX = vRobotX + ω × r
     double turretVelocityX =
         robotVelocity.vxMetersPerSecond
         + robotVelocity.omegaRadiansPerSecond
@@ -162,10 +164,13 @@ public class TurretSubsystem extends SubsystemBase {
         + robotVelocity.omegaRadiansPerSecond
           * (roboToTurret.getX() * Math.cos(robotAngleRads)
              - roboToTurret.getY() * Math.sin(robotAngleRads));
+    double turretOmega = 
+        robotVelocity.omegaRadiansPerSecond 
+        + motor.getMechanismVelocity().in(RadiansPerSecond);
 
     return new ChassisSpeeds(turretVelocityX,
                              turretVelocityY,
-                             robotVelocity.omegaRadiansPerSecond + motor.getMechanismVelocity().in(RadiansPerSecond));
+                             turretOmega);
   }
 
   public void setupLimelight() {
