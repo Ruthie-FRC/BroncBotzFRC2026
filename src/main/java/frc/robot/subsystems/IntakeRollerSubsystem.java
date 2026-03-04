@@ -1,98 +1,114 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.sim.SparkMaxSim;
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.Agitator;
 import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.IntakeRollerConstants;
-import java.util.function.BooleanSupplier;
+
+import java.util.function.Supplier;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.velocity.FlyWheel;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
+import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakeRollerSubsystem extends SubsystemBase {
 
-  private final SparkMax m_rollerMotor =
-      new SparkMax(CanIDConstants.intakeRollerID, MotorType.kBrushless);
+  private final SparkMax agitator = new SparkMax(CanIDConstants.intakeRollerID, MotorType.kBrushless);
 
-  private final DCMotor m_rollerMotorGearbox = DCMotor.getNEO(1);
+  private final SmartMotorControllerConfig motorConfig =
+      new SmartMotorControllerConfig(this)
+          .withClosedLoopController(
+              Constants.Agitator.kP,
+              Constants.Agitator.kI,
+              Constants.Agitator.kD,
+              RPM.of(5000),
+              RotationsPerSecondPerSecond.of(2500))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+          .withIdleMode(MotorMode.COAST)
+          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withStatorCurrentLimit(Amps.of(40))
+          .withMotorInverted(false)
+          .withClosedLoopRampRate(Seconds.of(0.25))
+          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(
+              new SimpleMotorFeedforward(
+                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
+          .withSimFeedforward(
+              new SimpleMotorFeedforward(
+                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
+          .withControlMode(ControlMode.CLOSED_LOOP);
 
-  private final FlywheelSim m_rollerSim =
-      new FlywheelSim(
-          LinearSystemId.createFlywheelSystem(
-              m_rollerMotorGearbox,
-              IntakeRollerConstants.kWristMomentOfInertia,
-              IntakeRollerConstants.kWristGearRatio),
-          m_rollerMotorGearbox,
-          1.0 / 4096.0);
+  private final SmartMotorController motor =
+      new SparkWrapper(agitator, DCMotor.getNEO(1), motorConfig);
 
-  private final SparkMaxSim m_rollerMotorSim = new SparkMaxSim(m_rollerMotor, m_rollerMotorGearbox);
+  private final FlyWheelConfig flywheelConfig =
+      new FlyWheelConfig(motor)
+          .withDiameter(Inches.of(4))
+          .withMass(Pounds.of(1))
+          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
+          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          .withSpeedometerSimulation(RPM.of(7500));
 
-  public IntakeRollerSubsystem() {
-    SparkMaxConfig config = new SparkMaxConfig();
-    config.inverted(true).smartCurrentLimit(40);
-    config.idleMode(IdleMode.kBrake);
-    m_rollerMotor.configure(
-        config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    // TODO: Set the default command, if any, for this subsystem by calling
-    // setDefaultCommand(command) done
-    //       in the constructor or in the robot coordination class, such as RobotContainer.
-    //       Also, you can call addChild(name, sendableChild) to associate sendables with the
-    // subsystem
-    //       such as SpeedControllers, Encoders, DigitalInputs, etc.
+  private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
+
+  public IntakeRollerSubsystem() {}
+
+  public AngularVelocity getVelocity() {
+    return flywheel.getSpeed();
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // In this method, we update our simulation of what our arm is doing
-    // First, we set our "inputs" (voltages)
-    m_rollerSim.setInput(m_rollerMotorSim.getAppliedOutput() * RoboRioSim.getVInVoltage());
-
-    // Next, we update it. The standard loop time is 20ms.
-    m_rollerSim.update(0.02);
-
-    // Finally, we set our simulated encoder's readings and simulated battery voltage
-    // m_encoderSim.setDistance(m_coralArmSim.getAngleRads());
-
-    m_rollerMotorSim.iterate(
-        m_rollerSim.getAngularVelocityRPM(),
-        RoboRioSim.getVInVoltage(),
-        // Simulated battery voltage, in Volts
-        0.02);
+  public Command setVelocity(AngularVelocity speed) {
+    return flywheel.setSpeed(speed);
   }
 
-  public Command setIntakeRoller(double speed) {
-    return run(
-        () -> {
-          m_rollerMotor.set(speed);
-        });
+  public Command setDutyCycle(double dutyCycle) {
+    return flywheel.set(dutyCycle);
   }
 
-  public Command out() {
-    return setIntakeRoller(IntakeRollerConstants.IntakeRollerOuttakeSpeeds);
+  public Command setVelocity(Supplier<AngularVelocity> speed) {
+    return flywheel.setSpeed(speed);
+  }
+
+  public Command setDutyCycle(Supplier<Double> dutyCycle) {
+    return flywheel.set(dutyCycle);
+  }
+
+  public Command sysId() {
+    return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+  }
+
+    public Command out() {
+    return setDutyCycle(-Agitator.AgitatorRollerIntakeSpeeds);
   }
 
   public Command in() {
-    return setIntakeRoller(IntakeRollerConstants.IntakeRollerIntakeSpeeds);
+    return setDutyCycle(Agitator.AgitatorRollerIntakeSpeeds);
   }
 
   public Command stop() {
-  return setIntakeRoller(0);
-}
-
-  public Command hold(BooleanSupplier fuel) {
-    return run(
-        () ->
-            m_rollerMotor.set(
-                fuel.getAsBoolean() ? IntakeRollerConstants.IntakeRollerHoldSpeed : 0));
+    return setDutyCycle(0);
   }
-
 
 }

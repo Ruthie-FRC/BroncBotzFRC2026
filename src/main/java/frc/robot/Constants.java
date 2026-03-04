@@ -180,8 +180,8 @@ public final class Constants {
     }
     
     public static class KickerConstants{
-      public static double kickerVoltage = 4;
-      public static double kickerVoltageReverse = -4;
+      public static double kickerVoltage = 5;
+      public static double kickerVoltageReverse = -5;
     }
   }
 

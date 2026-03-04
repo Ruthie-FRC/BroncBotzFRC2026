@@ -149,13 +149,14 @@ public class RobotContainer {
     // } else {
     // }
 
-    // agitator.setDefaultCommand(agitator.setDutyCycle(0));
-    // indexer.setDefaultCommand(indexer.setDutyCycle(0));
-    // turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
-    // turret.setDefaultCommand(turret.set(0));
+    agitator.setDefaultCommand(agitator.setDutyCycle(0));
+    indexer.setDefaultCommand(indexer.setDutyCycle(0));
+    turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+    kicker.setDefaultCommand(kicker.setKickerVolts(0));
+    //turret.setDefaultCommand(turret.set(0));
     // hood.setDefaultCommand(hood.setDutyCycle(0));
-    //intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
-    
+    // intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
+    intakeRoller.setDefaultCommand(intakeRoller.setDutyCycle(0));
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
 
@@ -181,11 +182,19 @@ public class RobotContainer {
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
     //m_driverController.button(8).whileTrue(intakeArm.setAngle(Degrees.of(55)));
 
-    m_driverController.rightBumper().whileTrue(agitator.in().alongWith(indexer.indexShoot(), intakeRoller.in()));
-    m_driverController.leftBumper().whileTrue(turretFlywheel.setVelocity(MetersPerSecond.of(8.44)).alongWith(kicker.kickerShoot(), indexer.indexShoot()));
+    m_driverController.rightBumper().whileTrue(intakeRoller.in().alongWith(agitator.in()));
+    m_driverController.leftBumper().whileTrue(kicker.setDutyCycle(-0.7).alongWith(indexer.indexShoot()));
+    m_driverController.leftTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
+    m_driverController.y().whileTrue(intakeRoller.out());
     m_driverController.x().whileTrue(agitator.in());
+    m_driverController.b().whileTrue(kicker.setDutyCycle(-0.7));
     m_driverController.a().whileTrue(indexer.indexShoot());
-    m_driverController.y().whileTrue(intakeRoller.in());
+    m_driverController.rightTrigger().whileTrue(intakeRoller.in().alongWith(agitator.out(),indexer.indexUnshoot()));
+
+
+    // m_driverController.x().whileFalse(agitator.set);\
+    // m_driverController.a().whileFalse(indexer.indexShoot());
+    // m_driverController.y().whileFalse(intakeRoller.in());
 
     if (Robot.isSimulation()){
      // configureFuelSim();

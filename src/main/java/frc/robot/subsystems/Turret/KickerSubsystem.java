@@ -38,7 +38,7 @@ public class KickerSubsystem extends SubsystemBase{
           .withGearing(IndexerConstants.gearingKicker)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(50))
+          .withStatorCurrentLimit(Amps.of(60))
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
@@ -74,5 +74,9 @@ public class KickerSubsystem extends SubsystemBase{
 
     public Command kickerStop(){
       return setKickerVolts(0);
+    }
+
+    public Command setDutyCycle(double speed) {
+      return kickerFlyWheel.set(speed);
     }
 }
