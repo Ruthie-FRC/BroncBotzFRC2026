@@ -61,6 +61,10 @@ public class LoadingSystem {
     return m_agitator.in().alongWith(m_indexer.indexShoot(), m_kicker.kickerShoot());
   }
 
+    public Command loadIn() {// transfer balls to the shooter(indexer, kicker)
+    return m_agitator.in().alongWith(m_indexer.indexShoot(), m_intakeRollers.in());
+  }
+
   public Command intakeHumanPlayer() {
     // when we intake from human player
     return null;

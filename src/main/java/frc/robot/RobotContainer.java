@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.function.Supplier;
 
@@ -57,11 +58,12 @@ public class RobotContainer {
 
   // private final TurretSubsystem turret = new TurretSubsystem();
   // private final HoodSubsystem hood = new HoodSubsystem();
-  // private final TurretFlywheelSubsystem turretFlywheel = new TurretFlywheelSubsystem();
+  private final TurretFlywheelSubsystem turretFlywheel = new TurretFlywheelSubsystem();
 
-  // private final IndexerSubsystem indexer = new IndexerSubsystem();
-  // private final AgitatorSubsystem agitator = new AgitatorSubsystem();
-  // private final KickerSubsystem kicker = new KickerSubsystem();
+  private final IndexerSubsystem indexer = new IndexerSubsystem();
+  private final AgitatorSubsystem agitator = new AgitatorSubsystem();
+  private final KickerSubsystem kicker = new KickerSubsystem();
+  private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
 
 
 
@@ -178,7 +180,12 @@ public class RobotContainer {
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
     //m_driverController.button(8).whileTrue(intakeArm.setAngle(Degrees.of(55)));
-    
+
+    m_driverController.rightBumper().whileTrue(agitator.in().alongWith(indexer.indexShoot(), intakeRoller.in()));
+    m_driverController.leftBumper().whileTrue(turretFlywheel.setVelocity(MetersPerSecond.of(8.44)).alongWith(kicker.kickerShoot(), indexer.indexShoot()));
+    m_driverController.x().whileTrue(agitator.in());
+    m_driverController.a().whileTrue(indexer.indexShoot());
+    m_driverController.y().whileTrue(intakeRoller.in());
 
     if (Robot.isSimulation()){
      // configureFuelSim();
