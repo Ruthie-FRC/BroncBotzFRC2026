@@ -172,6 +172,19 @@ public class TurretSubsystem extends SubsystemBase {
                              turretVelocityY,
                              turretOmega);
   }
+  //robot frame, field frame
+  //cnp
+  /*double turretVelocityX =
+        robotVelocity.vxMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+          * (roboToTurret.getX() * Math.cos(robotAngleRads)
+             - roboToTurret.getY() * Math.sin(robotAngleRads));
+    double turretVelocityY =
+        robotVelocity.vyMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+          * (roboToTurret.getX() * Math.sin(robotAngleRads)
+             - roboToTurret.getY() * Math.cos(robotAngleRads));
+    */
 
   public void setupLimelight() {
 
