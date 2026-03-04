@@ -100,7 +100,7 @@ public final class Constants {
   public static final double ksimV = 0;
 
 
-  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("36:1"));
+  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("7:1"));
 
   public static final Mass weight = Pounds.of(5.44);
   public static final Distance length = Inches.of(18.77);

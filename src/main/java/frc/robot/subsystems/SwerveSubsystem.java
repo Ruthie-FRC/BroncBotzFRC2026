@@ -100,6 +100,7 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    swerveDrive.setModuleStateOptimization(true);
 
     turretVisualizer =
     new TurretVisualizer(
