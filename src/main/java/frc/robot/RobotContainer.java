@@ -54,7 +54,7 @@ public class RobotContainer {
   //     new TurretVisualizer(() -> new Pose3d(drivebase.getPose()), drivebase::getFieldVelocity);
 
   // private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
-  // private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
+   private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
 
   // private final TurretSubsystem turret = new TurretSubsystem();
   // private final HoodSubsystem hood = new HoodSubsystem();
@@ -155,7 +155,7 @@ public class RobotContainer {
     kicker.setDefaultCommand(kicker.setKickerVolts(0));
     //turret.setDefaultCommand(turret.set(0));
     // hood.setDefaultCommand(hood.setDutyCycle(0));
-    // intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
+     intakeArm.setDefaultCommand(intakeArm.setDutyCycle(0));//if not intaking, the arm is at max
     intakeRoller.setDefaultCommand(intakeRoller.setDutyCycle(0));
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -181,7 +181,7 @@ public class RobotContainer {
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
     //m_driverController.button(8).whileTrue(intakeArm.setAngle(Degrees.of(55)));
-
+/* 
     m_driverController.rightBumper().whileTrue(intakeRoller.in().alongWith(agitator.in()));
     m_driverController.leftBumper().whileTrue(kicker.setDutyCycle(-0.7).alongWith(indexer.indexShoot()));
     m_driverController.leftTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
@@ -189,9 +189,12 @@ public class RobotContainer {
     m_driverController.x().whileTrue(agitator.in());
     m_driverController.b().whileTrue(kicker.setDutyCycle(-0.7));
     m_driverController.a().whileTrue(indexer.indexShoot());
-    m_driverController.rightTrigger().whileTrue(intakeRoller.in().alongWith(agitator.out(),indexer.indexUnshoot()));
-
-
+    */
+    //m_driverController.rightTrigger().whileTrue(intakeRoller.in().alongWith(agitator.out(),indexer.indexUnshoot()));
+    m_driverController.a().whileTrue(intakeArm.setAngle(Degrees.of(10)));
+    m_driverController.b().whileTrue(intakeArm.setAngle(Degrees.of(20)));
+    m_driverController.x().whileTrue(intakeArm.setAngle(Degrees.of(30)));
+    
     // m_driverController.x().whileFalse(agitator.set);\
     // m_driverController.a().whileFalse(indexer.indexShoot());
     // m_driverController.y().whileFalse(intakeRoller.in());
