@@ -181,9 +181,10 @@ public class RobotContainer {
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
     //m_driverController.button(8).whileTrue(intakeArm.setAngle(Degrees.of(55)));
-/* 
+
+    /* mechanism tested & worked-intakeroller,agitator; indexer, kicker; flywheel
     m_driverController.rightBumper().whileTrue(intakeRoller.in().alongWith(agitator.in()));
-    m_driverController.leftBumper().whileTrue(kicker.setDutyCycle(-0.7).alongWith(indexer.indexShoot()));
+    m_driverController.leftBumper().whileTrue(indexer.indexShoot().alongWith(kicker.setDutyCycle(-0.7)));
     m_driverController.leftTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
     m_driverController.y().whileTrue(intakeRoller.out());
     m_driverController.x().whileTrue(agitator.in());
