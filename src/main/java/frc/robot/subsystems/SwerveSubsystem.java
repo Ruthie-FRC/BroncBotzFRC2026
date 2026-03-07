@@ -147,7 +147,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
   public Command turnRight() {
     return run(() -> {
-          swerveDrive.drive(new Translation2d(0, 0), getHeadingDegrees() + 90.0, false, false);
+          swerveDrive.drive(new Translation2d(0, 0), getHeadingDegrees() + 90, false, false);
         })
         .finallyDo(() -> swerveDrive.drive(new Translation2d(0, 0), 0, false, false));
   }
@@ -479,7 +479,6 @@ public class SwerveSubsystem extends SubsystemBase {
     // Create the constraints to use while pathfinding
         */
   }
-
   /**
    * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
    *

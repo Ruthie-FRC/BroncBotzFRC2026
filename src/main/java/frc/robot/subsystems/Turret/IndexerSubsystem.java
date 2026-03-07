@@ -90,7 +90,7 @@ public class IndexerSubsystem extends SubsystemBase {
     return indexflywheel.setSpeed(speed);
   }
 
-  public Command setDutyCycle(int dutyCycle) {
+  public Command setDutyCycle(double dutyCycle) {
     return indexflywheel.set(dutyCycle);
   }
 
