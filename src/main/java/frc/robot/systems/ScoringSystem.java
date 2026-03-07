@@ -71,7 +71,7 @@ public class ScoringSystem {
   public Command shootBall() {
 
     // just transfer and shoot
-    return m_turret.setAngle(Degrees.zero()).alongWith(m_flywheel.setVelocity(MetersPerSecond.of(8.44)), m_kicker.kickerShoot(), m_indexer.indexShoot(), m_agitator.in());
+    return m_turret.setAngle(Degrees.zero()).alongWith(m_flywheel.setVelocity(MetersPerSecond.of(8.44)), m_kicker.kickerShoot(), m_indexer.indexShoot());
     
   }
 }

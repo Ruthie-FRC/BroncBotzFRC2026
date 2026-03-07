@@ -9,12 +9,6 @@
           "data": {
             "pathName": "Auto One Advanced Path 2"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "climb"
-          }
         }
       ]
     }

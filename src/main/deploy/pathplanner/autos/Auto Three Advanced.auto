@@ -19,12 +19,6 @@
                 "data": {
                   "waitTime": 4.0
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shootBall"
-                }
               }
             ]
           }
@@ -43,12 +37,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "Auto Three Advanced Path Follow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shootBall"
                 }
               }
             ]

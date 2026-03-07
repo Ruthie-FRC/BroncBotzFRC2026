@@ -41,6 +41,7 @@ import frc.robot.systems.ScoringSystem;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
+import yams.mechanisms.velocity.FlyWheel;
 import yams.units.YUnits;
 
 
@@ -154,7 +155,8 @@ public class RobotContainer {
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     turret.setDefaultCommand(turret.set(0));
     hood.setDefaultCommand(hood.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));//if not intaking, the arm is at max
+    intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));
+    //if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -179,11 +181,12 @@ public class RobotContainer {
     //m_driverController.button(5).whileTrue(scoring.score());
     m_driverController.button(6).whileTrue(scoring.shootBall());
     
-    m_operatorController.leftTrigger().onTrue(loading.intakeBalls());
-    m_operatorController.rightTrigger().onTrue(scoring.shootBall());
-    m_operatorController.leftBumper().onTrue(loading.outTakeBalls()); 
-
-    
+    // m_operatorController.leftTrigger().onTrue(loading.intakeBalls());//Uncomment Later
+    // m_operatorController.rightTrigger().onTrue(scoring.shootBall());//UnComment Later
+    m_driverController.rightTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
+    m_driverController.a().whileTrue(kicker.setDutyCycle(-1));
+    m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
+    m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
 
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
@@ -210,23 +213,23 @@ public class RobotContainer {
     //       m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
           
 
-    m_driverController.rightTrigger().whileTrue(
-    Commands.either(fullShoot, turretFlywheel.setDutyCycle(-0.4), () -> streamlinedShooting));
+    // m_driverController.rightTrigger().whileTrue(
+    // Commands.either(fullShoot, turretFlywheel.setDutyCycle(-0.4), () -> streamlinedShooting));
 
 
-    m_driverController.leftTrigger().whileTrue(
-    Commands.either(fullShoot, kicker.setDutyCycle(-0.9), () -> streamlinedShooting));
+    // m_driverController.leftTrigger().whileTrue(
+    // Commands.either(fullShoot, kicker.setDutyCycle(-0.9), () -> streamlinedShooting));
 
 
-    m_driverController.a().whileTrue(
-    Commands.either(fullShoot, agitator.setDutyCycle(-0.4), () -> streamlinedShooting));
+    // m_driverController.a().whileTrue(
+    // Commands.either(fullShoot, agitator.setDutyCycle(-0.4), () -> streamlinedShooting));
 
 
-    m_driverController.b().whileTrue(
-    Commands.either(fullShoot, indexer.setDutyCycle(-0.4), () -> streamlinedShooting));
+    // m_driverController.b().whileTrue(
+    // Commands.either(fullShoot, indexer.setDutyCycle(-0.4), () -> streamlinedShooting));
 
 
-    m_driverController.x().onTrue(Commands.runOnce(() -> streamlinedShooting = !streamlinedShooting));
+    // m_driverController.x().onTrue(Commands.runOnce(() -> streamlinedShooting = !streamlinedShooting));
 
 
     //   }
