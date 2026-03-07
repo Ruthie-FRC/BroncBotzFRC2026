@@ -138,7 +138,7 @@ public class RobotContainer {
     defaultCommands();
   }
 
-
+  private boolean streamlinedShooting = true;
 
   public void defaultCommands() {
 
@@ -209,6 +209,24 @@ public class RobotContainer {
     //       m_driverController.button(7).whileTrue(turretSubsystem.set(1.0));//not working
     //       m_driverController.button(8).whileTrue(turretSubsystem.set(-1.0));//not working
           
+
+    m_driverController.rightTrigger().whileTrue(
+    Commands.either(fullShoot, turretFlywheel.setDutyCycle(-0.4), () -> streamlinedShooting));
+
+
+    m_driverController.leftTrigger().whileTrue(
+    Commands.either(fullShoot, kicker.setDutyCycle(-0.9), () -> streamlinedShooting));
+
+
+    m_driverController.a().whileTrue(
+    Commands.either(fullShoot, agitator.setDutyCycle(-0.4), () -> streamlinedShooting));
+
+
+    m_driverController.b().whileTrue(
+    Commands.either(fullShoot, indexer.setDutyCycle(-0.4), () -> streamlinedShooting));
+
+
+    m_driverController.x().onTrue(Commands.runOnce(() -> streamlinedShooting = !streamlinedShooting));
 
 
     //   }
@@ -286,5 +304,12 @@ public class RobotContainer {
     return autoChooser.getSelected(); 
   }
 
+  public Command fullShoot =
+turretFlywheel.setDutyCycle(-0.4)
+        .alongWith(
+            agitator.setDutyCycle(0.4),
+            kicker.setDutyCycle(-0.9),
+            indexer.setDutyCycle(0.4)
+        );
 
 }
