@@ -46,7 +46,9 @@ public class LoadingSystem {
     return  intakeDown().andThen(m_intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn)
                         .alongWith(m_intakeRollers.in(), m_agitator.in()));//onchange
   }
-
+  public Command outTakeBalls(){
+    return  null;
+  }
   public Command stopIntakeBalls(){//stop
     return m_intakeArm.setAngle(Setpoints.Intake.intakeArmStartAngle)
                       .alongWith(m_intakeRollers.stop(), m_agitator.stop());//simulate? speed
@@ -59,10 +61,6 @@ public class LoadingSystem {
 
   public Command transferBalls() {// transfer balls to the shooter(indexer, kicker)
     return m_agitator.in().alongWith(m_indexer.indexShoot(), m_kicker.kickerShoot());
-  }
-
-    public Command loadIn() {// transfer balls to the shooter(indexer, kicker)
-    return m_agitator.in().alongWith(m_indexer.indexShoot(), m_intakeRollers.in());
   }
 
   public Command intakeHumanPlayer() {
