@@ -123,7 +123,11 @@ public class RobotContainer {
           .translationHeadingOffset(Rotation2d.fromDegrees(0));
 
  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
- Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+ Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(    driveAngularVelocity.copy()
+            // Fallback
+            .aim(FieldConstants.Hub.HubPose)
+            .aimHeadingOffset(Rotation2d.k180deg)
+            .aimWhile(m_driverController.rightTrigger()));
 
   Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
@@ -177,12 +181,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.button(1).whileTrue(loading.intakeBalls());
-    m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
-    m_driverController.button(3).whileTrue(loading.transferBalls());
-    m_driverController.button(4).whileTrue(loading.intakeDown());
-    //m_driverController.button(5).whileTrue(scoring.score());
-    m_driverController.button(6).whileTrue(scoring.shootBall());
+    // m_driverController.button(1).whileTrue(loading.intakeBalls());
+    // m_driverController.button(2).whileTrue(loading.stopIntakeBalls());
+    // m_driverController.button(3).whileTrue(loading.transferBalls());
+    // m_driverController.button(4).whileTrue(loading.intakeDown());
+    // //m_driverController.button(5).whileTrue(scoring.score());
+    // m_driverController.button(6).whileTrue(scoring.shootBall());
     
     // m_operatorController.leftTrigger().onTrue(loading.intakeBalls());//Uncomment Later
     // m_operatorController.rightTrigger().onTrue(scoring.shootBall());//UnComment Later
@@ -191,8 +195,8 @@ public class RobotContainer {
     m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
     m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
     rightTrigerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
-    
 
+    
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
    // m_driverController.button(7).whileTrue(intakeArm.setAngle(Degrees.of(35)));
@@ -247,12 +251,12 @@ public class RobotContainer {
     //   }
 
        if(testingMode.equals("IntakeArm")){//not working
-           m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-           m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
-           //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
-           //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
-           m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
-           m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
+          //  m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+          //  m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+          //  //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
+          //  //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
+          //  m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
+          //  m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
           
    }
 
