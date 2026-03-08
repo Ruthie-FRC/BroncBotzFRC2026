@@ -96,6 +96,9 @@ public class FieldConstants {
     public static final Pose2d HubPose = new Pose2d(new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
             fieldWidth / 2.0), new Rotation2d());
 
+    public static final Translation2d HubPos = new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
+            fieldWidth / 2.0);
+
             
 
     public static final Translation3d topCenterPoint =

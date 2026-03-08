@@ -56,6 +56,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.systems.ShooterTargetingSystem;
 import frc.robot.systems.ShooterTargetingSystem.Shot;
+import frc.robot.systems.field.FieldConstants;
 import frc.robot.systems.field.FieldConstants.AprilTagLayoutType;
 import limelight.Limelight;
 import limelight.networktables.AngularVelocity3d;
@@ -239,6 +240,8 @@ public class SwerveSubsystem extends SubsystemBase {
     // }
     // outofAreaReading = 0;
     // // System.out.println(usefulPose.toString());
+    
+    //// swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05*stdDevScale, 0.05*stdDevScale, 0.022*stdDevScale));
     // swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.05, 0.05, 0.022));
     // // System.out.println(result.timestamp_LIMELIGHT_publish);
     // // System.out.println(result.timestamp_RIOFPGA_capture);
@@ -677,5 +680,24 @@ public class SwerveSubsystem extends SubsystemBase {
   public void zeroGyro() {
     swerveDrive.zeroGyro();
   }
+
+  /**
+ * Get the distance to the hub in meters
+ * @return Distance to hub in meters.
+ */
+public Double distanceToHub() {
+  // p = robot position, h = hub position, d = desired distance (midRange)
+        Translation2d p = getPose().getTranslation();
+        Translation2d h = FieldConstants.Hub.HubPos;
+
+        // vector from hub to robot: v = p - h
+        Translation2d v = p.minus(h);
+
+        // distance ||v||
+        double dist = Math.hypot(v.getX(), v.getY());
+
+        SmartDashboard.putNumber("AutoShootRPM/distance/meters", dist);
+        return dist;
+}
 
 }
