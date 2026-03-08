@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.MomentOfInertiaUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
@@ -145,6 +146,8 @@ public final class Constants {
     public static Transform3d turretPivotCenterFromRobotCenter =
         new Transform3d(new Translation3d(Inches.of(0), Inches.of(0), Inches.of(0)), new Rotation3d());
 
+    public static double flywheelTolerance = 3000.0;
+    public static double FARShooterGolRPM = 3800.0;
     public static class PivotConstants {
 
       public static double kP = 5;
@@ -165,6 +168,7 @@ public final class Constants {
       public static final double kASim = 0;
       public static final double kGSim = 0;
       public static final Angle tolerance = Degrees.of(2);
+      
       // public static Angle softLimitMin = Degrees.of(-105);
       // public static Angle softLimitMax = Degrees.of(105);//change it back!
       public static Angle softLimitMin = Degrees.of(-70);//for testing

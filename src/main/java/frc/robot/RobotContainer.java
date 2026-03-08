@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.Setpoints.Turret.Pivot;
 import frc.robot.commands.AlignToGoal;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -65,14 +67,15 @@ public class RobotContainer {
   private final KickerSubsystem kicker = new KickerSubsystem();
 
 
-
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController = 
         new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-
+  private static final double TRIGGER_DEADBAND = 0.1;
+  private final Trigger rightTrigerDeadband = 
+  new Trigger(()-> m_driverController.getRightTriggerAxis() > TRIGGER_DEADBAND);
 
       /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular
@@ -187,6 +190,8 @@ public class RobotContainer {
     m_driverController.a().whileTrue(kicker.setDutyCycle(-1));
     m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
     m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
+    rightTrigerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
+    
 
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));

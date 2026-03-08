@@ -79,4 +79,11 @@ public class KickerSubsystem extends SubsystemBase{
     public Command setDutyCycle(double speed) {
       return kickerFlyWheel.set(speed);
     }
+    public void setRPM(double rpm){
+       kickerFlyWheel.setSpeed(RPM.of(rpm));
+    }
+
+    public void stop() {
+      kickerFlyWheel.set(0);
+    }
 }

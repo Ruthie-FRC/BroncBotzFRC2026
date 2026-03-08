@@ -113,4 +113,12 @@ public class IndexerSubsystem extends SubsystemBase {
   public Command sysId() {
     return indexflywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
   }
+  public void setRPM(double rpm){
+    indexflywheel.setSpeed(RPM.of(rpm));
+  }
+
+
+  public void stop() {
+    indexflywheel.set(0);
+  }
 }

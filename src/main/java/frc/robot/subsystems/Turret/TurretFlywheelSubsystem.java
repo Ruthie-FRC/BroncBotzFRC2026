@@ -48,14 +48,14 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
               0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))//don't change it for SA comp
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
+          .withMotorInverted(true)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+          .withFeedforward(new SimpleMotorFeedforward(0.18, 1.38, 0.015))
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withFollowers(Pair.of(flywheelFollowerMotor, true))
           .withControlMode(ControlMode.CLOSED_LOOP);
@@ -76,7 +76,7 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
   public TurretFlywheelSubsystem() {}
 
   public AngularVelocity getVelocity() {
-    return flywheel.getSpeed();
+    return motor.getMechanismVelocity();
   }
 
   public Command setVelocity(AngularVelocity speed) {
@@ -124,4 +124,23 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
   {
     flywheel.setDutyCycleSetpoint(dutyCycle);
   }
+  
+  public void setTargetRPM(double rpm){
+    motor.setVelocity(RPM.of(rpm));//WHY SMC??
+  }
+
+  public void stop() {
+    motor.setDutyCycle(0);  
+  }
+
+  public void periodic()
+  {
+    flywheel.updateTelemetry();
+  }
+
+  public void simulationPeriodic()
+  {
+    flywheel.simIterate();
+  }
+  
 }
