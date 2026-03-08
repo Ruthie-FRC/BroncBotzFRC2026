@@ -700,4 +700,9 @@ public class SwerveSubsystem extends SubsystemBase {
     return dist;
   }
 
+  public void driveFieldOrientedSetpoint(ChassisSpeeds speeds)
+  {
+    swerveDrive.driveFieldOriented(speeds);
+  }
+
 }

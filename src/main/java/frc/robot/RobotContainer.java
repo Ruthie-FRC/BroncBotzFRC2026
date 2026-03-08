@@ -25,6 +25,7 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.Setpoints.Turret.Hood;
 import frc.robot.Setpoints.Turret.Pivot;
 import frc.robot.commands.AlignToGoal;
+import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShootOnTheMoveCommand;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -202,7 +203,7 @@ public class RobotContainer {
     m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
     m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
     rightTriggerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
-
+    m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
