@@ -31,7 +31,7 @@ public class KickerSubsystem extends SubsystemBase{
     private final SparkMax kickerMotor = 
       new SparkMax(CanIDConstants.kickerflywheelID, MotorType.kBrushless);
 
-    private final SmartMotorControllerConfig motorKickerConfig =
+    private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
               0, 0, 0)
@@ -46,44 +46,30 @@ public class KickerSubsystem extends SubsystemBase{
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
-    private final SmartMotorController kickMotor =
-      new SparkWrapper(kickerMotor, DCMotor.getNEO(1), motorKickerConfig);
+    private final SmartMotorController motor =
+      new SparkWrapper(kickerMotor, DCMotor.getNEO(1), motorConfig);
 
 
     private final FlyWheelConfig kickerConfig =
-    new FlyWheelConfig(kickMotor)
-        .withDiameter(Inches.of(4))
+    new FlyWheelConfig(motor)
+        .withDiameter(Inches.of(2))
         .withMass(Pounds.of(1))
-        .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
+        .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
         .withSoftLimit(RPM.of(-5000), RPM.of(5000))
         .withSpeedometerSimulation(RPM.of(7500));
 
-    private final FlyWheel kickerFlyWheel = new FlyWheel(kickerConfig);
+    private final FlyWheel kicker = new FlyWheel(kickerConfig);
 
-    public Command setKickerVolts(double volts){
-      return kickerFlyWheel.setVoltage(Volts.of(volts));
+    public Command setDutyCycle(double dutyCycle) {
+      return kicker.set(dutyCycle);
     }
-
-    public Command kickerShoot(){
-      return setKickerVolts(KickerConstants.kickerVoltage);
-    }
-
-    public Command kickerUnshoot(){
-      return setKickerVolts(KickerConstants.kickerVoltageReverse);
+    public Command setRPM(double rpm){
+       return kicker.setSpeed(RPM.of(rpm));
     }
 
-    public Command kickerStop(){
-      return setKickerVolts(0);
+    public Command stop(){
+      return kicker.set(0);
     }
 
-    public Command setDutyCycle(double speed) {
-      return kickerFlyWheel.set(speed);
-    }
-    public void setRPM(double rpm){
-       kickerFlyWheel.setSpeed(RPM.of(rpm));
-    }
-
-    public void stop() {
-      kickerFlyWheel.set(0);
-    }
+    
 }
