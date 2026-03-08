@@ -81,4 +81,14 @@ public class IndexerSubsystem extends SubsystemBase {
   public AngularVelocity getRPM(){
     return indexflywheel.getSpeed();
   }
+
+  public void periodic()
+  {
+    indexflywheel.updateTelemetry();
+  }
+
+  public void simulationPeriodic()
+  {
+    indexflywheel.simIterate();
+  }
 }

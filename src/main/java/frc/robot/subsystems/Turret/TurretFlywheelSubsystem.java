@@ -47,7 +47,9 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+              0.00016541, 0, 0
+              // RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+          )
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))//don't change it for SA comp
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)

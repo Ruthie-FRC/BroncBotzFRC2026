@@ -73,6 +73,16 @@ public class KickerSubsystem extends SubsystemBase{
       return kicker.set(0);
     }
 
+    public void periodic()
+    {
+      kicker.updateTelemetry();
+    }
+  
+    public void simulationPeriodic()
+    {
+      kicker.simIterate();
+    }
+
     public AngularVelocity getRPM(){
       return kicker.getSpeed();
     }

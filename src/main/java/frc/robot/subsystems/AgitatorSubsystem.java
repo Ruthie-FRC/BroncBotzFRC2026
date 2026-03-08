@@ -42,10 +42,11 @@ public class AgitatorSubsystem extends SubsystemBase {
           .withClosedLoopController(
               Constants.Agitator.kP,
               Constants.Agitator.kI,
-              Constants.Agitator.kD,
-              RPM.of(5000),
-              RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+              Constants.Agitator.kD
+              // RPM.of(5000),
+              // RotationsPerSecondPerSecond.of(2500))
+          )
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
