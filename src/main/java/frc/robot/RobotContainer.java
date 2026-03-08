@@ -126,13 +126,13 @@ public class RobotContainer {
  Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(    driveAngularVelocity.copy()
             // Fallback
-            .aim(FieldConstants.Hub.hub)
+            .aim(FieldConstants.Hub.getHubPose())
             .aimHeadingOffset(Rotation2d.k180deg)
             .aimWhile(m_driverController.button(1)));
   
   Command autoSwerveInputStream = drivebase.driveFieldOriented(driveAngularVelocity.copy()
             // Fallback
-            .aim(FieldConstants.Hub.hub)
+            .aim(FieldConstants.Hub.getHubPose())
             .aimHeadingOffset(Rotation2d.k180deg)
             .aimWhile(()-> true));
 

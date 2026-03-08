@@ -688,7 +688,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public Double distanceToHub() {
     // p = robot position, h = hub position, d = desired distance (midRange)
     Translation2d p = getPose().getTranslation();
-    Translation2d h = FieldConstants.Hub.hubTranslation2d;
+    Translation2d h = FieldConstants.Hub.getHubTranslation2d();
 
     // vector from hub to robot: v = p - h
     Translation2d v = p.minus(h);
