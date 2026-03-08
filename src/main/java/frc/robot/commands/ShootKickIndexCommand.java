@@ -49,7 +49,6 @@ public class ShootKickIndexCommand extends Command {
     private final double goalRPM;   // <-- parameter stored here
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
-    private final Debouncer shootDebounce2 = new Debouncer(0.3, DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
         // TUNE HERE

@@ -15,11 +15,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
+import frc.robot.Dashboard;
+
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.function.Supplier;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -93,13 +101,23 @@ public class FieldConstants {
     public static final double innerHeight = Units.inchesToMeters(56.5);
 
     // Relevant reference points on alliance side
-    public static final Pose2d HubPose = new Pose2d(new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
+    public static final Pose2d HubPoseBlue = new Pose2d(new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
             fieldWidth / 2.0), new Rotation2d());
 
-    public static final Translation2d HubPos = new Translation2d( AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
-            fieldWidth / 2.0);
+        /** Blue alliance hub/speaker position (x, y) in inches. */
+        public static final Translation2d BLUE_HUB_POSITION = new Translation2d(Inches.of(182.11).in(Meters), Inches.of(158.84).in(Meters) );
+        /** Red alliance hub/speaker position (x, y) in inches. */
+        public static final Translation2d RED_HUB_POSITION = new Translation2d( Inches.of(469.11).in(Meters), Inches.of(158.84).in(Meters) );
 
-            
+        public static Pose2d hub = 
+             Dashboard.getAlliance() == Alliance.Blue
+                ? new Pose2d(BLUE_HUB_POSITION, Rotation2d.fromDegrees(0))
+                : new Pose2d(RED_HUB_POSITION, Rotation2d.fromDegrees(0));
+
+                public static Translation2d hubTranslation2d = 
+             Dashboard.getAlliance() == Alliance.Blue
+                ? (BLUE_HUB_POSITION)
+                : (RED_HUB_POSITION);
 
     public static final Translation3d topCenterPoint =
         new Translation3d(
