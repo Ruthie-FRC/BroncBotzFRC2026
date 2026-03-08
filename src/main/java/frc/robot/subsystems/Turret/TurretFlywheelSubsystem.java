@@ -48,14 +48,14 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
               0.00016541, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))//don't change it for SA comp
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))//don't change it for SA comp
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(true)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0.18, 1.38, 0.015))
+          .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015))
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withFollowers(Pair.of(flywheelFollowerMotor, true))
           .withControlMode(ControlMode.CLOSED_LOOP);

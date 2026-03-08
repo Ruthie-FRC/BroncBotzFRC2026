@@ -37,10 +37,10 @@ public class IndexerSubsystem extends SubsystemBase {
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              1, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+              1, 0, 0)
           .withGearing(IndexerConstants.gearingIndexer)
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withTelemetry("Indexer", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
