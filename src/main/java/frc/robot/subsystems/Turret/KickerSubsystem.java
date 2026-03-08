@@ -34,12 +34,12 @@ public class KickerSubsystem extends SubsystemBase{
     private final SmartMotorControllerConfig motorKickerConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              1, 0, 0, RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+              0, 0, 0)
           .withGearing(IndexerConstants.gearingKicker)
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(60))
-          .withMotorInverted(false)
+          .withMotorInverted(true)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
