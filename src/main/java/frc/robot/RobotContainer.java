@@ -66,6 +66,7 @@ public class RobotContainer {
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem kicker = new KickerSubsystem();
 
+  private Trigger shootAuto = new Trigger(()-> false);
 
   public static Timer timerThing = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -74,7 +75,7 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController = 
         new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   private static final double TRIGGER_DEADBAND = 0.1;
-  private final Trigger rightTrigerDeadband = 
+  private final Trigger rightTriggerDeadband = 
   new Trigger(()-> m_driverController.getRightTriggerAxis() > TRIGGER_DEADBAND);
 
       /**
@@ -128,6 +129,12 @@ public class RobotContainer {
             .aim(FieldConstants.Hub.HubPose)
             .aimHeadingOffset(Rotation2d.k180deg)
             .aimWhile(m_driverController.rightTrigger()));
+  
+  Command autoSwerveInputStream = drivebase.driveFieldOriented(driveAngularVelocity.copy()
+            // Fallback
+            .aim(FieldConstants.Hub.HubPose)
+            .aimHeadingOffset(Rotation2d.k180deg)
+            .aimWhile(()-> true));
 
   Command driveFieldOrientedDirectAngleKeyboard = drivebase.driveFieldOriented(driveDirectAngle);
 
@@ -194,7 +201,7 @@ public class RobotContainer {
     m_driverController.a().whileTrue(kicker.setDutyCycle(-1));
     m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
     m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
-    rightTrigerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
+    rightTriggerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
 
     
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
@@ -313,7 +320,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected(); 
+    // return autoChooser.getSelected(); 
+    return drivebase.driveToPose(new Pose2d(new Translation2d(16, 2), new Rotation2d())).alongWith(loading.intakeBalls()).withTimeout(6)
+    .andThen(autoSwerveInputStream)
+    .alongWith(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
   }
 
   public Command fullShoot =
