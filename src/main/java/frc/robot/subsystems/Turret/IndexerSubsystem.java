@@ -31,13 +31,13 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IndexerSubsystem extends SubsystemBase {
 
-  private final SparkMax flywheelMotor =
+  private final SparkMax indexMotor =
       new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              1, 0, 0)
+              0, 0, 0)
           .withGearing(IndexerConstants.gearingIndexer)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("Indexer", TelemetryVerbosity.HIGH)
@@ -49,14 +49,8 @@ public class IndexerSubsystem extends SubsystemBase {
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
-
-
-
   private final SmartMotorController motor =
-      new SparkWrapper(flywheelMotor, DCMotor.getNEO(1), motorConfig);
-
-
-
+      new SparkWrapper(indexMotor, DCMotor.getNEO(1), motorConfig);
 
   private final FlyWheelConfig flywheelConfig =
       new FlyWheelConfig(motor)
@@ -68,57 +62,23 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private final FlyWheel indexflywheel = new FlyWheel(flywheelConfig);
 
-
-
   public IndexerSubsystem() {}
 
 
   //INDEXER COMMANDS
-  public AngularVelocity getVelocity() {
-    return indexflywheel.getSpeed();
-  }
-
-  public Command setVelocity(AngularVelocity speed) {
-    return indexflywheel.setSpeed(speed);
-  }
-
-  public Command setDutyCycleIndex(double dutyCycle) {
-    return indexflywheel.set(dutyCycle);
-  }
-
-  public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return indexflywheel.setSpeed(speed);
-  }
-
   public Command setDutyCycle(double dutyCycle) {
     return indexflywheel.set(dutyCycle);
   }
-
-  public Command setIndexerVoltage(double volts){
-    return indexflywheel.setVoltage(Volts.of(volts));
-  }
-
-  public Command indexShoot(){
-    return setIndexerVoltage(IndexerConstants.indexerVoltage);
-  }
-
-  public Command indexUnshoot(){
-    return setIndexerVoltage(IndexerConstants.indexerVoltageOut);
-  }
   
-  public Command indexStop(){
-    return setIndexerVoltage(0);
+  public Command setRPM(double rpm){
+     return indexflywheel.setSpeed(RPM.of(rpm));
   }
 
-  public Command sysId() {
-    return indexflywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
-  }
-  public void setRPM(double rpm){
-    indexflywheel.setSpeed(RPM.of(rpm));
+  public Command stop(){
+    return indexflywheel.set(0);
   }
 
-
-  public void stop() {
-    indexflywheel.set(0);
+  public AngularVelocity getRPM(){
+    return indexflywheel.getSpeed();
   }
 }

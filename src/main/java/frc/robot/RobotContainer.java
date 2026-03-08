@@ -38,8 +38,8 @@ import frc.robot.subsystems.Turret.KickerSubsystem;
 import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
 import frc.robot.subsystems.Turret.TurretSubsystem;
 import frc.robot.subsystems.Turret.TurretVisualizer;
-import frc.robot.systems.LoadingSystem;
-import frc.robot.systems.ScoringSystem;
+// import frc.robot.systems.LoadingSystem;
+// import frc.robot.systems.ScoringSystem;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 import utils.FuelSim;
@@ -142,8 +142,8 @@ public class RobotContainer {
  
   // private final ShootOnTheMoveCommand SOTM =
   //        new ShootOnTheMoveCommand(drivebase.getPoseSupplier(), driveAngularVelocity, FieldConstants.Hub.HubPose, turret, hood, turretFlywheel);
-  private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
-  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, turretFlywheel, hood, kicker, agitator);
+  /* private final LoadingSystem loading = new LoadingSystem(indexer, intakeArm, intakeRoller, drivebase, turret, agitator, kicker);
+  private final ScoringSystem scoring = new ScoringSystem(indexer, intakeArm, intakeRoller, drivebase, turret, turretFlywheel, hood, kicker, agitator);*/
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -318,12 +318,12 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+ /*  */ public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return autoChooser.getSelected(); 
-    return drivebase.driveToPose(new Pose2d(new Translation2d(16, 2), new Rotation2d())).alongWith(loading.intakeBalls()).withTimeout(6)
-    .andThen(autoSwerveInputStream)
-    .alongWith(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
+    return autoChooser.getSelected(); 
+    // return drivebase.driveToPose(new Pose2d(new Translation2d(16, 2), new Rotation2d())).alongWith(loading.intakeBalls()).withTimeout(6)
+    // .andThen(autoSwerveInputStream)
+    // .alongWith(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
   }
 
   public Command fullShoot =

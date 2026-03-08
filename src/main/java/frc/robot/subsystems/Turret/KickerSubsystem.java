@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
@@ -37,7 +38,7 @@ public class KickerSubsystem extends SubsystemBase{
               0, 0, 0)
           .withGearing(IndexerConstants.gearingKicker)
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
+          .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(60))
           .withMotorInverted(true)
           .withClosedLoopRampRate(Seconds.of(0.25))
@@ -53,7 +54,7 @@ public class KickerSubsystem extends SubsystemBase{
     private final FlyWheelConfig kickerConfig =
     new FlyWheelConfig(motor)
         .withDiameter(Inches.of(2))
-        .withMass(Pounds.of(1))
+        .withMass(Pounds.of(0.7))
         .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
         .withSoftLimit(RPM.of(-5000), RPM.of(5000))
         .withSpeedometerSimulation(RPM.of(7500));
@@ -63,6 +64,7 @@ public class KickerSubsystem extends SubsystemBase{
     public Command setDutyCycle(double dutyCycle) {
       return kicker.set(dutyCycle);
     }
+    
     public Command setRPM(double rpm){
        return kicker.setSpeed(RPM.of(rpm));
     }
@@ -71,5 +73,7 @@ public class KickerSubsystem extends SubsystemBase{
       return kicker.set(0);
     }
 
-    
+    public AngularVelocity getRPM(){
+      return kicker.getSpeed();
+    }
 }
