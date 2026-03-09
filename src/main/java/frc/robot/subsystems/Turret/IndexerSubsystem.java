@@ -38,15 +38,15 @@ public class IndexerSubsystem extends SubsystemBase {
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
               0, 0, 0)
-          .withGearing(IndexerConstants.gearingIndexer)
+          .withGearing(IndexerConstants.gearingIndexer) //always ask mech whether there's extra chain or gears that need to be take in account for :)
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("Indexer", TelemetryVerbosity.HIGH)
+          .withTelemetry("IndexerMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withMotorInverted(false)//check
+          // .withClosedLoopRampRate(Seconds.of(0.25))  //limits the speed, don't add it
+          // .withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
@@ -55,40 +55,41 @@ public class IndexerSubsystem extends SubsystemBase {
   private final FlyWheelConfig flywheelConfig =
       new FlyWheelConfig(motor)
           .withDiameter(Inches.of(4))
-          .withMass(Pounds.of(1))
-          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
-          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-          .withSpeedometerSimulation(RPM.of(7500));
+          .withMass(Pounds.of(1))//Mass & Diameter is for sim only
+          .withTelemetry("Indexer", TelemetryVerbosity.HIGH);
+          //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          //.withSpeedometerSimulation(RPM.of(7500));
 
-  private final FlyWheel indexflywheel = new FlyWheel(flywheelConfig);
+  private final FlyWheel indexer = new FlyWheel(flywheelConfig);
 
   public IndexerSubsystem() {}
 
-
-  //INDEXER COMMANDS
   public Command setDutyCycle(double dutyCycle) {
-    return indexflywheel.set(dutyCycle);
+    return indexer.set(dutyCycle);
   }
   
   public Command setRPM(double rpm){
-     return indexflywheel.setSpeed(RPM.of(rpm));
+     return indexer.setSpeed(RPM.of(rpm));
   }
 
   public Command stop(){
-    return indexflywheel.set(0);
+    return indexer.set(0);
   }
 
   public AngularVelocity getRPM(){
-    return indexflywheel.getSpeed();
+    return indexer.getSpeed();
   }
 
   public void periodic()
   {
-    indexflywheel.updateTelemetry();
+    indexer.updateTelemetry();
   }
 
   public void simulationPeriodic()
   {
-    indexflywheel.simIterate();
+    indexer.simIterate();
   }
 }
+//Besides turretFlywheel, indexer, kicker, agitator, intakeRoller are all modeled as a YAMS flywheel
+//For sim, start w/ increasin kv(pid = 0)
+//Add periodic() and simulationPeriodic() for sim updates

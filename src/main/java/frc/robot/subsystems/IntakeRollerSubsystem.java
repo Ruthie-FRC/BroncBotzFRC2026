@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -35,80 +36,66 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakeRollerSubsystem extends SubsystemBase {
 
-  private final SparkMax agitator = new SparkMax(CanIDConstants.intakeRollerID, MotorType.kBrushless);
+  private final SparkFlex intakeRollerMotor = new SparkFlex(CanIDConstants.intakeRollerID, MotorType.kBrushless);//IntakeRoller is not NEO
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
-          .withClosedLoopController(
-              Constants.Agitator.kP,
-              Constants.Agitator.kI,
-              Constants.Agitator.kD,
-              RPM.of(5000),
-              RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+          .withClosedLoopController(0,0,0)
+              //RPM.of(5000),
+              //RotationsPerSecondPerSecond.of(2500))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.HIGH)//not Intake"ARM" motor
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(
-              new SimpleMotorFeedforward(
-                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
-          .withSimFeedforward(
-              new SimpleMotorFeedforward(
-                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
+          //.withClosedLoopRampRate(Seconds.of(0.25))
+          //.withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(new SimpleMotorFeedforward(0,0,0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0,0.5,0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
-      new SparkWrapper(agitator, DCMotor.getNEO(1), motorConfig);
+      new SparkWrapper(intakeRollerMotor, DCMotor.getNeoVortex(1), motorConfig);
 
-  private final FlyWheelConfig flywheelConfig =
+  private final FlyWheelConfig intakeRollerConfig =
       new FlyWheelConfig(motor)
           .withDiameter(Inches.of(4))
           .withMass(Pounds.of(1))
-          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
-          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-          .withSpeedometerSimulation(RPM.of(7500));
+          .withTelemetry("IntakeRoller", TelemetryVerbosity.HIGH);
+          //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          //.withSpeedometerSimulation(RPM.of(7500));
 
-  private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
+  private final FlyWheel intakeRoller = new FlyWheel(intakeRollerConfig);
 
   public IntakeRollerSubsystem() {}
 
-  public AngularVelocity getVelocity() {
-    return flywheel.getSpeed();
+  public AngularVelocity getRPM() {
+    return intakeRoller.getSpeed();
   }
 
-  public Command setVelocity(AngularVelocity speed) {
-    return flywheel.setSpeed(speed);
+  public Command setRPM(double rpm) {
+    return intakeRoller.setSpeed(RPM.of(rpm));
   }
 
   public Command setDutyCycle(double dutyCycle) {
-    return flywheel.set(dutyCycle);
-  }
-
-  public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return flywheel.setSpeed(speed);
-  }
-
-  public Command setDutyCycle(Supplier<Double> dutyCycle) {
-    return flywheel.set(dutyCycle);
-  }
-
-  public Command sysId() {
-    return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
-  }
-
-    public Command out() {
-    return setDutyCycle(-Agitator.AgitatorRollerIntakeSpeeds);
-  }
-
-  public Command in() {
-    return setDutyCycle(Agitator.AgitatorRollerIntakeSpeeds);
+    return intakeRoller.set(dutyCycle);
   }
 
   public Command stop() {
-    return setDutyCycle(0);
+    return intakeRoller.set(0);
+  }
+
+  public void periodic()
+  {
+    intakeRoller.updateTelemetry();
+  }
+
+  public void simulationPeriodic()
+  {
+    intakeRoller.simIterate();
   }
 
 }
+// public Command sysId() {
+//     return intakeRoller.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+//   }

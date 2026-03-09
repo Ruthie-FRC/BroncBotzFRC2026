@@ -60,13 +60,7 @@ public final class Constants {
   }
 
   public static class Agitator {
-    public static double kP = 0;
-    public static double kD = 0;
-    public static double kI = 0;
-
-    public static double kS = 0.27937;
-    public static double kV = 0.089836;
-    public static double kA = 0.014557;
+    
     public static double AgitatorRollerIntakeSpeeds = .5;
   }
 
@@ -176,8 +170,8 @@ public final class Constants {
       public static double EncoderAOffset = (0);
     }
     public static class IndexerConstants {
-      public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("3:1"));
-      public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("5:1"));
+      public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("5:1"));
+      public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("3:1"));
 
       public static double indexerVoltage = 4;
       public static double indexerVoltageOut = -4;

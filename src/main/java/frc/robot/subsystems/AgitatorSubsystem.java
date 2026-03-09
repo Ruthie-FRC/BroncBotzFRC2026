@@ -35,81 +35,65 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class AgitatorSubsystem extends SubsystemBase {
 
-  private final SparkMax agitator = new SparkMax(CanIDConstants.agitatorID, MotorType.kBrushless);
+  private final SparkMax agitatorMotor = new SparkMax(CanIDConstants.agitatorID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
-          .withClosedLoopController(
-              Constants.Agitator.kP,
-              Constants.Agitator.kI,
-              Constants.Agitator.kD
+          .withClosedLoopController(0,0,0
               // RPM.of(5000),
               // RotationsPerSecondPerSecond.of(2500))
           )
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
           .withIdleMode(MotorMode.COAST)
-          .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+          .withTelemetry("AgitatorMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(
-              new SimpleMotorFeedforward(
-                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
-          .withSimFeedforward(
-              new SimpleMotorFeedforward(
-                  Constants.Agitator.kS, Constants.Agitator.kV, Constants.Agitator.kA))
+          .withMotorInverted(false)//check
+          //.withClosedLoopRampRate(Seconds.of(0.25))
+          //.withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(new SimpleMotorFeedforward( 0,0,0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0,0.5,0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
-      new SparkWrapper(agitator, DCMotor.getNEO(1), motorConfig);
+      new SparkWrapper(agitatorMotor, DCMotor.getNEO(1), motorConfig);
 
-  private final FlyWheelConfig flywheelConfig =
+  private final FlyWheelConfig agitatorConfig =
       new FlyWheelConfig(motor)
-          .withDiameter(Inches.of(4))
-          .withMass(Pounds.of(1))
-          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
-          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-          .withSpeedometerSimulation(RPM.of(7500));
+          .withDiameter(Inches.of(2))
+          .withMass(Pounds.of(1.5))
+          .withTelemetry("Agitator", TelemetryVerbosity.HIGH);
+          //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          //.withSpeedometerSimulation(RPM.of(7500));
 
-  private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
+  private final FlyWheel agitator = new FlyWheel(agitatorConfig);
 
   public AgitatorSubsystem() {}
 
   public AngularVelocity getVelocity() {
-    return flywheel.getSpeed();
+    return agitator.getSpeed();
   }
 
-  public Command setVelocity(AngularVelocity speed) {
-    return flywheel.setSpeed(speed);
+  public Command setRPM(double rpm) {
+    return agitator.setSpeed(RPM.of(rpm));
   }
 
   public Command setDutyCycle(double dutyCycle) {
-    return flywheel.set(dutyCycle);
-  }
-
-  public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return flywheel.setSpeed(speed);
-  }
-
-  public Command setDutyCycle(Supplier<Double> dutyCycle) {
-    return flywheel.set(dutyCycle);
-  }
-
-  public Command sysId() {
-    return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
-  }
-
-    public Command out() {
-    return setDutyCycle(-Agitator.AgitatorRollerIntakeSpeeds);
-  }
-
-  public Command in() {
-    return setDutyCycle(Agitator.AgitatorRollerIntakeSpeeds);
+    return agitator.set(dutyCycle);
   }
 
   public Command stop() {
-    return setDutyCycle(0);
+    return agitator.set(0);
   }
-
+  public void periodic()
+  {
+     agitator.updateTelemetry();
+  }
+  
+  public void simulationPeriodic()
+  {
+    agitator.simIterate();
+  }
 }
+// public Command sysId() {
+  //   return agitator.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+  // }

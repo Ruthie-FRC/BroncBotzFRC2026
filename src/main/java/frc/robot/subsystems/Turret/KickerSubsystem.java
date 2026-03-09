@@ -35,29 +35,28 @@ public class KickerSubsystem extends SubsystemBase{
     private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
           .withClosedLoopController(
-              0, 0, 0)
+              0, 0, 0)// RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
           .withGearing(IndexerConstants.gearingKicker)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(60))
-          .withMotorInverted(true)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withStatorCurrentLimit(Amps.of(40))
+          .withMotorInverted(true)//check
+          //.withClosedLoopRampRate(Seconds.of(0.25))
+          //.withOpenLoopRampRate(Seconds.of(0.25))
           .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
     private final SmartMotorController motor =
       new SparkWrapper(kickerMotor, DCMotor.getNEO(1), motorConfig);
 
-
     private final FlyWheelConfig kickerConfig =
     new FlyWheelConfig(motor)
         .withDiameter(Inches.of(2))
         .withMass(Pounds.of(0.7))
-        .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
-        .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-        .withSpeedometerSimulation(RPM.of(7500));
+        .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
+        //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
+        //.withSpeedometerSimulation(RPM.of(7500));
 
     private final FlyWheel kicker = new FlyWheel(kickerConfig);
 
@@ -67,6 +66,10 @@ public class KickerSubsystem extends SubsystemBase{
     
     public Command setRPM(double rpm){
        return kicker.setSpeed(RPM.of(rpm));
+    }
+
+    public AngularVelocity getRPM(){
+      return kicker.getSpeed();
     }
 
     public Command stop(){
@@ -81,9 +84,5 @@ public class KickerSubsystem extends SubsystemBase{
     public void simulationPeriodic()
     {
       kicker.simIterate();
-    }
-
-    public AngularVelocity getRPM(){
-      return kicker.getSpeed();
     }
 }
