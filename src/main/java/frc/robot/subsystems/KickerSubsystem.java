@@ -70,7 +70,7 @@ public class KickerSubsystem extends SubsystemBase {
         return kicker.getSpeed();
     }
 
-    public Command stop() {
+    public Command stopCommand() {
         return kicker.set(0);
     }
 

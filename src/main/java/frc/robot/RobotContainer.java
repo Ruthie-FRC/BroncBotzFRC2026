@@ -98,7 +98,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ShootCommand", new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase).withTimeout(Seconds.of(3)));
 
         new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-        new EventTrigger("IntakeStop").onTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn).alongWith(intakeRoller.stop()));
+        new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleIn).alongWith(intakeRoller.stopCommand()));
     }
 
 
@@ -129,6 +129,14 @@ public class RobotContainer {
         m_driverController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
         m_driverController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
         m_driverController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+        
+        // m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
+        // m_driverController.button(2).whileTrue(drivebase.lockPos().withTimeout(5));
+        // m_driverController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, Setpoints.Shooter.hubRPM).withTimeout(5));
+        // m_driverController.button(4).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
+        // m_driverController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
+        // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+
 
     }
 

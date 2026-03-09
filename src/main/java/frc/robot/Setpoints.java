@@ -17,6 +17,8 @@ public class Setpoints {
         public static final AngularVelocity outtakeRollerRPM = RPM.of(1000);
         public static final Angle intakeArmStartAngle = Degrees.of(45);
         public static final Angle intakeArmAngleIn = Degrees.of(10);
+        public static final AngularVelocity agitatorRPMout = RPM.of(-500);
+        public static final AngularVelocity agitatorRPMin = RPM.of(500);
         public static Angle intakeArmAngleOut = Degrees.of(50);
 
     }

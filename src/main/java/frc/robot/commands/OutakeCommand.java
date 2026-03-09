@@ -7,6 +7,7 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 
 
 public class OutakeCommand extends Command {
@@ -18,7 +19,7 @@ public class OutakeCommand extends Command {
         this.intakeArmSubsystem = intakeArmSubsystem;
         this.intakeRollerSubsystem = intakeRollerSubsystem;
         this.agitatorSubsystem = agitatorSubsystem;
-        addRequirements(this.intakeArmSubsystem, this.intakeRollerSubsystem);
+        addRequirements(this.intakeArmSubsystem, this.intakeRollerSubsystem,this.agitatorSubsystem);
     }
 
     /**
@@ -37,9 +38,9 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleOut, Degrees.of(10))){
+        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleOut, Degrees.of(7))){
             intakeRollerSubsystem.setVelocitySetpoint(Setpoints.Intake.outtakeRollerRPM);
-            agitatorSubsystem.setDutyCycleSetpoint(0.5);
+            agitatorSubsystem.setVelocitySetpoint(Setpoints.Intake.agitatorRPMout);
         }
     }
 

@@ -57,7 +57,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
             .withClosedLoopController(0, 0, 0)
             .withSimClosedLoopController(0, 0, 0)
             .withFeedforward(new ArmFeedforward(0, 0, 0))
-            .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+            .withSimFeedforward(new ArmFeedforward(0.2, 0.2, 0.2))
             .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
             .withGearing(GroundConstants.gearing)
             .withMotorInverted(false)
@@ -102,62 +102,22 @@ public class IntakeArmSubsystem extends SubsystemBase {
         //sparkSmartMotorController.synchronizeRelativeEncoder();
     }
 
-
-    /**
-     * Set the angle of the arm.
-     *
-     * @param angle Angle to go to.
-     */
-
-    public Command setAngle(Angle angle) {
+    public Command setAngleCommand(Angle angle) {
         return arm.setAngle(angle);
         //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
     }
 
-    public Command setAngle(Supplier<Angle> angleSupplier) {
-        return arm.setAngle(angleSupplier);
-    }
-
-    public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
-        return arm.set(dutyCycleSupplier);
-    }
-
-    public Command setDutyCycle(double dutyCycle) {
+    public Command setDutyCycleCommand(double dutyCycle) {
         return arm.set(dutyCycle);
-    }
-
-    /**
-     * Move the arm up and down.
-     *
-     * @param dutycycle [-1, 1] speed to set the arm too.
-     */
-    public Command set(double dutycycle) {
-        return arm.set(dutycycle);
-    } //sparkMaxController.getDutyCycle();
-    //DutyCycleEncoder m_encoderFR = new DutyCycleEncoder(0, 4.0, 2.0); 0-DIO channel 0
-
-    /**
-     * Run sysId on the {@link Arm}
-     */
-    public Command sysId() {
-        return arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
-    }
-
-
-    public boolean exampleCondition() {
-        // Query some boolean state, such as a digital sensor.
-        return false;
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
         arm.updateTelemetry();
     }
 
     @Override
     public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
         arm.simIterate();
     }
 

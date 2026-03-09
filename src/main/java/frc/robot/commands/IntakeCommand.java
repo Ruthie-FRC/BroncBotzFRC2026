@@ -7,6 +7,7 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 
 
 public class IntakeCommand extends Command {
@@ -39,9 +40,10 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void execute() {
-        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleIn, Degrees.of(10)))
+        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleIn, Degrees.of(7)))
         {
             intakeRollerSubsystem.setVelocitySetpoint(Setpoints.Intake.intakeRollerRPM);
+            agitatorSubsystem.setVelocitySetpoint(Setpoints.Intake.agitatorRPMin);
         }
     }
 

@@ -67,7 +67,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         return intakeRoller.set(dutyCycle);
     }
 
-    public Command stop() {
+    public Command stopCommand() {
         return intakeRoller.set(0);
     }
 
@@ -79,9 +79,9 @@ public class IntakeRollerSubsystem extends SubsystemBase {
         intakeRoller.simIterate();
     }
 
-    public void setDutycycleSetpoint(double dutycycleSetpoint) { intakeRoller.set(dutycycleSetpoint);}
+    public void setDutycycleSetpoint(double dutycycleSetpoint) { intakeRoller.setDutyCycleSetpoint(dutycycleSetpoint);}
 
-    public void setVelocitySetpoint(AngularVelocity intakeRollerRPM) { intakeRoller.setSpeed(intakeRollerRPM);}
+    public void setVelocitySetpoint(AngularVelocity intakeRollerRPM) { intakeRoller.setMechanismVelocitySetpoint(intakeRollerRPM);}
 }
 // public Command sysId() {
 //     return intakeRoller.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));

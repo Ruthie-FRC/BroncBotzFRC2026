@@ -61,17 +61,11 @@ public class FlywheelSubsystem extends SubsystemBase {
         return flywheel.getSpeed();
     }
 
-    public Command setRPMCommand(double rpm) {
-        return flywheel.setSpeed(RPM.of(rpm));
+    public Command setVelocityommand(AngularVelocity velocity) {
+        return flywheel.setSpeed(velocity);
     }
 
     public void setVelocitySetpoint(AngularVelocity velocity)
-    {
-        flywheel.setMechanismVelocitySetpoint(velocity);
-    }
-
-
-    public void set(AngularVelocity velocity)
     {
         flywheel.setMechanismVelocitySetpoint(velocity);
     }
@@ -80,8 +74,8 @@ public class FlywheelSubsystem extends SubsystemBase {
         return flywheel.set(dutyCycle);
     }
 
-    public void stop() {
-        flywheel.set(0);
+    public Command stopCommand() {
+        return flywheel.set(0);
     }
 
     public void periodic() {
@@ -90,6 +84,10 @@ public class FlywheelSubsystem extends SubsystemBase {
 
     public void simulationPeriodic() {
         flywheel.simIterate();
+    }
+
+    public void setDutyCycleSetpoint(double dutyCycle) {
+         flywheel.setDutyCycleSetpoint(0);
     }
 
 }

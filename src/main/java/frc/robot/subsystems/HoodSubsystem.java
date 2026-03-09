@@ -86,7 +86,7 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
     return hood.set(dutyCycle);
   }
 
-  public Command stop(){
+  public Command stopCommand(){
     return hood.set(0);
   }
   @Override

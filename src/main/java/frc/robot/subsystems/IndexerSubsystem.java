@@ -63,11 +63,11 @@ public class IndexerSubsystem extends SubsystemBase {
     return indexer.set(dutyCycle);
   }
   
-  public Command setRPMCommand(double rpm){
-     return indexer.setSpeed(RPM.of(rpm));
+  public Command setVeloctiyCommand(AngularVelocity velocity){
+     return indexer.setSpeed(velocity);
   }
 
-  public Command stop(){
+  public Command stopCommand(){
     return indexer.set(0);
   }
 
@@ -85,9 +85,13 @@ public class IndexerSubsystem extends SubsystemBase {
     indexer.simIterate();
   }
 
-    public void setVelocitySetpoint(AngularVelocity velo) {
-      indexer.setMechanismVelocitySetpoint(velo);
-    }
+  public void setVelocitySetpoint(AngularVelocity velo) {
+    indexer.setMechanismVelocitySetpoint(velo);
+  }
+
+  public void setDutyCycleSetpoint(double dutyCycle) {
+      indexer.setDutyCycleSetpoint(dutyCycle);
+  }
 }
 //Besides turretFlywheel, indexer, kicker, agitator, intakeRoller are all modeled as a YAMS flywheel
 //For sim, start w/ increasin kv(pid = 0)
