@@ -108,9 +108,9 @@ public class ShootKickIndexCommand extends Command {
             goalRPM1 = swerve.get().distanceToHub();
         }
 
-        shooter.setTargetRPM(goalRPM1);
+        shooter.setRPM(goalRPM1);
 
-        AngularVelocity shooterRPM = shooter.getVelocity();
+        AngularVelocity shooterRPM = shooter.getRPM();
 
         boolean shooterReady = shootDebounce1.calculate(
             shooterRPM.isNear(
