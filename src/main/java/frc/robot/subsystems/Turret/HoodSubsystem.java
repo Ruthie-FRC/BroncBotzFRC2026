@@ -33,31 +33,27 @@ import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 import static edu.wpi.first.units.Units.*;
 
-public class HoodSubsystem extends SubsystemBase {
+public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it's not really affected by gravity
+
   private final SparkMax hoodMotor = new SparkMax(CanIDConstants.hoodID, MotorType.kBrushless);
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
-          .withClosedLoopController(
-              HoodConstants.kP,
-              HoodConstants.kI,
-              HoodConstants.kD,
-              DegreesPerSecond.of(180),
-              DegreesPerSecondPerSecond.of(90))
-          .withSimClosedLoopController(
-            HoodConstants.kPSim,
-              HoodConstants.kISim,
-              HoodConstants.kDSim,
-              DegreesPerSecond.of(180),
-              DegreesPerSecondPerSecond.of(90))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1,1)))
+          .withClosedLoopController(0,0,0)
+              //DegreesPerSecond.of(180),  
+              //DegreesPerSecondPerSecond.of(90))  //Don't add it unless it's not increasing fast enough
+          .withSimClosedLoopController(0,0,0)
+              //DegreesPerSecond.of(180),
+              //DegreesPerSecondPerSecond.of(90))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(164,12,54,24,27)))
           .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withVoltageCompensation(Volts.of(12))
           .withMotorInverted(false)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0, 1))
+          //.withClosedLoopRampRate(Seconds.of(0.25)) //Don't add it unless it's too fast(limit the rate & help slow it down)->check yams docs
+          //.withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0,0,0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor =
@@ -75,43 +71,29 @@ public class HoodSubsystem extends SubsystemBase {
       new PivotConfig(motor)
           .withHardLimit(HoodConstants.hardLimitMin, HoodConstants.hardLimitMax)
           .withSoftLimits(HoodConstants.softLimitMin, HoodConstants.softLimitMax)
-          .withTelemetry("TurretPivot", TelemetryVerbosity.HIGH)
+          .withTelemetry("Hood", TelemetryVerbosity.HIGH)
           .withStartingPosition(Degrees.of(0))
-          .withMOI(Meter.of(0.001), Pounds.of(3));
+          .withMOI(Inches.of(7), Pounds.of(2));
 
   private final Pivot hood = new Pivot(m_config);
 
-
   public HoodSubsystem() {}
 
-  public Command setAngle(Angle angle) {
-    return hood.setAngle(angle);
-  }
-
-  public Command setAngle(Supplier<Angle> angleSupplier) {
-    return hood.setAngle(angleSupplier);
+  public Command setDegree(double degree) {
+    return hood.setAngle(Degrees.of(degree));
   }
 
   public Angle getAngle() {
     return hood.getAngle();
   }
 
-  public Command sysId() {
-    return hood.sysId(
-        Volts.of(4.0), // maximumVoltage
-        Volts.per(Second).of(0.5), // step
-        Seconds.of(8.0) // duration
-        );
-  }
-
-  public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
-    return hood.set(dutyCycleSupplier);
-  }
-
   public Command setDutyCycle(double dutyCycle) {
     return hood.set(dutyCycle);
   }
 
+  public Command stop(){
+    return hood.set(0);
+  }
   @Override
   public void periodic() {
     hood.updateTelemetry();
@@ -121,8 +103,12 @@ public class HoodSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     hood.simIterate();
   }
-
-  public void setAngleSetpoint(Angle measure){
-       hood.setMechanismPositionSetpoint(measure);
-  }
 }
+//Live tuning, so we don't really need sysId
+//public Command sysId() {
+  //   return hood.sysId(
+  //       Volts.of(4.0), // maximumVoltage
+  //       Volts.per(Second).of(0.5), // step
+  //       Seconds.of(8.0) // duration
+  //       );
+  // }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
@@ -174,9 +175,9 @@ public class ShootOnTheMoveCommand extends Command
     {
       var shooterRPM = RPM.of(launchFlywheelSpeedMap.get(lookaheadTurretToTargetDistance));
       turret.setAngleSetpoint(turretAngle.getMeasure());
-      hoodSubsystem.setAngleSetpoint(Radians.of(hoodAngle));
-      shooterSubsystem.setVelocitySetpoint(shooterRPM);
-      if (shootingDebounce.calculate(shooterSubsystem.getVelocity().isNear(shooterRPM, RPM.of(10))))
+      hoodSubsystem.setDegree(Radians.of(hoodAngle).in(Degrees));
+      shooterSubsystem.setRPM(shooterRPM.in(RPM));
+      if (shootingDebounce.calculate(shooterSubsystem.getRPM().isNear(shooterRPM, RPM.of(10))))
       {
         // Set indexer to go vrooooom
         // HERE
@@ -195,7 +196,7 @@ public class ShootOnTheMoveCommand extends Command
   @Override
   public void end(boolean interrupted)
   {
-    shooterSubsystem.setDutyCycleSetpoint(0);
+    shooterSubsystem.setDutyCycle(0);
   }
   
 

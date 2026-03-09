@@ -55,11 +55,11 @@ public class IntakeArmSubsystem extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(GroundConstants.kP, GroundConstants.kI, GroundConstants.kD)
-  .withSimClosedLoopController(GroundConstants.ksimP, GroundConstants.ksimI, GroundConstants.ksimD)
+  .withClosedLoopController(0,0,0)
+  .withSimClosedLoopController(0,0,0)
   // Feedforward Constants
-  .withFeedforward(new ArmFeedforward(GroundConstants.kS, GroundConstants.kG, GroundConstants.kV))
-  .withSimFeedforward(new ArmFeedforward(GroundConstants.ksimS, GroundConstants.ksimG, GroundConstants.ksimV))
+  .withFeedforward(new ArmFeedforward(0,0,0))
+  .withSimFeedforward(new ArmFeedforward(0,0,0))
   // Gearing from the motor rotor to final shaft.
   // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
   .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)

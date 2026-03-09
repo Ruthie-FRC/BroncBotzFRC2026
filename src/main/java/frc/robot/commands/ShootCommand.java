@@ -43,8 +43,8 @@ public class ShootCommand extends Command{
 
     @Override
     public void execute(){
-        flywheel.setTargetRPM(goalRPM);
-        AngularVelocity flywheelRPM = flywheel.getVelocity();
+        flywheel.setRPM(goalRPM);
+        AngularVelocity flywheelRPM = flywheel.getRPM();
 
         boolean flywheelReady = debouncer.calculate(
             flywheelRPM.isNear(

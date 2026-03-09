@@ -115,13 +115,6 @@ public final class Constants {
 }
 
   public static class IntakeRollerConstants {
-    public static double kP = 0.2;
-    public static double kI = 0;
-    public static double kD = 0;
-
-    public static double kPSim = 5;
-    public static double kISim = 0;
-    public static double kDSim = 0;
 
     public static double IntakeRollerOuttakeSpeeds = -.5;
     public static double IntakeRollerIntakeSpeeds = .5;
@@ -211,19 +204,11 @@ public final class Constants {
 
     public static final Angle hardLimitMin = Degrees.of(20);
     public static final Angle hardLimitMax = Degrees.of(45);
-    public static final Distance length = Inches.of(7.5);
+    public static final Distance length = Inches.of(7);
     public static final Angle softLimitMin = Degrees.of(22);
     public static final Angle softLimitMax = Degrees.of(44);
     public static final MomentOfInertia MOIInKilogram =
             KilogramSquareMeters.of(Pounds.of(306.068).in(Kilograms) * Inches.of(1).in(Meters) * Inches.of(1).in(Meters));
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kPSim = 0.85;
-    public static final double kISim = 0;
-    public static final double kDSim = 0;
-    
-    
     //.per(Inches).per(Inches).in(KilogramSquareMeters);
 
   }

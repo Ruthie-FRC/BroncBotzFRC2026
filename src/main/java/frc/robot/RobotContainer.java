@@ -163,14 +163,14 @@ public class RobotContainer {
     //   drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     // } else {
     // }
-
+    kicker.setDefaultCommand(kicker.setDutyCycle(0));
     agitator.setDefaultCommand(agitator.setDutyCycle(0));
     indexer.setDefaultCommand(indexer.setDutyCycle(0));
+    intakeRoller.setDefaultCommand(intakeRoller.setDutyCycle(0));
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     turret.setDefaultCommand(turret.set(0));
     hood.setDefaultCommand(hood.setDutyCycle(0));
     intakeArm.setDefaultCommand(intakeArm.setAngle(intakeArm.getAngle()));
-    //if not intaking, the arm is at max
     
     // climberSubsystem.setDefaultCommand(climberSubsystem.setHeight(Setpoints.Climber.startHeight));
   }
@@ -197,12 +197,12 @@ public class RobotContainer {
     
     // m_operatorController.leftTrigger().onTrue(loading.intakeBalls());//Uncomment Later
     // m_operatorController.rightTrigger().onTrue(scoring.shootBall());//UnComment Later
-    m_driverController.rightTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
+    /*m_driverController.rightTrigger().whileTrue(turretFlywheel.setDutyCycle(-0.4));
     m_driverController.a().whileTrue(kicker.setDutyCycle(-1));
     m_driverController.b().whileTrue(indexer.setDutyCycle(0.4));
     m_driverController.leftTrigger().whileTrue(agitator.setDutyCycle(0.4));
     rightTriggerDeadband.whileTrue(new ShootCommand(indexer, kicker, hood, turretFlywheel, TurretConstants.FARShooterGolRPM));
-
+    */
     
     //m_driverController.button(5).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
     //m_driverController.button(6).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
@@ -211,9 +211,35 @@ public class RobotContainer {
     
 
     if (Robot.isSimulation()){
-     // configureFuelSim();
+      String testMode = "RollersAndFlywheels";
+    //   if(testingMode.equals("Elevator")){
+    //       m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
+    //       m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
+    //       m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
+    //       m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
+    //   }
+
+      if(testMode.equals("IntakeArm")){//not working
+        //  m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
+        //  m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
+        //  //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
+        //  //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
+        //  m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
+        //  m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
+      }
+      if(testMode.equals("RollersAndFlywheels")){
+        m_driverController.button(1).whileTrue(indexer.setDutyCycle(0.4));
+        m_driverController.button(2).whileTrue(indexer.setRPM(1000));
+        m_driverController.button(3).whileTrue(kicker.setDutyCycle(0.4));
+        m_driverController.button(4).whileTrue(kicker.setRPM(1000));
+        m_driverController.button(5).whileTrue(agitator.setDutyCycle(0.4));
+        m_driverController.button(6).whileTrue(agitator.setRPM(1000));
+        m_driverController.button(7).whileTrue(intakeRoller.setDutyCycle(0.4));
+        m_driverController.button(8).whileTrue(intakeRoller.setRPM(1000));
+        m_driverController.button(9).whileTrue(turretFlywheel.setDutyCycle(0.4));
+        m_driverController.button(10).whileTrue(turretFlywheel.setRPM(3000));
+      }
     }
-       String testingMode = "IntakeArm";
 
     //   if (testingMode.equals("Turret")){
     //     //TODO :: Add commands that control hood angles, Velocity, and pivot with sim
@@ -250,22 +276,7 @@ public class RobotContainer {
 
     //   }
 
-    //   if(testingMode.equals("Elevator")){
-    //       m_driverController.button(1).whileTrue(climberSubsystem.setHeight((Meters.of(0.8))));
-    //       m_driverController.button(2).whileTrue(climberSubsystem.setHeight(Meters.of(0.16)));
-    //       m_driverController.button(3).whileTrue(climberSubsystem.set(-0.3));
-    //       m_driverController.button(4).whileTrue(climberSubsystem.set(0.3));
-    //   }
-
-       if(testingMode.equals("IntakeArm")){//not working
-          //  m_driverController.button(1).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleIn));
-          //  m_driverController.button(2).whileTrue(intakeArm.setAngle(Setpoints.Intake.intakeArmAngleOut));
-          //  //m_driverController.button(3).whileTrue(intakeArm.setAngle(Degrees.of(60)));
-          //  //m_driverController.button(4).whileTrue(intakeArm.setAngle(Degrees.of(30)));
-          //  m_driverController.button(5).whileTrue(intakeArm.setDutyCycle(0.8));
-          //  m_driverController.button(6).whileTrue(intakeArm.setDutyCycle(-0.8));
-          
-   }
+    
 
 
 

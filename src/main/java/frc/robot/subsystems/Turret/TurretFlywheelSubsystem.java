@@ -40,24 +40,20 @@ import yams.units.YUnits;
 
 public class TurretFlywheelSubsystem extends SubsystemBase {
 
-  private final TalonFX flywheelMotor =
-      new TalonFX(CanIDConstants.turretFlywheelID);
-  private final TalonFX flywheelFollowerMotor = 
-      new TalonFX(CanIDConstants.turretFlywheelFollowerID);
+  private final TalonFX flywheelMotor = new TalonFX(CanIDConstants.turretFlywheelID);
+  private final TalonFX flywheelFollowerMotor = new TalonFX(CanIDConstants.turretFlywheelFollowerID);
   private final SmartMotorControllerConfig motorConfig =
-      new SmartMotorControllerConfig(this)
-          .withClosedLoopController(
-              0.00016541, 0, 0
-              // RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
-          )
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))//don't change it for SA comp
+       new SmartMotorControllerConfig(this)
+          .withClosedLoopController(0, 0, 0)// RPM.of(5000), RotationsPerSecondPerSecond.of(2500))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+          //don't change gears for SA comp //acutal gear ratio: 22:18 TT
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(40))
+          .withStatorCurrentLimit(Amps.of(60))//For flywheel, stator current lm can be 60A/80A //talon fx can handle up to 260A
           .withMotorInverted(true)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015))
+          //.withClosedLoopRampRate(Seconds.of(0.25))
+          //.withOpenLoopRampRate(Seconds.of(0.25))
+          .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015)) //thanks 3561!
           .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
           .withFollowers(Pair.of(flywheelFollowerMotor, true))
           .withControlMode(ControlMode.CLOSED_LOOP);
@@ -69,70 +65,28 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
       new FlyWheelConfig(motor)
           .withDiameter(Inches.of(4))
           .withMass(Pounds.of(1))
-          .withTelemetry("FlywheelMech", TelemetryVerbosity.HIGH)
-          .withSoftLimit(RPM.of(-5000), RPM.of(5000))
-          .withSpeedometerSimulation(RPM.of(7500));
+          .withTelemetry("Flywheel", TelemetryVerbosity.HIGH);
+          //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
+          //.withSpeedometerSimulation(RPM.of(7500));
 
   private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
 
   public TurretFlywheelSubsystem() {}
 
-  public AngularVelocity getVelocity() {
-    return motor.getMechanismVelocity();
+  public AngularVelocity getRPM() {
+    return flywheel.getSpeed();
   }
 
-  public Command setVelocity(AngularVelocity speed) {
-    return flywheel.setSpeed(speed);
-  }
-
-  public Command setVelocity(LinearVelocity speed) {
-    return flywheel.setSpeed(
-        RPM.of(speed.in(YUnits.SandwichPerSecond) * TurretConstants.wheelDiameter));
+  public Command setRPM(double rpm) {
+    return flywheel.setSpeed(RPM.of(rpm));
   }
 
   public Command setDutyCycle(double dutyCycle) {
     return flywheel.set(dutyCycle);
   }
 
-  public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return flywheel.setSpeed(speed);
-  }
-
-  public Command setDutyCycle(Supplier<Double> dutyCycle) {
-    return flywheel.set(dutyCycle);
-  }
-
-    public void setRPM(LinearVelocity newHorizontalSpeed)
-  {
-    flywheel.setMeasurementVelocitySetpoint(newHorizontalSpeed);
-  }
-
-  public boolean readyToShoot(AngularVelocity tolerance)
-  {
-    if (motor.getMechanismSetpointVelocity().isEmpty())
-    {return false;}
-    return motor.getMechanismVelocity().isNear(motor.getMechanismSetpointVelocity().orElseThrow(), tolerance);
-  }
-
-  public Command sysId() {
-    return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
-  }
-
-  public void setVelocitySetpoint(AngularVelocity speed){
-    flywheel.setMechanismVelocitySetpoint(speed);
-  }
-
-  public void setDutyCycleSetpoint(double dutyCycle)
-  {
-    flywheel.setDutyCycleSetpoint(dutyCycle);
-  }
-  
-  public void setTargetRPM(double rpm){
-    motor.setVelocity(RPM.of(rpm));//WHY SMC??
-  }
-
   public void stop() {
-    motor.setDutyCycle(0);  
+    flywheel.set(0);
   }
 
   public void periodic()
@@ -144,5 +98,29 @@ public class TurretFlywheelSubsystem extends SubsystemBase {
   {
     flywheel.simIterate();
   }
-  
+  /********************AlignToGoal*************************** */
+  public void setRPM(LinearVelocity newHorizontalSpeed)
+  {
+    flywheel.setMeasurementVelocitySetpoint(newHorizontalSpeed);
+  }
+
+  /**********************************Shoot Cmd**************************** */
+  // public boolean readyToShoot(AngularVelocity tolerance)
+  // {
+  //   if (motor.getMechanismSetpointVelocity().isEmpty())
+  //   {return false;}
+  //   return motor.getMechanismVelocity().isNear(motor.getMechanismSetpointVelocity().orElseThrow(), tolerance);
+  // }
+
+  // public void setTargetRPM(double rpm){
+  //   motor.setVelocity(RPM.of(rpm));//Using SMC?
+  // }
 }
+// public Command sysId() {
+//     return flywheel.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));
+//   }
+
+// public Command setVelocity(LinearVelocity speed) {
+  //   return flywheel.setSpeed(
+  //       RPM.of(speed.in(YUnits.SandwichPerSecond) * TurretConstants.wheelDiameter));
+  // }
