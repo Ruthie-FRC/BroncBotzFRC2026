@@ -82,6 +82,10 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
     return hood.getAngle();
   }
 
+  public void setDutyCycleSetpoint(double dutyCycle) {
+    hood.setDutyCycleSetpoint(dutyCycle);
+  } 
+
   public Command setDutyCycle(double dutyCycle) {
     return hood.set(dutyCycle);
   }
@@ -98,6 +102,8 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
   public void simulationPeriodic() {
     hood.simIterate();
   }
+
+
 }
 //Live tuning, so we don't really need sysId
 //public Command sysId() {

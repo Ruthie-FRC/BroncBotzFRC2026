@@ -95,7 +95,7 @@ public class RobotContainer {
         defaultCommands();
 
         // Named commands do NOT run with path's. They are inbetween paths.
-        NamedCommands.registerCommand("ShootCommand", new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase).withTimeout(Seconds.of(3)));
+        NamedCommands.registerCommand("ShootCommand", new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase).withTimeout(Seconds.of(6)));
 
         new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
         new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleIn).alongWith(intakeRoller.stopCommand()));
@@ -127,8 +127,8 @@ public class RobotContainer {
     private void configureBindings() {
         m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
         m_driverController.x().whileTrue(drivebase.lockPos());
-        m_driverController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, Setpoints.Shooter.hubRPM));
-        m_driverController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
+        m_driverController.button(1).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood,  Setpoints.Shooter.hubRPM, Setpoints.Hood.hubDegree));
+        m_driverController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase));
         m_driverController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
         m_driverController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
         

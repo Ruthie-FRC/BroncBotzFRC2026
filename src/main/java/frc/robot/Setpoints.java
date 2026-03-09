@@ -28,14 +28,14 @@ public class Setpoints {
         public static final AngularVelocity startFlywheelAngle = YUnits.RPY.of(0);
     }
 
-    public static class Turret {
 
         public static class Hood {
+            public static final Angle hubDegree = Degrees.of(30);
             public static final Angle startHoodAngle = Degrees.of(30);
             public static final Angle lowerHoodAngle = Degrees.of(20);
             public static final Angle higherHoodAngle = Degrees.of(45);
         }
 
-    }
+    
 
 }
