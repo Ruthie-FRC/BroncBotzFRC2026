@@ -40,7 +40,7 @@ public class IndexerSubsystem extends SubsystemBase {
           .withMotorInverted(false)//check
           // .withClosedLoopRampRate(Seconds.of(0.25))  //limits the speed, don't add it
           // .withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0.18, 0.62, 0))
           .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
           .withControlMode(ControlMode.CLOSED_LOOP);
 

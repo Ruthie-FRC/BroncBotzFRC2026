@@ -52,21 +52,21 @@ public class IntakeArmSubsystem extends SubsystemBase {
     private SparkMax m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID, MotorType.kBrushless);
     private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0, 0, 0)
+            .withClosedLoopController(1.35, 0, 0)
             .withSimClosedLoopController(10, 0, 0)
-            .withFeedforward(new ArmFeedforward(0, 0, 0))
+            .withFeedforward(new ArmFeedforward(0.15, 0, 0))
             .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
             .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
             .withGearing(GroundConstants.gearing)
-            .withMotorInverted(false)
+            .withMotorInverted(true)
             .withIdleMode(MotorMode.BRAKE)
             .withStartingPosition(Setpoints.Intake.intakeArmStartAngle)
             .withStatorCurrentLimit(Amps.of(40))
-            .withFollowers(Pair.of(m_followerMotor, true))
-            .withExternalEncoder(m_motor.getAbsoluteEncoder())
-            .withExternalEncoderInverted(false)
-            .withUseExternalFeedbackEncoder(true)
-            .withExternalEncoderZeroOffset(Degrees.of(0));
+            .withFollowers(Pair.of(m_followerMotor, true));
+            // .withExternalEncoder(m_motor.getAbsoluteEncoder())
+            // .withExternalEncoderInverted(true)
+            // .withUseExternalFeedbackEncoder(true)
+            // .withExternalEncoderZeroOffset(Degrees.of(87.089));
 
 
     //-same thing as ArmConfig.withHorizontalZero()
@@ -132,5 +132,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
     public BooleanSupplier aroundAngle(Angle angle) {
         return arm.isNear(angle, GroundConstants.tolerationAngle);
+    }
+
+    public Command setVoltageCommand(Voltage volt){
+        return arm.setVoltage(volt);
     }
 }

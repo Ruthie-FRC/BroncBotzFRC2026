@@ -64,7 +64,8 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
           .withSoftLimits(HoodConstants.softLimitMin, HoodConstants.softLimitMax)
           .withTelemetry("Hood", TelemetryVerbosity.HIGH)
           .withStartingPosition(Degrees.of(0))
-          .withMOI(Inches.of(7), Pounds.of(2));
+          //.withMOI(Inches.of(7), Pounds.of(2))
+          .withMOI(HoodConstants.MOIInKilogram);
 
   private final Pivot hood = new Pivot(m_config);
 

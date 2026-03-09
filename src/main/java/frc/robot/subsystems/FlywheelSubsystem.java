@@ -31,14 +31,14 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final TalonFX flywheelFollowerMotor = new TalonFX(CanIDConstants.turretFlywheelFollowerID);
     private final SmartMotorControllerConfig motorConfig =
             new SmartMotorControllerConfig(this)
-                    .withClosedLoopController(0, 0, 0)
+                    .withClosedLoopController(0.3447, 0, 0.0025)
                     .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
                     //don't change gears for SA comp //acutal gear ratio: 22:18 TT
                     .withIdleMode(MotorMode.COAST)
                     .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
                     .withStatorCurrentLimit(Amps.of(60))//For flywheel, stator current lm can be 60A/80A //talon fx can handle up to 260A
                     .withMotorInverted(true)
-                    .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015)) //thanks 3561!
+                    .withFeedforward(new SimpleMotorFeedforward(0.17, 0.117, 0.01)) //thanks 3561!
                     .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
                     .withFollowers(Pair.of(flywheelFollowerMotor, true))
                     .withControlMode(ControlMode.CLOSED_LOOP);

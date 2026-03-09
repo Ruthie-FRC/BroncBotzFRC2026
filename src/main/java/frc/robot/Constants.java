@@ -95,15 +95,15 @@ public final class Constants {
   // public static final double ksimV = 0;
 
 
-  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromStages("144:1"));
+  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromReductionStages(9,4,4));
 
   public static final Mass weight = Pounds.of(11);
   public static final Distance length = Inches.of(19.25);
 
   public static final Angle softLowerLimit = Degrees.of(0);
-  public static final Angle softUpperLimit = Degrees.of(50);
-  public static final Angle hardLowerLimit = Degrees.of(0);
-  public static final Angle hardUpperLimit = Degrees.of(55);
+  public static final Angle softUpperLimit = Degrees.of(55);
+  public static final Angle hardLowerLimit = Degrees.of(-5);
+  public static final Angle hardUpperLimit = Degrees.of(60);
 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
@@ -201,11 +201,11 @@ public final class Constants {
 
   public static class HoodConstants{
 
-    public static final Angle hardLimitMin = Degrees.of(20);
-    public static final Angle hardLimitMax = Degrees.of(45);
+    public static final Angle hardLimitMin = Degrees.of(0);
+    public static final Angle hardLimitMax = Degrees.of(30);
     public static final Distance length = Inches.of(7);
-    public static final Angle softLimitMin = Degrees.of(22);
-    public static final Angle softLimitMax = Degrees.of(44);
+    public static final Angle softLimitMin = Degrees.of(0);
+    public static final Angle softLimitMax = Degrees.of(25);
     public static final MomentOfInertia MOIInKilogram =
             KilogramSquareMeters.of(Pounds.of(306.068).in(Kilograms) * Inches.of(1).in(Meters) * Inches.of(1).in(Meters));
     //.per(Inches).per(Inches).in(KilogramSquareMeters);

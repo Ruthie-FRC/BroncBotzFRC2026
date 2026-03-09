@@ -15,7 +15,7 @@ public class Setpoints {
     public static class Intake {
         public static final AngularVelocity intakeRollerRPM = RPM.of(-1000);
         public static final AngularVelocity outtakeRollerRPM = RPM.of(1000);
-        public static final Angle intakeArmStartAngle = Degrees.of(45);
+        public static final Angle intakeArmStartAngle = Degrees.of(0); // change back to 45
         public static final Angle intakeArmAngleIn = Degrees.of(5);
         public static final AngularVelocity agitatorRPMout = RPM.of(-500);
         public static final AngularVelocity agitatorRPMin = RPM.of(500);
@@ -29,12 +29,12 @@ public class Setpoints {
     }
 
 
-          public static class Hood {
-              public static final Angle hubDegree = Degrees.of(30);
-              public static final Angle startHoodAngle = Degrees.of(30);
-              public static final Angle lowerHoodAngle = Degrees.of(20);
-              public static final Angle higherHoodAngle = Degrees.of(45);
-          }
+    public static class Hood {
+        public static final Angle hubDegree = Degrees.of(15);
+        public static final Angle startHoodAngle = Degrees.of(0);
+        public static final Angle lowerHoodAngle = Degrees.of(0);
+        public static final Angle higherHoodAngle = Degrees.of(25);
+    }
 
     
 

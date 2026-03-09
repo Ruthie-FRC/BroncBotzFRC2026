@@ -31,6 +31,7 @@ import swervelib.SwerveInputStream;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 
 public class RobotContainer {
@@ -107,10 +108,11 @@ public class RobotContainer {
 
         drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
-        kicker.setDefaultCommand(kicker.setDutyCycleCommand(-0.3));
+        kicker.setDefaultCommand(kicker.setDutyCycleCommand(0)); // Set -0.3 before on field
         agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
-        indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0.3));
+        indexer.setDefaultCommand(indexer.setDutyCycleCommand(0)); // Set -0.3 before on field
         turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+        intakeArm.setDefaultCommand(intakeArm.setVoltageCommand(Volts.of(0)));
     }
 
 
@@ -139,7 +141,13 @@ public class RobotContainer {
         // m_driverController.button(4).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
         // m_driverController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
         // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
-        m_driverController.button(7).whileTrue(intakeArm.setAngleCommand(Degrees.of(34)));
+        //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
+        //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
+        m_driverController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
+        m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+        m_driverController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
+        m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+
 
 
     }
