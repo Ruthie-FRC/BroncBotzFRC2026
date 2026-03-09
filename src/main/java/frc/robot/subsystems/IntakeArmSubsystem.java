@@ -48,21 +48,19 @@ import yams.motorcontrollers.simulation.Sensor;
 
 public class IntakeArmSubsystem extends SubsystemBase {
 
-
-    // Vendor motor controller object
     private SparkMax m_motor = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
     private SparkMax m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID, MotorType.kBrushless);
     private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(0, 0, 0)
-            .withSimClosedLoopController(0, 0, 0)
+            .withSimClosedLoopController(10, 0, 0)
             .withFeedforward(new ArmFeedforward(0, 0, 0))
-            .withSimFeedforward(new ArmFeedforward(0.2, 0.2, 0.2))
+            .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
             .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
             .withGearing(GroundConstants.gearing)
             .withMotorInverted(false)
             .withIdleMode(MotorMode.BRAKE)
-            .withStartingPosition(GroundConstants.startingPosition)
+            .withStartingPosition(Setpoints.Intake.intakeArmStartAngle)
             .withStatorCurrentLimit(Amps.of(40))
             .withFollowers(Pair.of(m_followerMotor, true))
             .withExternalEncoder(m_motor.getAbsoluteEncoder())
@@ -82,7 +80,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
             .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
             // Hard limit is applied to the simulation.
             .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
-            .withStartingPosition(Degrees.of(0))
             // .withHorizontalZero(Degrees.of(15))
 
             // Length and mass of your arm for sim.
@@ -102,13 +99,25 @@ public class IntakeArmSubsystem extends SubsystemBase {
         //sparkSmartMotorController.synchronizeRelativeEncoder();
     }
 
+    public Angle getAngle() {
+        return arm.getAngle();
+    }
+
     public Command setAngleCommand(Angle angle) {
         return arm.setAngle(angle);
         //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
     }
 
+    public void setAngleSetpoint(Angle angle){
+        arm.setMechanismPositionSetpoint(angle);
+    }
+
     public Command setDutyCycleCommand(double dutyCycle) {
         return arm.set(dutyCycle);
+    }
+
+    public void setDutyCycleSetpoint(double dutyCycle){
+        arm.setDutyCycleSetpoint(dutyCycle);
     }
 
     @Override
@@ -121,16 +130,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
         arm.simIterate();
     }
 
-    public Angle getAngle() {
-        return arm.getAngle();
-    }
-
-
     public BooleanSupplier aroundAngle(Angle angle) {
         return arm.isNear(angle, GroundConstants.tolerationAngle);
-    }
-
-    public void setAngleSetpoint(Angle angle) {
-        arm.setMechanismPositionSetpoint(angle);
     }
 }

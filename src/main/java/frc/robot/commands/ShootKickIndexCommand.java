@@ -43,7 +43,7 @@ public class ShootKickIndexCommand extends Command {
     private final IndexerSubsystem indexer;
     private final AgitatorSubsystem agitator;
     private final Optional<SwerveSubsystem> swerve;
-    private final HoodSubsystem hood;
+    private final HoodSubsystem hood;//94 rpm
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     private final Angle goalDegree;
 

@@ -29,6 +29,7 @@ import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 
 
@@ -138,6 +139,7 @@ public class RobotContainer {
         // m_driverController.button(4).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
         // m_driverController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
         // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+        m_driverController.button(7).whileTrue(intakeArm.setAngleCommand(Degrees.of(34)));
 
 
     }
