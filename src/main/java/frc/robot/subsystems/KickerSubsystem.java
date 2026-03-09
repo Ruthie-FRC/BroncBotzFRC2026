@@ -6,15 +6,14 @@ import static edu.wpi.first.units.Units.Pounds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
-
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
+import frc.robot.Constants.IndexerConstants;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -24,58 +23,62 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class AgitatorSubsystem extends SubsystemBase {
-
-    private final SparkMax agitatorMotor = new SparkMax(CanIDConstants.agitatorID, MotorType.kBrushless);
+public class KickerSubsystem extends SubsystemBase {
+    private final SparkMax kickerMotor =
+            new SparkMax(CanIDConstants.kickerflywheelID, MotorType.kBrushless);
 
     private final SmartMotorControllerConfig motorConfig =
             new SmartMotorControllerConfig(this)
                     .withClosedLoopController(0, 0, 0)
-                    .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
+                    .withGearing(IndexerConstants.gearingKicker)
                     .withIdleMode(MotorMode.COAST)
-                    .withTelemetry("AgitatorMotor", TelemetryVerbosity.HIGH)
+                    .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH)
                     .withStatorCurrentLimit(Amps.of(40))
-                    .withMotorInverted(false)
+                    .withMotorInverted(true)//check
                     .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
                     .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
                     .withControlMode(ControlMode.CLOSED_LOOP);
 
     private final SmartMotorController motor =
-            new SparkWrapper(agitatorMotor, DCMotor.getNEO(1), motorConfig);
+            new SparkWrapper(kickerMotor, DCMotor.getNEO(1), motorConfig);
 
-    private final FlyWheelConfig agitatorConfig =
+    private final FlyWheelConfig kickerConfig =
             new FlyWheelConfig(motor)
                     .withDiameter(Inches.of(2))
-                    .withMass(Pounds.of(1.5))
-                    .withTelemetry("Agitator", TelemetryVerbosity.HIGH);
+                    .withMass(Pounds.of(0.7))
+                    .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
 
-    private final FlyWheel agitator = new FlyWheel(agitatorConfig);
-
-    public AgitatorSubsystem() {
-    }
-
-    public AngularVelocity getVelocity() {
-        return agitator.getSpeed();
-    }
+    private final FlyWheel kicker = new FlyWheel(kickerConfig);
 
     public Command setDutyCycleCommand(double dutyCycle) {
-        return agitator.set(dutyCycle);
+        return kicker.set(dutyCycle);
+    }
+
+    public void setDutycycleSetpoint(double dutycycleSetpoint) {
+        kicker.setDutyCycleSetpoint(dutycycleSetpoint);
+    }
+
+    public Command setRPMCommand(AngularVelocity rpm) {
+        return kicker.setSpeed(rpm);
+    }
+
+    public void setVelocitySetpoint(AngularVelocity velocity) {
+        kicker.setMechanismVelocitySetpoint(velocity);
+    }
+
+    public AngularVelocity getRPM() {
+        return kicker.getSpeed();
+    }
+
+    public Command stop() {
+        return kicker.set(0);
     }
 
     public void periodic() {
-        agitator.updateTelemetry();
+        kicker.updateTelemetry();
     }
 
     public void simulationPeriodic() {
-        agitator.simIterate();
-    }
-
-    public void setDutyCycleSetpoint(double dutycycle) {
-        agitator.setDutyCycleSetpoint(dutycycle);
-    }
-
-    public void setVelocitySetpoint(AngularVelocity velocity)
-    {
-        agitator.setMechanismVelocitySetpoint(velocity);
+        kicker.simIterate();
     }
 }

@@ -1,28 +1,19 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Setpoints;
-import frc.robot.Constants;
 import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.HoodConstants;
-import frc.robot.Constants.TurretConstants.PivotConstants;
 
-import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.mechanisms.config.ArmConfig;
-import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.config.PivotConfig;
-import yams.mechanisms.positional.Arm;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -30,7 +21,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
-import yams.motorcontrollers.remote.TalonFXWrapper;
+
 import static edu.wpi.first.units.Units.*;
 
 public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it's not really affected by gravity
@@ -79,8 +70,12 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
 
   public HoodSubsystem() {}
 
-  public Command setDegree(double degree) {
+  public Command setDegreeCommand(double degree) {
     return hood.setAngle(Degrees.of(degree));
+  }
+
+  public void setAngleSetpoint(Angle degree) {
+      hood.setMechanismPositionSetpoint(degree);
   }
 
   public Angle getAngle() {

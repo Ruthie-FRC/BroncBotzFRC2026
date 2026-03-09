@@ -39,10 +39,10 @@ public class Dashboard {
     public static Field2d getField2d() {
         return field;
     }
-    
+
     public static Alliance getAlliance() {
         Optional<Alliance> shrodingersAlliance = DriverStation.getAlliance();
-        if ( shrodingersAlliance.isEmpty() ) {
+        if (shrodingersAlliance.isEmpty()) {
             if (allianceBackupSelector.get().equals("Blue")) {
                 return Alliance.Blue;
             } else if (allianceBackupSelector.get().equals("Red")) {
@@ -66,7 +66,7 @@ public class Dashboard {
             return;
         } else if (130 >= matchTime && matchTime > 105) {
             // Shift 1, 25 seconds until shift 2
-            matchPhaseChangePublisher.set(matchTime - 105); 
+            matchPhaseChangePublisher.set(matchTime - 105);
             return;
         } else if (105 >= matchTime && matchTime > 80) {
             // Shift 2, 25 seconds until shift 3
@@ -91,15 +91,18 @@ public class Dashboard {
         // If we have no alliance, we cannot be enabled, therefore no hub.
         if (alliance.isEmpty()) {
             hubActivePublisher.set(false);
-            return; }
+            return;
+        }
         // Hub is always enabled in autonomous.
         if (DriverStation.isAutonomousEnabled()) {
             hubActivePublisher.set(true);
-            return; }
+            return;
+        }
         // At this point, if we're not teleop enabled, there is no hub.
         if (!DriverStation.isTeleopEnabled()) {
             hubActivePublisher.set(false);
-            return; }
+            return;
+        }
 
         // We're teleop enabled, compute.
         double matchTime = DriverStation.getMatchTime();
@@ -108,7 +111,8 @@ public class Dashboard {
         // If we have no game data, we cannot compute, assume hub is active, as its likely early in teleop.
         if (gameData.isEmpty()) {
             hubActivePublisher.set(true);
-            return; }
+            return;
+        }
         boolean redInactiveFirst = false;
         switch (gameData.charAt(0)) {
             case 'R' -> redInactiveFirst = true;
@@ -116,14 +120,16 @@ public class Dashboard {
             default -> {
                 // If we have invalid game data, assume hub is active.
                 hubActivePublisher.set(true);
-                return; } }
+                return;
+            }
+        }
 
         // Shift was is active for blue if red won auto, or red if blue won auto.
         boolean shift1Active = switch (alliance.get()) {
             case Red -> !redInactiveFirst;
-            case Blue -> redInactiveFirst; };
+            case Blue -> redInactiveFirst;
+        };
 
-        
 
         if (matchTime > 130) {
             // Transition shift, hub is active.
@@ -147,7 +153,7 @@ public class Dashboard {
             return;
         } else {
             // End game, hub always active.
-            hubActivePublisher.set(true); 
+            hubActivePublisher.set(true);
         }
     }
 }

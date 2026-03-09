@@ -1,0 +1,95 @@
+package frc.robot.subsystems;
+
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CanIDConstants;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.velocity.FlyWheel;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
+import yams.motorcontrollers.remote.TalonFXWrapper;
+
+public class FlywheelSubsystem extends SubsystemBase {
+
+    private final TalonFX flywheelMotor = new TalonFX(CanIDConstants.turretFlywheelID);
+    private final TalonFX flywheelFollowerMotor = new TalonFX(CanIDConstants.turretFlywheelFollowerID);
+    private final SmartMotorControllerConfig motorConfig =
+            new SmartMotorControllerConfig(this)
+                    .withClosedLoopController(0, 0, 0)
+                    .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+                    //don't change gears for SA comp //acutal gear ratio: 22:18 TT
+                    .withIdleMode(MotorMode.COAST)
+                    .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+                    .withStatorCurrentLimit(Amps.of(60))//For flywheel, stator current lm can be 60A/80A //talon fx can handle up to 260A
+                    .withMotorInverted(true)
+                    .withFeedforward(new SimpleMotorFeedforward(0.08, 0.119, 0.015)) //thanks 3561!
+                    .withSimFeedforward(new SimpleMotorFeedforward(0.27937, 0.089836, 0.014557))
+                    .withFollowers(Pair.of(flywheelFollowerMotor, true))
+                    .withControlMode(ControlMode.CLOSED_LOOP);
+
+    private final SmartMotorController motor =
+            new TalonFXWrapper(flywheelMotor, DCMotor.getKrakenX60(2), motorConfig);
+
+    private final FlyWheelConfig flywheelConfig =
+            new FlyWheelConfig(motor)
+                    .withDiameter(Inches.of(4))
+                    .withMass(Pounds.of(1))
+                    .withTelemetry("Flywheel", TelemetryVerbosity.HIGH);
+
+    private final FlyWheel flywheel = new FlyWheel(flywheelConfig);
+
+    public FlywheelSubsystem() {
+    }
+
+    public AngularVelocity getRPM() {
+        return flywheel.getSpeed();
+    }
+
+    public Command setRPMCommand(double rpm) {
+        return flywheel.setSpeed(RPM.of(rpm));
+    }
+
+    public void setVelocitySetpoint(AngularVelocity velocity)
+    {
+        flywheel.setMechanismVelocitySetpoint(velocity);
+    }
+
+
+    public void set(AngularVelocity velocity)
+    {
+        flywheel.setMechanismVelocitySetpoint(velocity);
+    }
+
+    public Command setDutyCycle(double dutyCycle) {
+        return flywheel.set(dutyCycle);
+    }
+
+    public void stop() {
+        flywheel.set(0);
+    }
+
+    public void periodic() {
+        flywheel.updateTelemetry();
+    }
+
+    public void simulationPeriodic() {
+        flywheel.simIterate();
+    }
+
+}

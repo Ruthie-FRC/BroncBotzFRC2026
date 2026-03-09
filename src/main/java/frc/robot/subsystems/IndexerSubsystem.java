@@ -1,13 +1,9 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -19,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CanIDConstants;
 import frc.robot.Constants.TurretConstants.IndexerConstants;
 
-import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -64,11 +59,11 @@ public class IndexerSubsystem extends SubsystemBase {
 
   public IndexerSubsystem() {}
 
-  public Command setDutyCycle(double dutyCycle) {
+  public Command setDutyCycleCommand(double dutyCycle) {
     return indexer.set(dutyCycle);
   }
   
-  public Command setRPM(double rpm){
+  public Command setRPMCommand(double rpm){
      return indexer.setSpeed(RPM.of(rpm));
   }
 
@@ -89,6 +84,10 @@ public class IndexerSubsystem extends SubsystemBase {
   {
     indexer.simIterate();
   }
+
+    public void setVelocitySetpoint(AngularVelocity velo) {
+      indexer.setMechanismVelocitySetpoint(velo);
+    }
 }
 //Besides turretFlywheel, indexer, kicker, agitator, intakeRoller are all modeled as a YAMS flywheel
 //For sim, start w/ increasin kv(pid = 0)

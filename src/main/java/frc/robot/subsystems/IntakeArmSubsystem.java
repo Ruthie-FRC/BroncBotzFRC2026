@@ -49,133 +49,128 @@ import yams.motorcontrollers.simulation.Sensor;
 public class IntakeArmSubsystem extends SubsystemBase {
 
 
-  // Vendor motor controller object
-  private SparkMax m_motor = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
-  private SparkMax m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID, MotorType.kBrushless);
-  private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
-  .withControlMode(ControlMode.CLOSED_LOOP)
-  // Feedback Constants (PID Constants)
-  .withClosedLoopController(0,0,0)
-  .withSimClosedLoopController(0,0,0)
-  // Feedforward Constants
-  .withFeedforward(new ArmFeedforward(0,0,0))
-  .withSimFeedforward(new ArmFeedforward(0,0,0))
-  // Gearing from the motor rotor to final shaft.
-  // In this example gearbox(3,4) is the same as gearbox("3:1","4:1") which corresponds to the gearbox attached to your motor.
-  .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
-  .withGearing(GroundConstants.gearing)
-  // Motor properties to prevent over currenting
-  .withMotorInverted(false)
-  .withIdleMode(MotorMode.BRAKE)
-  .withStartingPosition(GroundConstants.startingPosition)
-  .withStatorCurrentLimit(Amps.of(40))
-  .withClosedLoopRampRate(Seconds.of(0.25))
-  .withOpenLoopRampRate(Seconds.of(0.25))
-  .withFollowers(Pair.of(m_followerMotor, true))
-  .withExternalEncoder(m_motor.getAbsoluteEncoder())
-  .withExternalEncoderInverted(false)
-  .withUseExternalFeedbackEncoder(true)
-  .withExternalEncoderGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
-  .withExternalEncoderZeroOffset(Degrees.of(0));
-  
-  
-  
-  //-same thing as ArmConfig.withHorizontalZero()
-  
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
-  
- 
-  private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
-  // Soft limit is applied to the SmartMotorControllers PID
-  .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-  // Hard limit is applied to the simulation.
-  .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
-  .withStartingPosition(Degrees.of(0))
-  // .withHorizontalZero(Degrees.of(15))
-
-  // Length and mass of your arm for sim.
-  .withLength(GroundConstants.length)
-  .withMass(GroundConstants.weight)
-  // Telemetry name and verbosity for the arm.
-  .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
-
-  
-  // Arm Mechanism
-  private Arm arm = new Arm(armCfg);
-
-  /** Creates a new ExampleSubsystem. */
-  public IntakeArmSubsystem() {
-   //sparkSmartMotorController.synchronizeRelativeEncoder(); 
-  }
- 
-
-   /**
-   * Set the angle of the arm.
-   * @param angle Angle to go to.
-   */
-  
-  public Command setAngle(Angle angle) {
-    return arm.setAngle(angle);
-    //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
-  }
-  
-  public Command setAngle(Supplier<Angle> angleSupplier) {
-    return arm.setAngle(angleSupplier);
-  }
-
-  public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
-    return arm.set(dutyCycleSupplier);
-  }
-  
-  public Command setDutyCycle(double dutyCycle) {
-    return arm.set(dutyCycle);
-  }
-  /**
-   * Move the arm up and down.
-   * @param dutycycle [-1, 1] speed to set the arm too.
-   */
-  public Command set(double dutycycle) { return arm.set(dutycycle);} //sparkMaxController.getDutyCycle();
-  //DutyCycleEncoder m_encoderFR = new DutyCycleEncoder(0, 4.0, 2.0); 0-DIO channel 0
-
-  /**
-   * Run sysId on the {@link Arm}
-   */
-  public Command sysId() { 
-    return arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
-  }
+    // Vendor motor controller object
+    private SparkMax m_motor = new SparkMax(Constants.CanIDConstants.intakeArmID, MotorType.kBrushless);
+    private SparkMax m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID, MotorType.kBrushless);
+    private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withClosedLoopController(0, 0, 0)
+            .withSimClosedLoopController(0, 0, 0)
+            .withFeedforward(new ArmFeedforward(0, 0, 0))
+            .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+            .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
+            .withGearing(GroundConstants.gearing)
+            .withMotorInverted(false)
+            .withIdleMode(MotorMode.BRAKE)
+            .withStartingPosition(GroundConstants.startingPosition)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withFollowers(Pair.of(m_followerMotor, true))
+            .withExternalEncoder(m_motor.getAbsoluteEncoder())
+            .withExternalEncoderInverted(false)
+            .withUseExternalFeedbackEncoder(true)
+            .withExternalEncoderZeroOffset(Degrees.of(0));
 
 
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
+    //-same thing as ArmConfig.withHorizontalZero()
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    arm.updateTelemetry();
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-    arm.simIterate();
-  }
-
-  public Angle getAngle() {
-    return arm.getAngle();
-  }
+    // Create our SmartMotorController from our Spark and config with the NEO.
+    private SmartMotorController sparkSmartMotorController = new SparkWrapper(m_motor, DCMotor.getNEO(2), smcConfig);
 
 
-public BooleanSupplier aroundAngle(Angle angle) {
-  return arm.isNear(angle, GroundConstants.tolerationAngle);
+    private ArmConfig armCfg = new ArmConfig(sparkSmartMotorController)
+            // Soft limit is applied to the SmartMotorControllers PID
+            .withSoftLimits(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+            // Hard limit is applied to the simulation.
+            .withHardLimit(GroundConstants.hardLowerLimit, GroundConstants.hardUpperLimit)
+            .withStartingPosition(Degrees.of(0))
+            // .withHorizontalZero(Degrees.of(15))
+
+            // Length and mass of your arm for sim.
+            .withLength(GroundConstants.length)
+            .withMass(GroundConstants.weight)
+            // Telemetry name and verbosity for the arm.
+            .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
+
+
+    // Arm Mechanism
+    private Arm arm = new Arm(armCfg);
+
+    /**
+     * Creates a new ExampleSubsystem.
+     */
+    public IntakeArmSubsystem() {
+        //sparkSmartMotorController.synchronizeRelativeEncoder();
+    }
+
+
+    /**
+     * Set the angle of the arm.
+     *
+     * @param angle Angle to go to.
+     */
+
+    public Command setAngle(Angle angle) {
+        return arm.setAngle(angle);
+        //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+    }
+
+    public Command setAngle(Supplier<Angle> angleSupplier) {
+        return arm.setAngle(angleSupplier);
+    }
+
+    public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
+        return arm.set(dutyCycleSupplier);
+    }
+
+    public Command setDutyCycle(double dutyCycle) {
+        return arm.set(dutyCycle);
+    }
+
+    /**
+     * Move the arm up and down.
+     *
+     * @param dutycycle [-1, 1] speed to set the arm too.
+     */
+    public Command set(double dutycycle) {
+        return arm.set(dutycycle);
+    } //sparkMaxController.getDutyCycle();
+    //DutyCycleEncoder m_encoderFR = new DutyCycleEncoder(0, 4.0, 2.0); 0-DIO channel 0
+
+    /**
+     * Run sysId on the {@link Arm}
+     */
+    public Command sysId() {
+        return arm.sysId(Volts.of(4.5), Volts.of(0.5).per(Second), Seconds.of(4));
+    }
+
+
+    public boolean exampleCondition() {
+        // Query some boolean state, such as a digital sensor.
+        return false;
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        arm.updateTelemetry();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+        arm.simIterate();
+    }
+
+    public Angle getAngle() {
+        return arm.getAngle();
+    }
+
+
+    public BooleanSupplier aroundAngle(Angle angle) {
+        return arm.isNear(angle, GroundConstants.tolerationAngle);
+    }
+
+    public void setAngleSetpoint(Angle angle) {
+        arm.setMechanismPositionSetpoint(angle);
+    }
 }
-
-}
-
-/*
- * Things to be done
- * Tuning
- * LaserCan
- */

@@ -25,11 +25,6 @@ public class AlignmentConstants {
     public static final Pose2d poseTolerance =
         new Pose2d(Inches.of(0.3), Inches.of(0.3), new Rotation2d(rotationTolerance));
 
-    public static final Distance MAX_AUTO_DRIVE_REEF_DISTANCE = Meters.of(2);
-    public static final Distance MAX_AUTO_DRIVE_ALGAE_DISTANCE = Meters.of(2);
-
-    public static final boolean enableDriveFeedFords = true;
-
     public static final PIDConstants translationPID = new PIDConstants(10, 0, 0); // 4.0, 0,0
     public static final double maximumVelocityMetersPerSecond = 1.3;
     public static final double maximumAccelerationMetersPerSecondSquared = 0.95;

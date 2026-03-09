@@ -32,10 +32,6 @@ import edu.wpi.first.units.measure.Time;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.TurretConstants.PivotConstants;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Turret.HoodSubsystem;
-import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
-import frc.robot.subsystems.Turret.TurretSubsystem;
 
 public class ShooterTargetingSystem {
 

@@ -4,25 +4,16 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.Agitator;
 import frc.robot.Constants.CanIDConstants;
-import frc.robot.Constants.IntakeRollerConstants;
 
-import java.util.function.Supplier;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -36,65 +27,61 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakeRollerSubsystem extends SubsystemBase {
 
-  private final SparkFlex intakeRollerMotor = new SparkFlex(CanIDConstants.intakeRollerID, MotorType.kBrushless);//IntakeRoller is not NEO
+    private final SparkFlex intakeRollerMotor = new SparkFlex(CanIDConstants.intakeRollerID, MotorType.kBrushless);//IntakeRoller is not NEO
 
-  private final SmartMotorControllerConfig motorConfig =
-      new SmartMotorControllerConfig(this)
-          .withClosedLoopController(0,0,0)
-              //RPM.of(5000),
-              //RotationsPerSecondPerSecond.of(2500))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
-          .withIdleMode(MotorMode.COAST)
-          .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.HIGH)//not Intake"ARM" motor
-          .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          //.withClosedLoopRampRate(Seconds.of(0.25))
-          //.withOpenLoopRampRate(Seconds.of(0.25))
-          .withFeedforward(new SimpleMotorFeedforward(0,0,0))
-          .withSimFeedforward(new SimpleMotorFeedforward(0,0.5,0))
-          .withControlMode(ControlMode.CLOSED_LOOP);
+    private final SmartMotorControllerConfig motorConfig =
+            new SmartMotorControllerConfig(this)
+                    .withClosedLoopController(0, 0, 0)
+                    .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
+                    .withIdleMode(MotorMode.COAST)
+                    .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.HIGH)//not Intake"ARM" motor
+                    .withStatorCurrentLimit(Amps.of(40))
+                    .withMotorInverted(false)
+                    .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+                    .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
+                    .withControlMode(ControlMode.CLOSED_LOOP);
 
-  private final SmartMotorController motor =
-      new SparkWrapper(intakeRollerMotor, DCMotor.getNeoVortex(1), motorConfig);
+    private final SmartMotorController motor =
+            new SparkWrapper(intakeRollerMotor, DCMotor.getNeoVortex(1), motorConfig);
 
-  private final FlyWheelConfig intakeRollerConfig =
-      new FlyWheelConfig(motor)
-          .withDiameter(Inches.of(4))
-          .withMass(Pounds.of(1))
-          .withTelemetry("IntakeRoller", TelemetryVerbosity.HIGH);
-          //.withSoftLimit(RPM.of(-5000), RPM.of(5000))
-          //.withSpeedometerSimulation(RPM.of(7500));
+    private final FlyWheelConfig intakeRollerConfig =
+            new FlyWheelConfig(motor)
+                    .withDiameter(Inches.of(4))
+                    .withMass(Pounds.of(1))
+                    .withTelemetry("IntakeRoller", TelemetryVerbosity.HIGH);
 
-  private final FlyWheel intakeRoller = new FlyWheel(intakeRollerConfig);
+    private final FlyWheel intakeRoller = new FlyWheel(intakeRollerConfig);
 
-  public IntakeRollerSubsystem() {}
+    public IntakeRollerSubsystem() {
+    }
 
-  public AngularVelocity getRPM() {
-    return intakeRoller.getSpeed();
-  }
+    public AngularVelocity getRPM() {
+        return intakeRoller.getSpeed();
+    }
 
-  public Command setRPM(double rpm) {
-    return intakeRoller.setSpeed(RPM.of(rpm));
-  }
+    public Command setRPM(double rpm) {
+        return intakeRoller.setSpeed(RPM.of(rpm));
+    }
 
-  public Command setDutyCycle(double dutyCycle) {
-    return intakeRoller.set(dutyCycle);
-  }
+    public Command setDutyCycleCommand(double dutyCycle) {
+        return intakeRoller.set(dutyCycle);
+    }
 
-  public Command stop() {
-    return intakeRoller.set(0);
-  }
+    public Command stop() {
+        return intakeRoller.set(0);
+    }
 
-  public void periodic()
-  {
-    intakeRoller.updateTelemetry();
-  }
+    public void periodic() {
+        intakeRoller.updateTelemetry();
+    }
 
-  public void simulationPeriodic()
-  {
-    intakeRoller.simIterate();
-  }
+    public void simulationPeriodic() {
+        intakeRoller.simIterate();
+    }
 
+    public void setDutycycleSetpoint(double dutycycleSetpoint) { intakeRoller.set(dutycycleSetpoint);}
+
+    public void setVelocitySetpoint(AngularVelocity intakeRollerRPM) { intakeRoller.setSpeed(intakeRollerRPM);}
 }
 // public Command sysId() {
 //     return intakeRoller.sysId(Volts.of(10), Volts.of(1).per(Second), Seconds.of(5));

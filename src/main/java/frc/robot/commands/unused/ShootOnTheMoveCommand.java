@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.unused;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Feet;
@@ -24,12 +24,11 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Turret.HoodSubsystem;
-import frc.robot.subsystems.Turret.TurretFlywheelSubsystem;
-import frc.robot.subsystems.Turret.TurretSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.subsystems.unused.TurretSubsystem;
 import frc.robot.systems.field.AllianceFlipUtil;
 import frc.robot.systems.field.FieldConstants;
-import swervelib.SwerveDrive;
 
 import java.util.function.Supplier;
 
@@ -49,8 +48,8 @@ public class ShootOnTheMoveCommand extends Command
   private       double     hoodAngle      = Double.NaN;
 
   // Private Variables
-  private              TurretSubsystem                          turret;
-  private              TurretFlywheelSubsystem                         shooterSubsystem;
+  private              TurretSubsystem                          turretSubsystem;
+  private FlywheelSubsystem shooterSubsystem;
   private              HoodSubsystem                            hoodSubsystem;
   private              Supplier<ChassisSpeeds>                  _fieldRelativeVelocity;
   private              Supplier<Pose2d>                         estimatedPose;
@@ -100,7 +99,7 @@ public class ShootOnTheMoveCommand extends Command
     timeOfFlightMap.put(1.38, 0.90);
   }
 
-  public ShootOnTheMoveCommand(TurretSubsystem turret, TurretFlywheelSubsystem shooter, HoodSubsystem hood,
+  public ShootOnTheMoveCommand(TurretSubsystem turret, FlywheelSubsystem shooter, HoodSubsystem hood,
                                SwerveSubsystem swerveDrive)
   {
     SmartDashboard.putData("ShootOnTheMoveField", debugField);
@@ -119,7 +118,7 @@ public class ShootOnTheMoveCommand extends Command
     };
     _fieldRelativeVelocity = swerveDrive::getFieldVelocity;
 
-    addRequirements(turret, shooter, hood);
+    addRequirements(turretSubsystem, shooterSubsystem, hoodSubsystem);
 
   }
 
@@ -139,12 +138,12 @@ public class ShootOnTheMoveCommand extends Command
     // Calculate distance from turret to target
     Translation2d target =
         AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint.toTranslation2d());
-    Pose2d turretPosition         = turret.getPose(robotPose);
+    Pose2d turretPosition         = turretSubsystem.getPose(robotPose);
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
     // Calculate field relative turret velocity
     Angle         robotAngle     = robotPose.getRotation().getMeasure();
-    ChassisSpeeds turretVelocity = turret.getVelocity(fieldRelativeVelocity, robotAngle);
+    ChassisSpeeds turretVelocity = turretSubsystem.getVelocity(fieldRelativeVelocity, robotAngle);
 
     // Account for imparted velocity by robot (turret) to offset
     double timeOfFlight;
@@ -174,9 +173,9 @@ public class ShootOnTheMoveCommand extends Command
         lookaheadTurretToTargetDistanceMeasure.lte(maxDistance))
     {
       var shooterRPM = RPM.of(launchFlywheelSpeedMap.get(lookaheadTurretToTargetDistance));
-      turret.setAngleSetpoint(turretAngle.getMeasure());
-      hoodSubsystem.setDegree(Radians.of(hoodAngle).in(Degrees));
-      shooterSubsystem.setRPM(shooterRPM.in(RPM));
+      turretSubsystem.setAngleSetpoint(turretAngle.getMeasure());
+      hoodSubsystem.setAngleSetpoint(Radians.of(hoodAngle));
+      shooterSubsystem.setVelocitySetpoint(shooterRPM);
       if (shootingDebounce.calculate(shooterSubsystem.getRPM().isNear(shooterRPM, RPM.of(10))))
       {
         // Set indexer to go vrooooom

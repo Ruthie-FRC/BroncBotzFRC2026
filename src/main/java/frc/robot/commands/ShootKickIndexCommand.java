@@ -6,22 +6,10 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Second;
 
-import java.lang.StackWalker.Option;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.Map.Entry;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import limelight.Limelight;
-import limelight.networktables.AngularVelocity3d;
-import limelight.networktables.LimelightPoseEstimator;
-import limelight.networktables.LimelightPoseEstimator.EstimationMode;
-import limelight.networktables.LimelightResults;
-import limelight.networktables.Orientation3d;
-import limelight.networktables.PoseEstimate;
+import frc.robot.subsystems.*;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.Debouncer;
@@ -30,44 +18,50 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
-import frc.robot.Constants;
-import frc.robot.subsystems.Turret.*;
-import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class ShootKickIndexCommand extends Command {
 
     private record RecordedShot(Distance distance, AngularVelocity shooterSpeed, Time tof) {
-        public Pair<Double,Double> getRPM() { return Pair.of(distance.in(Meters), shooterSpeed.in(RPM));}
-        public Pair<Double,Double> getTOF() { return Pair.of(distance.in(Meters), tof.in(Second));}
+        public Pair<Double, Double> getRPM() {
+            return Pair.of(distance.in(Meters), shooterSpeed.in(RPM));
+        }
+
+        public Pair<Double, Double> getTOF() {
+            return Pair.of(distance.in(Meters), tof.in(Second));
+        }
     }
-    private final TurretFlywheelSubsystem shooter;
+
+    private final FlywheelSubsystem shooter;
     private final KickerSubsystem kicker;
     private final IndexerSubsystem indexer;
+    private final AgitatorSubsystem agitatorSubsystem;
     private final Optional<SwerveSubsystem> swerve;
 
-    private final double goalRPM;   // <-- parameter stored here
+    private final AngularVelocity goalRPM;   // <-- parameter stored here
 
     private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
-        // TUNE HERE
-        new RecordedShot(Meters.of(1), RPM.of(4000), Second.of(1)),
-        new RecordedShot(Meters.of(1), RPM.of(4000), Second.of(1))
+            // TUNE HERE
+            new RecordedShot(Meters.of(1), RPM.of(4000), Second.of(1)),
+            new RecordedShot(Meters.of(1), RPM.of(4000), Second.of(1))
 
     );
     private final InterpolatingDoubleTreeMap calculatedGoalRPM = new InterpolatingDoubleTreeMap();
     private final InterpolatingDoubleTreeMap calculatedTOF = new InterpolatingDoubleTreeMap();
 
     public ShootKickIndexCommand(
-        TurretFlywheelSubsystem shooter,
-        KickerSubsystem kicker,
-        IndexerSubsystem indexer,
-        double goalRPM1            // <-- parameter passed in
+            FlywheelSubsystem shooter,
+            KickerSubsystem kicker,
+            IndexerSubsystem indexer,
+            AgitatorSubsystem agitator,
+            AngularVelocity goalRPM1            // <-- parameter passed in
     ) {
         this.shooter = shooter;
         this.kicker = kicker;
         this.indexer = indexer;
+        this.agitatorSubsystem = agitator;
         this.swerve = Optional.empty();
         this.goalRPM = goalRPM1;   // <-- store parameter
 
@@ -75,19 +69,20 @@ public class ShootKickIndexCommand extends Command {
     }
 
     public ShootKickIndexCommand(
-        TurretFlywheelSubsystem shooter,
-        KickerSubsystem kicker,
-        IndexerSubsystem indexer, 
-        SwerveSubsystem swerve
+            FlywheelSubsystem shooter,
+            KickerSubsystem kicker,
+            IndexerSubsystem indexer,
+            AgitatorSubsystem agitator,
+            SwerveSubsystem swerve
     ) {
         this.shooter = shooter;
         this.kicker = kicker;
         this.indexer = indexer;
+        this.agitatorSubsystem = agitator;
         this.swerve = Optional.of(swerve);
-        goalRPM = 0;
+        goalRPM = RPM.zero();
 
-        for(var shot : shots)
-        {
+        for (var shot : shots) {
             calculatedGoalRPM.put(shot.distance.in(Meters), shot.shooterSpeed.in(RPM));
             calculatedTOF.put(shot.distance.in(Meters), shot.tof.in(Second));
         }
@@ -97,38 +92,41 @@ public class ShootKickIndexCommand extends Command {
     @Override
     public void initialize() {
         // Spin up shooter to the passed RPM
+        kicker.setVelocitySetpoint(RPM.of(1000));
+        if (swerve.isEmpty()) {
+            shooter.setVelocitySetpoint(goalRPM);
+        }
+        agitatorSubsystem.setDutyCycleSetpoint(0);
     }
 
     @Override
     public void execute() {
-        
-        double goalRPM1 = goalRPM;
-        if(swerve.isPresent())
-        {
-            goalRPM1 = swerve.get().distanceToHub();
+
+        AngularVelocity goalRPM1 = goalRPM;
+        if (swerve.isPresent()) {
+            goalRPM1 = RPM.of(calculatedGoalRPM.get(swerve.get().distanceToHub()));
         }
 
-        shooter.setRPM(goalRPM1);
+        shooter.setVelocitySetpoint(goalRPM1);
 
         AngularVelocity shooterRPM = shooter.getRPM();
 
         boolean shooterReady = shootDebounce1.calculate(
-            shooterRPM.isNear(
-                RPM.of(goalRPM1),
-                RPM.of(100)// tolerance
-            )
+                shooterRPM.isNear(
+                        goalRPM1,
+                        RPM.of(100)// tolerance
+                )
 
         );
 
-          if(shooterReady){
-            kicker.setRPM(0.75);
-            indexer.setRPM(goalRPM);
-        }else{
-            kicker.setRPM(0.75);
+        if (shooterReady) {
+            agitatorSubsystem.setDutyCycleSetpoint(0.5);
+            indexer.setVelocitySetpoint(RPM.of(1000));
+        } else {
             indexer.stop();
         }
 
-        
+
     }
 
     @Override
@@ -136,6 +134,7 @@ public class ShootKickIndexCommand extends Command {
         shooter.stop();
         kicker.stop();
         indexer.stop();
+        agitatorSubsystem.setDutyCycleSetpoint(0);
     }
 
     @Override
