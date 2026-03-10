@@ -110,12 +110,16 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setDutyCycleCommand(double dutyCycle)
   {
-    return arm.set(dutyCycle);
+    return run(() -> {
+      masterMotorController.setDutyCycle(dutyCycle);
+      slaveMotorController.setDutyCycle(dutyCycle);
+    }).withName("SetDutyCycle");
   }
 
   public void setDutyCycleSetpoint(double dutyCycle)
   {
     arm.setDutyCycleSetpoint(dutyCycle);
+    slaveMotorController.setDutyCycle(dutyCycle);
   }
 
   @Override
@@ -137,6 +141,9 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setVoltageCommand(Voltage volt)
   {
-    return arm.setVoltage(volt);
+    return run(() -> {
+      masterMotorController.setVoltage(volt);
+      slaveMotorController.setVoltage(volt);
+    }).withName("SetVoltage");
   }
 }
