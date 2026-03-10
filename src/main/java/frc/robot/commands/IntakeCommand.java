@@ -8,7 +8,6 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
 
 
 public class IntakeCommand extends Command {
@@ -30,7 +29,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void initialize() {
-        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleOut);
+        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
     }
@@ -41,7 +40,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void execute() {
-        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleOut, Degrees.of(7)))
+        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
         {
             intakeRollerSubsystem.setVelocitySetpoint(Setpoints.Intake.intakeRollerRPM);
             agitatorSubsystem.setVelocitySetpoint(Setpoints.Intake.agitatorRPMin);
@@ -79,7 +78,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleIn);
+        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
         agitatorSubsystem.setDutyCycleSetpoint(0);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
     }

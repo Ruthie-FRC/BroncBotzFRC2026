@@ -108,7 +108,7 @@ public class RobotContainer
                                                             drivebase).withTimeout(Seconds.of(6)));
 
     new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleIn)
+    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp)
                                                    .alongWith(intakeRoller.stopCommand()));
   }
 
