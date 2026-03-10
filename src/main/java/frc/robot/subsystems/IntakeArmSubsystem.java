@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -141,9 +142,20 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setVoltageCommand(Voltage volt)
   {
-    return run(() -> {
-      masterMotorController.setVoltage(volt);
-      slaveMotorController.setVoltage(volt);
-    }).withName("SetVoltage");
+    return setLeftVoltageCommand(volt).alongWith(setRightVoltageCommand(volt)).withName("SetVoltage");
+  }
+
+  public Command setLeftVoltageCommand(Voltage volt)
+  {
+    return run(() -> {masterMotorController.setVoltage(volt);}).finallyDo(() -> {
+      masterMotorController.setVoltage(Volts.of(0));
+    }).withName("SetLeftVoltage");
+  }
+
+  public Command setRightVoltageCommand(Voltage volt)
+  {
+    return run(() -> {slaveMotorController.setVoltage(volt);}).finallyDo(() -> {
+      slaveMotorController.setVoltage(Volts.of(0));
+    }).withName("SetRightVoltage");
   }
 }
