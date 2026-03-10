@@ -78,4 +78,5 @@ public class AgitatorSubsystem extends SubsystemBase {
     {
         agitator.setMechanismVelocitySetpoint(velocity);
     }
+
 }

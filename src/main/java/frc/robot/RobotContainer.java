@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -165,29 +167,31 @@ public class RobotContainer
       m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
       m_driverController.x().whileTrue(drivebase.lockPos());
       m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
-
-      m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
-                                                                                 kicker,
-                                                                                 indexer,
-                                                                                 agitator,
-                                                                                // hood,
-                                                                                 drivebase));
+     
+    //   m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    //                                                                              kicker,
+    //                                                                              indexer,
+    //                                                                              agitator,
+    //                                                                             // hood,
+    //                                                                              drivebase));
+          
                                                                                  
       m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
-      m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-                                                                   kicker,
-                                                                   indexer,
-                                                                   agitator,
-                                                                  // hood,
-                                                                   Setpoints.Shooter.hubRPM
-                                                                  // Setpoints.Hood.hubDegree
-                                                                  ));
-
+    //   m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    //                                                                kicker,
+    //                                                                indexer,
+    //                                                                agitator,
+    //                                                               // hood,
+    //                                                                Setpoints.Shooter.hubRPM
+    //                                                               // Setpoints.Hood.hubDegree
+    //                                                               ));
+        
+      m_operatorController.x().whileTrue(indexer.setVeloctiyCommand(RPM.of(300)).alongWith(kicker.setRPMCommand(RPM.of(650)),agitator.setDutyCycleCommand(0.5)));
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
       m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-
+      
     
 
 
