@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -130,11 +131,13 @@ public class RobotContainer {
     private void configureBindings() {
         m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
         m_driverController.x().whileTrue(drivebase.lockPos());
+        m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
+
         m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood,  Setpoints.Shooter.hubRPM, Setpoints.Hood.hubDegree));
         m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase));
         m_operatorController.leftBumper().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)).alongWith(agitator.setDutyCycleCommand(0.3), intakeRoller.setDutyCycleCommand(0.3)).finallyDo(()->intakeRoller.setDutycycleSetpoint(0)));
         m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
-        
+
         // m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
         // m_driverController.button(2).whileTrue(drivebase.lockPos().withTimeout(5));
         // m_driverController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, Setpoints.Shooter.hubRPM).withTimeout(5));
@@ -143,16 +146,19 @@ public class RobotContainer {
         // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
         //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
         //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-      
+
 
         m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
         m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(50)));
-        // m_driverController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
-        // m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
-        // m_driverController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
-        // m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
 
-        // m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
+        if(DriverStation.isTest())
+        {
+           m_driverController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
+           m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+           m_driverController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
+           m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+        }
+
 
 
     }
