@@ -100,14 +100,15 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setAngleCommand(Angle angle)
   {
-    return run(()->setAngleSetpoint(angle)).withName("SetAngleCommand");
-    //.until(arm.isNear(angle, Degrees.of(OutakeConstants.kArmAllowableError)));
+    return arm.setAngle(angle);
+//    return run(()->setAngleSetpoint(angle)).withName("SetAngleCommand");
   }
 
   public void setAngleSetpoint(Angle angle)
   {
-    masterMotorController.setPosition(angle);
-    slaveMotorController.setPosition(angle);
+    arm.setMechanismPositionSetpoint(angle);
+//    masterMotorController.setPosition(angle);
+//    slaveMotorController.setPosition(angle);
   }
 
   public Command setDutyCycleCommand(double dutyCycle)
