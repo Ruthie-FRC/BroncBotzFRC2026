@@ -58,7 +58,7 @@ public class KickerSubsystem extends SubsystemBase {
         kicker.setDutyCycleSetpoint(dutycycleSetpoint);
     }
 
-    public Command setRPMCommand(AngularVelocity rpm) {
+    public Command setVelocityCommand(AngularVelocity rpm) {
         return kicker.setSpeed(rpm);
     }
 
@@ -81,4 +81,5 @@ public class KickerSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         kicker.simIterate();
     }
+
 }

@@ -140,14 +140,15 @@ public class ShootKickIndexCommand extends Command {
         boolean shooterReady = shootDebounce1.calculate(
                 shooterRPM.isNear(
                         goalRPM1,
-                        RPM.of(100)// tolerance
+                        RPM.of(150)// tolerance
                 )
 
         );
+        kicker.setVelocitySetpoint(RPM.of(1000));
 
         if (shooterReady) {
             agitator.setDutyCycleSetpoint(0.5);
-            indexer.setVelocitySetpoint(RPM.of(1000));
+            indexer.setVelocitySetpoint(RPM.of(400));
         } else {
             indexer.setDutyCycleSetpoint(0);;
         }
