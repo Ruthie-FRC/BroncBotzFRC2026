@@ -30,7 +30,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void initialize() {
-        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleIn);
+        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleOut);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
     }
