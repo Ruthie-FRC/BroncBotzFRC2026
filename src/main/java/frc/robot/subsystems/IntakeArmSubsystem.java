@@ -40,9 +40,9 @@ public class IntakeArmSubsystem extends SubsystemBase
                                                                     MotorType.kBrushless);
   private SmartMotorControllerConfig masterConfig    = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(1.6, 0, 0)
+      .withClosedLoopController(4.5, 0, 0.5)
       .withSimClosedLoopController(10, 0, 0)
-      .withFeedforward(new ArmFeedforward(0.17, 0, 6, 15.5))
+      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0))
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
       .withGearing(GroundConstants.gearing)
@@ -115,15 +115,22 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setDutyCycleCommand(double dutyCycle)
   {
+    return setDutyCycleCommand(dutyCycle, dutyCycle);
+  }
+ public Command setDutyCycleCommand(double left, double right)
+  {
     return run(() -> {
-      masterMotorController.setDutyCycle(dutyCycle);
-      slaveMotorController.setDutyCycle(dutyCycle);
-    }).withName("SetDutyCycle");
+      masterMotorController.setDutyCycle(left);
+      slaveMotorController.setDutyCycle(right);
+    }).finallyDo(() -> {
+      masterMotorController.setDutyCycle((0));
+      slaveMotorController.setDutyCycle((0));
+    }).withName("SetBothDutyCycle");
   }
 
   public void setDutyCycleSetpoint(double dutyCycle)
   {
-    arm.setDutyCycleSetpoint(dutyCycle);
+    masterMotorController.setDutyCycle(dutyCycle);
     slaveMotorController.setDutyCycle(dutyCycle);
   }
 

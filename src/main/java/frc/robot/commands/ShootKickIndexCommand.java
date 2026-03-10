@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Second;
@@ -52,9 +53,25 @@ public class ShootKickIndexCommand extends Command {
 
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE
-            new RecordedShot(Meters.of(1), RPM.of(1000),  Second.of(1)),
-            new RecordedShot(Meters.of(2), RPM.of(2000),Second.of(1)),
-            new RecordedShot(Meters.of(3), RPM.of(3000), Second.of(1))
+            new RecordedShot(Inches.of(196), RPM.of(3000),  Second.of(1)),
+            new RecordedShot(Inches.of(165), RPM.of(2800),Second.of(1)),
+            new RecordedShot(Inches.of(140), RPM.of(2600), Second.of(1)),
+             new RecordedShot(Inches.of(116), RPM.of(2400),  Second.of(1)),
+            new RecordedShot(Inches.of(93), RPM.of(2200),Second.of(1)),
+            new RecordedShot(Inches.of(208), RPM.of(3200), Second.of(1)),
+             new RecordedShot(Inches.of(202), RPM.of(3150),  Second.of(1)),
+            new RecordedShot(Inches.of(191), RPM.of(3100),Second.of(1)),
+            new RecordedShot(Inches.of(191), RPM.of(3050), Second.of(1)),
+            new RecordedShot(Inches.of(132), RPM.of(2500),  Second.of(1)),
+            new RecordedShot(Inches.of(115), RPM.of(2400),Second.of(1)),
+            new RecordedShot(Inches.of(105), RPM.of(2400), Second.of(1)),
+             new RecordedShot(Inches.of(97), RPM.of(2200),  Second.of(1)),
+            new RecordedShot(Inches.of(265), RPM.of(4000),Second.of(1)),
+            new RecordedShot(Inches.of(207), RPM.of(3100), Second.of(1)),
+             new RecordedShot(Inches.of(174), RPM.of(2800),  Second.of(1)),
+            new RecordedShot(Inches.of(162), RPM.of(2700),Second.of(1)),
+            new RecordedShot(Inches.of(153), RPM.of(2600), Second.of(1)),
+            new RecordedShot(Inches.of(133), RPM.of(2500), Second.of(1))
 
     );
     private final InterpolatingDoubleTreeMap calculatedGoalRPM = new InterpolatingDoubleTreeMap();
@@ -150,7 +167,7 @@ public class ShootKickIndexCommand extends Command {
             agitator.setDutyCycleSetpoint(0.5);
             indexer.setVelocitySetpoint(RPM.of(400));
         } else {
-            indexer.setDutyCycleSetpoint(0);;
+            indexer.setDutyCycleSetpoint(-0.3);;
         }
 
 

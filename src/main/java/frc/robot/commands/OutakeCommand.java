@@ -38,9 +38,12 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleDown, Degrees.of(7))){
-            intakeRollerSubsystem.setVelocitySetpoint(Setpoints.Intake.outtakeRollerRPM);
-            agitatorSubsystem.setVelocitySetpoint(Setpoints.Intake.agitatorRPMout);
+         intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
+        System.out.println(intakeArmSubsystem.getAngle().in(Degrees));
+        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
+        {
+            intakeRollerSubsystem.setDutycycleSetpoint(1);//(Setpoints.Intake.intakeRollerRPM);
+            agitatorSubsystem.setDutyCycleSetpoint(-0.5);
         }
     }
 

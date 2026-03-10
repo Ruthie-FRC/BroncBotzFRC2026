@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Ohm;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -126,7 +127,7 @@ public class RobotContainer
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setVoltageCommand(Volts.of(0)));
+    // intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand((0)));
   }
 
 
@@ -151,52 +152,78 @@ public class RobotContainer
     //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
     //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
 
-    if (DriverStation.isTest())
-    {
+   
    // Test mode controls.
-      // m_operatorController.x().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
-      // m_operatorController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-2)));
-      // m_operatorController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1), Volts.of(0)));
-      // m_operatorController.a().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1), Volts.of(0)));
-      // m_operatorController.leftBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(-1)));
-      // m_operatorController.rightBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(1)));
-    }
-     else
-    {}
+      // m_operatorController.povUp().whileTrue(intakeArm.setDutyCycleCommand(0.3));
+      // m_operatorController.povRight().whileTrue(intakeArm.setDutyCycleCommand(-0.3));
+      // m_operatorController.b().whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+      //  m_operatorController.a().whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+      // m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
+      // m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
+  
     //  Regular driver and operator controls.
-      m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
-      m_driverController.x().whileTrue(drivebase.lockPos());
-      m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
+      // m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
+      // m_driverController.x().whileTrue(drivebase.lockPos());
+
+       m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
+
+      boolean slowMode = false;
+      
+      //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
      
-    //   m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                                              kicker,
-    //                                                                              indexer,
-    //                                                                              agitator,
-    //                                                                             // hood,
-    //                                                                              drivebase));
+      m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+                                                                                 kicker,
+                                                                                 indexer,
+                                                                                 agitator,
+                                                                                // hood,
+                                                                                 drivebase));
           
                                                                                  
-      m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+      // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
-      m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-                                                                   kicker,
-                                                                   indexer,
-                                                                   agitator,
-                                                                  // hood,
-                                                                   RPM.of(3000)
-                                                                  // Setpoints.Hood.hubDegree
-                                                                  ));
+      // m_driverController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+      //                                                              kicker,
+      //                                                              indexer,
+      //                                                              agitator,
+      //                                                             // hood,
+      //                                                              RPM.of(2800)
+      //                                                             // Setpoints.Hood.hubDegree
+      //                                                             ));
+      // m_driverController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+      //                                                              kicker,
+      //                                                              indexer,
+      //                                                              agitator,
+      //                                                             // hood,
+      //                                                              RPM.of(3350)
+      //                                                             // Setpoints.Hood.hubDegree
+      //                                                             ));
+      // m_driverController.b().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+      //                                                              kicker,
+      //                                                              indexer,
+      //                                                              agitator,
+      //                                                             // hood,
+      //                                                              RPM.of(3100)
+      //                                                             // Setpoints.Hood.hubDegree
+      //                                                             ));
+      // m_driverController.a().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+      //                                                              kicker,
+      //                                                              indexer,
+      //                                                              agitator,
+      //                                                             // hood,
+      //                                                              RPM.of(2950)
+      //                                                             // Setpoints.Hood.hubDegree
+      //                                                             ));                                                            
         
-      //m_operatorController.x().whileTrue(indexer.setVeloctiyCommand(RPM.of(300)).alongWith(kicker.setRPMCommand(RPM.of(650)),agitator.setDutyCycleCommand(0.5)));
+      m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
       m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-      
+      m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+  }
     
 
 
-  }
-
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
