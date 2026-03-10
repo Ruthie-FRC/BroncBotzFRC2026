@@ -78,7 +78,7 @@ public class RobotContainer {
             // Fallback
             .aim(FieldConstants.Hub.getHubPose())
             .aimHeadingOffset(Rotation2d.k180deg)
-            .aimWhile(m_driverController.button(1)));
+            .aimWhile(m_driverController.leftBumper()));
 
     Command autoSwerveInputStream = drivebase.driveFieldOriented(driveAngularVelocity.copy()
             // Fallback
@@ -108,9 +108,9 @@ public class RobotContainer {
 
         drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
-        kicker.setDefaultCommand(kicker.setDutyCycleCommand(0)); // Set -0.3 before on field
+        kicker.setDefaultCommand(kicker.setDutyCycleCommand(-0)); // Set -0.3 before on field
         agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
-        indexer.setDefaultCommand(indexer.setDutyCycleCommand(0)); // Set -0.3 before on field
+        indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
         turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
         intakeArm.setDefaultCommand(intakeArm.setVoltageCommand(Volts.of(0)));
     }
@@ -130,10 +130,10 @@ public class RobotContainer {
     private void configureBindings() {
         m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
         m_driverController.x().whileTrue(drivebase.lockPos());
-        m_driverController.button(1).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood,  Setpoints.Shooter.hubRPM, Setpoints.Hood.hubDegree));
-        m_driverController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase));
-        m_driverController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-        m_driverController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+        m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood,  Setpoints.Shooter.hubRPM, Setpoints.Hood.hubDegree));
+        m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase));
+        m_operatorController.leftBumper().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)).alongWith(agitator.setDutyCycleCommand(0.3), intakeRoller.setDutyCycleCommand(0.3)).finallyDo(()->intakeRoller.setDutycycleSetpoint(0)));
+        m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
         
         // m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
         // m_driverController.button(2).whileTrue(drivebase.lockPos().withTimeout(5));
@@ -143,11 +143,16 @@ public class RobotContainer {
         // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
         //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
         //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-        m_driverController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
-        m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
-        m_driverController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
-        m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+      
 
+        m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
+        m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(50)));
+        // m_driverController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
+        // m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+        // m_driverController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
+        // m_driverController.y().whileFalse(intakeArm.setVoltageCommand(Volts.of(0)));
+
+        // m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
 
 
     }
