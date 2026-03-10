@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Setpoints;
+import frc.robot.Setpoints.Intake;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -74,7 +75,7 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown);
+        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleUp);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
     }
