@@ -105,7 +105,8 @@ public class RobotContainer
                                                             indexer,
                                                             agitator,
                                                             hood,
-                                                            drivebase).withTimeout(Seconds.of(6)));
+                                                            Setpoints.Shooter.hubRPM, 
+                                                            Setpoints.Hood.hubDegree).withTimeout(Seconds.of(6)));
 
     new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp)
@@ -170,7 +171,9 @@ public class RobotContainer
                                                                                  agitator,
                                                                                  hood,
                                                                                  drivebase));
+                                                                                 
       m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+
       m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                    kicker,
                                                                    indexer,
@@ -178,6 +181,7 @@ public class RobotContainer
                                                                    hood,
                                                                    Setpoints.Shooter.hubRPM,
                                                                    Setpoints.Hood.hubDegree));
+
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(50)));
       m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
