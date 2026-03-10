@@ -11,22 +11,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 4.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootCommand"
-                }
-              }
-            ]
+            "name": "ShootCommand"
           }
         },
         {
@@ -36,22 +23,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Auto Three Advanced Path Follow"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootCommand"
-                }
-              }
-            ]
+            "pathName": "Auto Three Advanced Path Follow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
           }
         }
       ]
