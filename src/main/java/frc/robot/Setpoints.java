@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import yams.units.YUnits;
 
 import static edu.wpi.first.units.Units.*;
@@ -21,6 +20,7 @@ public class Setpoints {
         public static final AngularVelocity agitatorRPMin = RPM.of(500);
         public static Angle intakeArmAngleOut = Degrees.of(45);
 
+      public static Angle intakeArmAbsZeroOffset = Degrees.of(0);
     }
 
     public static class Indexer {
