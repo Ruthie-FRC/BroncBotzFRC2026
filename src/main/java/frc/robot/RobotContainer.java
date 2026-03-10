@@ -45,7 +45,7 @@ public class RobotContainer
   private final IntakeRollerSubsystem intakeRoller = new IntakeRollerSubsystem();
   private final IntakeArmSubsystem    intakeArm    = new IntakeArmSubsystem();
 
-  private final HoodSubsystem     hood           = new HoodSubsystem();
+  //private final HoodSubsystem     hood           = new HoodSubsystem();
   private final FlywheelSubsystem turretFlywheel = new FlywheelSubsystem();
 
   private final IndexerSubsystem  indexer  = new IndexerSubsystem();
@@ -104,9 +104,10 @@ public class RobotContainer
                                                             kicker,
                                                             indexer,
                                                             agitator,
-                                                            hood,
-                                                            Setpoints.Shooter.hubRPM, 
-                                                            Setpoints.Hood.hubDegree).withTimeout(Seconds.of(6)));
+                                                           // hood,
+                                                            Setpoints.Shooter.hubRPM 
+                                                            //Setpoints.Hood.hubDegree
+                                                            ).withTimeout(Seconds.of(6)));
 
     new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp)
@@ -150,17 +151,17 @@ public class RobotContainer
 
     if (DriverStation.isTest())
     {
-      // Test mode controls.
-      m_operatorController.x().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
-      m_operatorController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
-      m_operatorController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1), Volts.of(0)));
-      m_operatorController.a().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1), Volts.of(0)));
-      m_operatorController.leftBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(-1)));
-      m_operatorController.rightBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(1)));
-
-    } else
-    {
-      // Regular driver and operator controls.
+   // Test mode controls.
+      // m_operatorController.x().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
+      // m_operatorController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-2)));
+      // m_operatorController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1), Volts.of(0)));
+      // m_operatorController.a().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1), Volts.of(0)));
+      // m_operatorController.leftBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(-1)));
+      // m_operatorController.rightBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(1)));
+    }
+     else
+    {}
+    //  Regular driver and operator controls.
       m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
       m_driverController.x().whileTrue(drivebase.lockPos());
       m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
@@ -169,7 +170,7 @@ public class RobotContainer
                                                                                  kicker,
                                                                                  indexer,
                                                                                  agitator,
-                                                                                 hood,
+                                                                                // hood,
                                                                                  drivebase));
                                                                                  
       m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
@@ -178,15 +179,16 @@ public class RobotContainer
                                                                    kicker,
                                                                    indexer,
                                                                    agitator,
-                                                                   hood,
-                                                                   Setpoints.Shooter.hubRPM,
-                                                                   Setpoints.Hood.hubDegree));
+                                                                  // hood,
+                                                                   Setpoints.Shooter.hubRPM
+                                                                  // Setpoints.Hood.hubDegree
+                                                                  ));
 
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-      m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(50)));
+      m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
       m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
 
-    }
+    
 
 
   }

@@ -40,9 +40,9 @@ public class IntakeArmSubsystem extends SubsystemBase
                                                                     MotorType.kBrushless);
   private SmartMotorControllerConfig masterConfig    = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(1.35, 0, 0)
+      .withClosedLoopController(1.6, 0, 0)
       .withSimClosedLoopController(10, 0, 0)
-      .withFeedforward(new ArmFeedforward(0.15, 0, 0))
+      .withFeedforward(new ArmFeedforward(0.17, 0, 6, 15.5))
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
       .withGearing(GroundConstants.gearing)
