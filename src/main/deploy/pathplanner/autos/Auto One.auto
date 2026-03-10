@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Auto One Path One"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
+          }
         }
       ]
     }

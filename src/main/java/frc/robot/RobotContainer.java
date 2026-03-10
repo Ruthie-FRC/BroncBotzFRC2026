@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -152,7 +151,7 @@ public class RobotContainer
     //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
     //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
 
-   
+
    // Test mode controls.
       // m_operatorController.povUp().whileTrue(intakeArm.setDutyCycleCommand(0.3));
       // m_operatorController.povRight().whileTrue(intakeArm.setDutyCycleCommand(-0.3));
@@ -160,7 +159,7 @@ public class RobotContainer
       //  m_operatorController.a().whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
       // m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
       // m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-  
+
     //  Regular driver and operator controls.
       // m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
       // m_driverController.x().whileTrue(drivebase.lockPos());
@@ -168,17 +167,17 @@ public class RobotContainer
        m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
 
       boolean slowMode = false;
-      
+
       //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-     
+
       m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                  kicker,
                                                                                  indexer,
                                                                                  agitator,
                                                                                 // hood,
                                                                                  drivebase));
-          
-                                                                                 
+
+
       // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
       // m_driverController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
@@ -212,7 +211,7 @@ public class RobotContainer
       //                                                             // hood,
       //                                                              RPM.of(2950)
       //                                                             // Setpoints.Hood.hubDegree
-      //                                                             ));                                                            
+      //                                                             ));
         
       m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
@@ -223,7 +222,7 @@ public class RobotContainer
     
 
 
-  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
