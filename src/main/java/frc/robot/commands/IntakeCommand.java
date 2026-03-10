@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Setpoints;
+import frc.robot.Setpoints.Intake;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -40,7 +41,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void execute() {
-        if(intakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleIn, Degrees.of(7)))
+        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleOut, Degrees.of(7)))
         {
             intakeRollerSubsystem.setVelocitySetpoint(Setpoints.Intake.intakeRollerRPM);
             agitatorSubsystem.setVelocitySetpoint(Setpoints.Intake.agitatorRPMin);

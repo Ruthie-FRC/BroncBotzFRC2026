@@ -180,10 +180,7 @@ public class RobotContainer
                                                                    Setpoints.Hood.hubDegree));
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(50)));
-      m_operatorController.leftBumper().whileTrue(intakeArm.setAngleCommand(Degrees.of(0))
-                                                           .alongWith(agitator.setDutyCycleCommand(0.3),
-                                                                      intakeRoller.setDutyCycleCommand(0.3))
-                                                           .finallyDo(() -> intakeRoller.setDutycycleSetpoint(0)));
+      m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
 
     }
 
