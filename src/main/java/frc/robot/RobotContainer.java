@@ -178,16 +178,16 @@ public class RobotContainer
                                                                                  
       m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
-    //   m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                                kicker,
-    //                                                                indexer,
-    //                                                                agitator,
-    //                                                               // hood,
-    //                                                                Setpoints.Shooter.hubRPM
-    //                                                               // Setpoints.Hood.hubDegree
-    //                                                               ));
+      m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+                                                                   kicker,
+                                                                   indexer,
+                                                                   agitator,
+                                                                  // hood,
+                                                                   RPM.of(3000)
+                                                                  // Setpoints.Hood.hubDegree
+                                                                  ));
         
-      m_operatorController.x().whileTrue(indexer.setVeloctiyCommand(RPM.of(300)).alongWith(kicker.setRPMCommand(RPM.of(650)),agitator.setDutyCycleCommand(0.5)));
+      //m_operatorController.x().whileTrue(indexer.setVeloctiyCommand(RPM.of(300)).alongWith(kicker.setRPMCommand(RPM.of(650)),agitator.setDutyCycleCommand(0.5)));
       m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
       m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
