@@ -19,6 +19,12 @@
                 "data": {
                   "waitTime": 4.0
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootCommand"
+                }
               }
             ]
           }
@@ -37,6 +43,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "Auto Three Advanced Path Follow"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootCommand"
                 }
               }
             ]
