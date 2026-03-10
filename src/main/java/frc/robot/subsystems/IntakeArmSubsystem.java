@@ -140,22 +140,20 @@ public class IntakeArmSubsystem extends SubsystemBase
     return arm.isNear(angle, GroundConstants.tolerationAngle);
   }
 
-  public Command setVoltageCommand(Voltage volt)
+  public Command setVoltageCommand(Voltage left, Voltage right)
   {
-    return setLeftVoltageCommand(volt).alongWith(setRightVoltageCommand(volt)).withName("SetVoltage");
-  }
-
-  public Command setLeftVoltageCommand(Voltage volt)
-  {
-    return run(() -> {masterMotorController.setVoltage(volt);}).finallyDo(() -> {
+    return run(() -> {
+      masterMotorController.setVoltage(left);
+      slaveMotorController.setVoltage(right);
+    }).finallyDo(() -> {
       masterMotorController.setVoltage(Volts.of(0));
-    }).withName("SetLeftVoltage");
+      slaveMotorController.setVoltage(Volts.of(0));
+    }).withName("SetBothVoltage");
   }
 
-  public Command setRightVoltageCommand(Voltage volt)
+  public Command setVoltageCommand(Voltage volts)
   {
-    return run(() -> {slaveMotorController.setVoltage(volt);}).finallyDo(() -> {
-      slaveMotorController.setVoltage(Volts.of(0));
-    }).withName("SetRightVoltage");
+    return setVoltageCommand(volts, volts);
   }
+
 }

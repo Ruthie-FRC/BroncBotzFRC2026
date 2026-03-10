@@ -152,10 +152,10 @@ public class RobotContainer
       // Test mode controls.
       m_operatorController.x().whileTrue(intakeArm.setVoltageCommand(Volts.of(1)));
       m_operatorController.y().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1)));
-      m_operatorController.b().whileTrue(intakeArm.setLeftVoltageCommand(Volts.of(1)));
-      m_operatorController.a().whileTrue(intakeArm.setLeftVoltageCommand(Volts.of(-1)));
-      m_operatorController.leftBumper().whileTrue(intakeArm.setRightVoltageCommand(Volts.of(-1)));
-      m_operatorController.rightBumper().whileTrue(intakeArm.setRightVoltageCommand(Volts.of(1)));
+      m_operatorController.b().whileTrue(intakeArm.setVoltageCommand(Volts.of(1), Volts.of(0)));
+      m_operatorController.a().whileTrue(intakeArm.setVoltageCommand(Volts.of(-1), Volts.of(0)));
+      m_operatorController.leftBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(-1)));
+      m_operatorController.rightBumper().whileTrue(intakeArm.setVoltageCommand(Volts.of(0), Volts.of(1)));
 
     } else
     {
