@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootCommand"
+                  "name": "ShootCommand"
                 }
               }
             ]
@@ -48,7 +48,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootCommand"
+                  "name": "ShootCommand"
                 }
               }
             ]
