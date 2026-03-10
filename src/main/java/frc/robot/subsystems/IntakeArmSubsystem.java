@@ -73,7 +73,9 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withLength(GroundConstants.length)
       .withMass(GroundConstants.weight)
       // Telemetry name and verbosity for the arm.
-      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
+      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
+      .withStartingPosition(Degrees.zero());
+      
 
 
   // Arm Mechanism
