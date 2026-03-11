@@ -38,8 +38,8 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-         intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
-        System.out.println(intakeArmSubsystem.getAngle().in(Degrees));
+        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
+        
         if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
         {
             intakeRollerSubsystem.setDutycycleSetpoint(1);//(Setpoints.Intake.intakeRollerRPM);

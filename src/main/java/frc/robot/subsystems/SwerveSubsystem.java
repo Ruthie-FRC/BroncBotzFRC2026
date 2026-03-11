@@ -126,7 +126,7 @@ public class SwerveSubsystem extends SubsystemBase
             new Pose3d( // TODO: Give the right offset here
                 Units.inchesToMeters(-12),
                 Units.inchesToMeters(-12), /// +Right, maybe?
-                Units.inchesToMeters(10.5),
+                Units.inchesToMeters(10),
                 new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
         .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
         .save();
@@ -140,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase
             new Pose3d( // TODO: Give the right offset here
                 Units.inchesToMeters(0),
                 Units.inchesToMeters(0), /// +Right, maybe?
-                Units.inchesToMeters(10.5),
+                Units.inchesToMeters(20.5),
                 new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
         .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
         .save();

@@ -44,7 +44,7 @@ public class IntakeCommand extends Command {
     public void execute() {
         intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
         hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        System.out.println(intakeArmSubsystem.getAngle().in(Degrees));
+    
         if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
         {
             intakeRollerSubsystem.setDutycycleSetpoint(-1);//(Setpoints.Intake.intakeRollerRPM);

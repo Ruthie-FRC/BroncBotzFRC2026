@@ -51,13 +51,14 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withGearing(GroundConstants.gearing)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))
-      .withMotorInverted(false)
+      .withMotorInverted(true)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
 
       .withExternalEncoder(m_followerAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      .withUseExternalFeedbackEncoder(true);
+      // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+      .withUseExternalFeedbackEncoder(true)
+      .withResetPreviousConfig(false);
 
 
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -78,10 +79,12 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
 
-      .withExternalEncoder(m_masterMotor.getAbsoluteEncoder())
+      .withExternalEncoder(m_masterAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-      .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      .withUseExternalFeedbackEncoder(true);
+      // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+      .withUseExternalFeedbackEncoder(true)
+      
+      .withResetPreviousConfig(false);
 
   private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
                                                                                 masterConfig);

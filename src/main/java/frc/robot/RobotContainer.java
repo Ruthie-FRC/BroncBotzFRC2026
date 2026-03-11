@@ -1,13 +1,17 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.NewtonMeter;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -74,20 +78,12 @@ public class RobotContainer
                            () -> m_driverController.getLeftX() * -1)
                        .withControllerRotationAxis(() -> m_driverController.getRightX() * -1)
                        .deadband(OperatorConstants.DEADBAND)
-                       .scaleTranslation(0.1)
-                       .scaleRotation(0.1)
+                       .scaleTranslation(.8)
+                       .scaleRotation(0.8)
                        .allianceRelativeControl(true);
 
 
-  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity.copy()
-                                                                                               // Fallback
-                                                                                               .aim(FieldConstants.Hub.getHubPose())
-                                                                                               .aimHeadingOffset(
-                                                                                                   Rotation2d.k180deg)
-                                                                                               .scaleTranslation(0.4)
-                                                                                               .scaleRotation(0.3)
-                                                                                               .aimWhile(
-                                                                                                   m_driverController.leftBumper()));
+  Command driveFieldOrientedAngularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
   Command autoSwerveInputStream = drivebase.driveFieldOriented(driveAngularVelocity.copy()
                                                                                    // Fallback
@@ -146,8 +142,7 @@ public class RobotContainer
   {
     Voltage armCtrlVolts = Volts.of(3);
     Time    window       = Seconds.of(0.5);
-
-    // Press a twice, and hold to have the left intake arm go up.
+/*    // Press a twice, and hold to have the left intake arm go up.
     m_driverController.a().and(DriverStation::isTest)
                       .multiPress(2, window.in(Seconds)).debounce(1)
                       .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts, Volts.of(0)));
@@ -177,14 +172,14 @@ public class RobotContainer
     
     m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
 
-
-    m_operatorController.povUp().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3));
-    m_operatorController.povRight().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(-0.3));
+*/
+    m_operatorController.povUp().whileTrue(intakeArm.setDutyCycleCommand(0.5));
+    m_operatorController.povDown().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
 //    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
 //    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
     m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-    m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-
+    m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+  
   }
 
   /**
@@ -214,8 +209,6 @@ public class RobotContainer
     // m_driverController.x().whileTrue(drivebase.lockPos());
 
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
-
-    boolean slowMode = false;
 
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
 
@@ -265,8 +258,8 @@ public class RobotContainer
     //                                                             ));
 
     // m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
-    // m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-    // m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
+    m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
+    m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
     // m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     // m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
   }

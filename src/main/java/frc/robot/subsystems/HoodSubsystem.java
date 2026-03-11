@@ -35,7 +35,7 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
           .withSimClosedLoopController(0,0,0)
               //DegreesPerSecond.of(180),
               //DegreesPerSecondPerSecond.of(90))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(164,12,54,24,27)))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
