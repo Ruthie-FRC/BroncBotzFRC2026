@@ -31,14 +31,40 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class IntakeArmSubsystem extends SubsystemBase
 {
 
-  private Angle absoluteEncoderZeroOffset = Setpoints.Intake.intakeArmAbsZeroOffset;
+  private Angle masterAbsoluteEncoderZeroOffset = Setpoints.Intake.intakeArmAbsZeroOffset;
+  private Angle followerAbsoluteEncoderZeroOffset = Degrees.zero();
 
-  private SparkMax                   m_masterMotor   = new SparkMax(Constants.CanIDConstants.intakeArmID,
-                                                                    MotorType.kBrushless);
-  private SparkAbsoluteEncoder       absoluteEncoder = m_masterMotor.getAbsoluteEncoder();
-  private SparkMax                   m_slaveMotor    = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID,
-                                                                    MotorType.kBrushless);
-  private SmartMotorControllerConfig masterConfig    = new SmartMotorControllerConfig(this)
+  private SparkMax             m_masterMotor   = new SparkMax(Constants.CanIDConstants.intakeArmID,
+                                                              MotorType.kBrushless);
+  private SparkMax             m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID,
+                                                              MotorType.kBrushless);
+
+
+  private SmartMotorControllerConfig followerConfig = new SmartMotorControllerConfig(this)
+      .withControlMode(ControlMode.CLOSED_LOOP)
+      .withClosedLoopController(4.5, 0, 0.5)
+      .withSimClosedLoopController(10, 0, 0)
+      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0))
+      .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
+      .withGearing(GroundConstants.gearing)
+      .withIdleMode(MotorMode.BRAKE)
+      .withStatorCurrentLimit(Amps.of(40))
+      .withStartingPosition(Degrees.zero())
+      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      .withMotorInverted(false)
+      // Set custom FF here
+      .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
+
+      .withExternalEncoder(m_followerMotor.getAbsoluteEncoder())
+      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset)
+      .withUseExternalFeedbackEncoder(true);
+
+
+  // Create our SmartMotorController from our Spark and config with the NEO.
+  private SmartMotorController       followerMotorController = new SparkWrapper(m_followerMotor,
+                                                                                DCMotor.getNEO(2),
+                                                                                followerConfig);
+  private SmartMotorControllerConfig masterConfig            = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withClosedLoopController(4.5, 0, 0.5)
       .withSimClosedLoopController(10, 0, 0)
@@ -50,20 +76,15 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))
       .withStartingPosition(Degrees.zero())
-      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit);
+      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      .withLooselyCoupledFollowers(followerMotorController)
 
-  private SmartMotorControllerConfig slaveConfig = masterConfig.clone()
-                                                               .withMotorInverted(false)
-                                                               // Set custom FF here
-                                                               .withTelemetry("IntakeArmSlaveMotor",
-                                                                              TelemetryVerbosity.HIGH);
+      .withExternalEncoder(m_masterMotor.getAbsoluteEncoder())
+      .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset)
+      .withUseExternalFeedbackEncoder(true);
 
-
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController slaveMotorController  = new SparkWrapper(m_slaveMotor, DCMotor.getNEO(2), slaveConfig);
-  private SmartMotorController masterMotorController = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
-                                                                        masterConfig.withLooselyCoupledFollowers(
-                                                                            slaveMotorController));
+  private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
+                                                                                masterConfig);
 
 
   private ArmConfig armCfg = new ArmConfig(masterMotorController)
@@ -73,9 +94,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withLength(GroundConstants.length)
       .withMass(GroundConstants.weight)
       // Telemetry name and verbosity for the arm.
-      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
-      .withStartingPosition(Degrees.zero());
-      
+      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
 
 
   // Arm Mechanism
@@ -86,13 +105,6 @@ public class IntakeArmSubsystem extends SubsystemBase
    */
   public IntakeArmSubsystem()
   {
-    boolean useAbsoluteEncoder = false;
-    // Synchronize the motor controllers to become the same angle.
-    Angle armAngle = Rotations.of(absoluteEncoder.getPosition()).minus(absoluteEncoderZeroOffset);
-    if (!useAbsoluteEncoder)
-    {armAngle = Intake.intakeArmStartAngle;}
-    masterMotorController.setEncoderPosition(armAngle);
-    slaveMotorController.setEncoderPosition(armAngle);
   }
 
   public Angle getAngle()
@@ -103,49 +115,50 @@ public class IntakeArmSubsystem extends SubsystemBase
   public Command setAngleCommand(Angle angle)
   {
 //    return arm.setAngle(angle);
-    return run(()->setAngleSetpoint(angle)).withName("SetAngleCommand");
+    return run(() -> setAngleSetpoint(angle)).withName("SetAngleCommand");
   }
 
   public void setAngleSetpoint(Angle angle)
   {
 //    arm.setMechanismPositionSetpoint(angle);
     masterMotorController.setPosition(angle);
-    slaveMotorController.setPosition(angle);
+    followerMotorController.setPosition(angle);
   }
 
   public Command setDutyCycleCommand(double dutyCycle)
   {
     return setDutyCycleCommand(dutyCycle, dutyCycle);
   }
- public Command setDutyCycleCommand(double left, double right)
+
+  public Command setDutyCycleCommand(double left, double right)
   {
     return run(() -> {
       masterMotorController.setDutyCycle(left);
-      slaveMotorController.setDutyCycle(right);
+      followerMotorController.setDutyCycle(right);
     }).finallyDo(() -> {
       masterMotorController.setDutyCycle((0));
-      slaveMotorController.setDutyCycle((0));
+      followerMotorController.setDutyCycle((0));
     }).withName("SetBothDutyCycle");
   }
 
   public void setDutyCycleSetpoint(double dutyCycle)
   {
     masterMotorController.setDutyCycle(dutyCycle);
-    slaveMotorController.setDutyCycle(dutyCycle);
+    followerMotorController.setDutyCycle(dutyCycle);
   }
 
   @Override
   public void periodic()
   {
     arm.updateTelemetry();
-    slaveMotorController.updateTelemetry();
+    followerMotorController.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic()
   {
     arm.simIterate();
-    slaveMotorController.simIterate();
+    followerMotorController.simIterate();
   }
 
   public BooleanSupplier aroundAngle(Angle angle)
@@ -157,10 +170,10 @@ public class IntakeArmSubsystem extends SubsystemBase
   {
     return run(() -> {
       masterMotorController.setVoltage(left);
-      slaveMotorController.setVoltage(right);
+      followerMotorController.setVoltage(right);
     }).finallyDo(() -> {
       masterMotorController.setVoltage(Volts.of(0));
-      slaveMotorController.setVoltage(Volts.of(0));
+      followerMotorController.setVoltage(Volts.of(0));
     }).withName("SetBothVoltage");
   }
 
