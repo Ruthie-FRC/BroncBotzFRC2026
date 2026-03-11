@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoAimCommand;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.systems.field.AllianceFlipUtil;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
 
@@ -110,7 +113,7 @@ public class RobotContainer
                                                             indexer,
                                                             agitator,
                                                            // hood,
-                                                            Setpoints.Shooter.hubRPM 
+                                                            Setpoints.Shooter.hubRPM
                                                             //Setpoints.Hood.hubDegree
                                                             ).withTimeout(Seconds.of(6)));
 
@@ -130,6 +133,9 @@ public class RobotContainer
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+
+    // Change the auto-aim to aim at our alliances hub.
+    RobotModeTriggers.teleop().onTrue(Commands.runOnce(()->driveAngularVelocity.aim(FieldConstants.Hub.getHubPose())));
   }
 
 
@@ -215,14 +221,14 @@ public class RobotContainer
       //                                                              RPM.of(2950)
       //                                                             // Setpoints.Hood.hubDegree
       //                                                             ));
-        
+
       // m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
       // m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
       // m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
       // m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
       // m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
   }
-    
+
 
 
 
