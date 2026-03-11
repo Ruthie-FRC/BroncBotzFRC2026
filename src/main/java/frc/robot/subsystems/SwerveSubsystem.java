@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -71,8 +72,10 @@ public class SwerveSubsystem extends SubsystemBase
   private ShooterTargetingSystem shooterAimer;
 
   public static SwerveDrive swerveDrive;
-  Limelight              limelight;
-  LimelightPoseEstimator limelightPoseEstimator;
+  private Limelight              limelight_swerve;
+  private LimelightPoseEstimator limelightPoseEstimator_swerve;
+  private Limelight              limelight_turret;
+  private LimelightPoseEstimator limelightPoseEstimator_turret;
 
   Field2d m_field2d = new Field2d();
 
@@ -115,8 +118,8 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupLimelight()
   {
     swerveDrive.stopOdometryThread();
-    limelight = new Limelight("limelight"); // We didn't rename the limelight
-    limelight
+    limelight_swerve = new Limelight("limelight"); // We didn't rename the limelight
+    limelight_swerve
         .getSettings()
         .withPipelineIndex(0)
         .withCameraOffset(
@@ -127,7 +130,21 @@ public class SwerveSubsystem extends SubsystemBase
                 new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
         .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
         .save();
-    limelightPoseEstimator = limelight.createPoseEstimator(EstimationMode.MEGATAG1);
+    limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
+
+    limelight_turret = new Limelight("limelight-turret"); // We didn't rename the limelight
+    limelight_turret
+        .getSettings()
+        .withPipelineIndex(0)
+        .withCameraOffset(
+            new Pose3d( // TODO: Give the right offset here
+                Units.inchesToMeters(0),
+                Units.inchesToMeters(0), /// +Right, maybe?
+                Units.inchesToMeters(10.5),
+                new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .save();
+    limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   }
 
   /**
@@ -187,24 +204,22 @@ public class SwerveSubsystem extends SubsystemBase
 
   private int     outofAreaReading = 0;
   private boolean initialReading   = false;
-  private double  lastLLTimestamp  = 0;
+  private double  lastLLTimestamp_swerve  = 0;
+  private double lastLLTimestamp_turret = 0;
 
-  @Override
-  public void periodic()
+  private double updateLimelight(Limelight ll, LimelightPoseEstimator llPoseEst, double llTimestamp, Angle cameraYaw, String llname)
   {
-    outofAreaReading = 0;
-    swerveDrive.updateOdometry();
-    limelight
+    ll
         .getSettings()
         .withRobotOrientation(
             new Orientation3d(
-                new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(Rotation2d.k180deg)),
+                new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(new Rotation2d(cameraYaw))),
                 new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
         .save();
 
     Optional<PoseEstimate> poseEstimates =
-        limelightPoseEstimator.getPoseEstimate();
-    Optional<LimelightResults> results = limelight.getLatestResults();
+        llPoseEst.getPoseEstimate();
+    Optional<LimelightResults> results = ll.getLatestResults();
     if (results.isPresent() && poseEstimates.isPresent())
     {
       LimelightResults result       = results.get();
@@ -214,11 +229,11 @@ public class SwerveSubsystem extends SubsystemBase
         Pose2d estimatorPose = poseEstimate.pose.toPose2d();
         Pose2d usefulPose    = result.getBotPose2d(Alliance.Blue);
         // TODO: Tune this to be better
-        SmartDashboard.putNumber("LimelightTuning/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() > 0.03 &&
-            poseEstimate.tagCount >= 1) // TODO: Should probably be tagCount > 1, not tagCount >= 1
+        SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
+        if (poseEstimate.getAvgTagAmbiguity() > 0.03 && // TODO: Change me, i am bad, too low
+            poseEstimate.tagCount > 1) 
         {
-          if (lastLLTimestamp != poseEstimate.timestampSeconds)
+          if (llTimestamp != poseEstimate.timestampSeconds)
           {
             var stdDevScale = Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
             // stdDevScale = distance^2/tagsInView
@@ -227,11 +242,22 @@ public class SwerveSubsystem extends SubsystemBase
             //  0.07 * stdDevScale));
             swerveDrive.addVisionMeasurement(estimatorPose,
                                              poseEstimate.timestampSeconds);
-            lastLLTimestamp = poseEstimate.timestampSeconds;
+            return poseEstimate.timestampSeconds;
           }
         }
       }
     }
+    return llTimestamp;
+  }
+
+  @Override
+  public void periodic()
+  {
+    outofAreaReading = 0;
+    swerveDrive.updateOdometry();
+    
+    lastLLTimestamp_swerve = updateLimelight(limelight_swerve, limelightPoseEstimator_swerve, lastLLTimestamp_swerve, Degrees.of(180), "swerve");
+    lastLLTimestamp_turret = updateLimelight(limelight_turret, limelightPoseEstimator_turret, lastLLTimestamp_turret, Degrees.zero(), "turret");
     // TODO: Remove me
     distanceToHub();
   }
