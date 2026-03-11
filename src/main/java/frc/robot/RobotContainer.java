@@ -170,6 +170,16 @@ public class RobotContainer
     // Press y to make the intake arm go down
     m_driverController.y().and(DriverStation::isTest)
                       .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts.times(-1)));
+
+
+
+    m_operatorController.povUp().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3));
+    m_operatorController.povRight().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(-0.3));
+//    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+//    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+    m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
+    m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
+
   }
 
   /**
@@ -194,13 +204,6 @@ public class RobotContainer
     //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
 
     // Test mode controls.
-    m_operatorController.povUp().whileTrue(intakeArm.setDutyCycleCommand(0.3));
-    m_operatorController.povRight().whileTrue(intakeArm.setDutyCycleCommand(-0.3));
-    m_operatorController.b().whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
-    m_operatorController.a().whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
-    m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-    m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-
     //  Regular driver and operator controls.
     m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
