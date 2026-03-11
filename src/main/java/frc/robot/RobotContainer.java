@@ -22,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
+import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -170,7 +171,8 @@ public class RobotContainer
     // Press y to make the intake arm go down
     m_driverController.y().and(DriverStation::isTest)
                       .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts.times(-1)));
-
+    
+    m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
 
 
     m_operatorController.povUp().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3));
