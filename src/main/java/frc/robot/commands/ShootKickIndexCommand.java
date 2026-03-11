@@ -122,7 +122,7 @@ public class ShootKickIndexCommand extends Command {
             calculatedTOF.put(shot.distance.in(Meters), shot.tof.in(Second));
            // calculatedHoodAngle.put(shot.distance.in(Meters), shot.hoodAngle.in(Degrees));
         }
-        addRequirements(this.shooter, this.kicker, this.indexer, this.agitator);//, this.hood
+        addRequirements(this.shooter, this.kicker, this.indexer);//, this.hood
     }
 
     

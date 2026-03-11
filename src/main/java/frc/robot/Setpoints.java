@@ -20,8 +20,11 @@ public class Setpoints {
         public static final AngularVelocity agitatorRPMin      = RPM.of(500);
         public static Angle                 intakeArmAngleDown = Degrees.of(0);
 
-      public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(0);
-      public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(0);
+        public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(0);
+        public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(0);
+
+        public static final Angle hoodDownAngle = Degrees.of(0);
+        public static final Angle hoodUpAngle = Degrees.of(25);
 
     }
 
@@ -38,6 +41,12 @@ public class Setpoints {
         public static final Angle higherHoodAngle = Degrees.of(25);
     }
 
+    public static class Trench {
+        public static final Angle hoodDownAngle = Degrees.of(0);
+        public static final Angle hoodUpAngle = Degrees.of(25);
+        public static final Angle intakeArmUpAngle = Degrees.of(55);
+        public static final Angle intakeArmDownAngle = Degrees.of(0);
+    }
     
 
 }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -19,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Setpoints.Hood;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
@@ -49,10 +52,10 @@ public class RobotContainer
 
   //private final HoodSubsystem     hood           = new HoodSubsystem();
   private final FlywheelSubsystem turretFlywheel = new FlywheelSubsystem();
-
   private final IndexerSubsystem  indexer  = new IndexerSubsystem();
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem   kicker   = new KickerSubsystem();
+  private final HoodSubsystem hood = new HoodSubsystem();
 
   public static Timer                 timerThing           = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -114,8 +117,8 @@ public class RobotContainer
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
 
-    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp)
+    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
                                                    .alongWith(intakeRoller.stopCommand()));
   }
 
@@ -222,6 +225,9 @@ public class RobotContainer
                                                                                agitator,
                                                                                // hood,
                                                                                drivebase));
+    
+    m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+
 
     // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
