@@ -205,7 +205,7 @@ public class RobotContainer
 
     // Test mode controls.
     //  Regular driver and operator controls.
-    m_driverController.a().whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
+    m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
 
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
