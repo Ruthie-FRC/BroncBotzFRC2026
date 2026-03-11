@@ -114,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void setupLimelight() {
         swerveDrive.stopOdometryThread();
-        limelight = new Limelight("limelight-swerve");
+        limelight = new Limelight("limelight");
         limelight
                 .getSettings()
                 .withPipelineIndex(0)
@@ -209,7 +209,8 @@ public class SwerveSubsystem extends SubsystemBase {
         {
           Pose2d estimatorPose = poseEstimate.pose.toPose2d();
           Pose2d usefulPose    = result.getBotPose2d(Alliance.Blue);
-          if(poseEstimate.getAvgTagAmbiguity() > 0.5 && poseEstimate.tagCount > 1){
+          SmartDashboard.putNumber("LimelightTuning/ambiguity",poseEstimate.getAvgTagAmbiguity());
+          if(poseEstimate.getAvgTagAmbiguity() > 0.03 && poseEstimate.tagCount >= 1){
             if (lastLLTimestamp != poseEstimate.timestampSeconds)
             {
               var stdDevScale = Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;

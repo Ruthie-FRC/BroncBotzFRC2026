@@ -71,7 +71,8 @@ public class RobotContainer
                            () -> m_driverController.getLeftX() * -1)
                        .withControllerRotationAxis(() -> m_driverController.getRightX() * -1)
                        .deadband(OperatorConstants.DEADBAND)
-                       .scaleTranslation(0.8)
+                       .scaleTranslation(0.1)
+                       .scaleRotation(0.1)
                        .allianceRelativeControl(true);
 
 
@@ -80,6 +81,8 @@ public class RobotContainer
                                                                                                .aim(FieldConstants.Hub.getHubPose())
                                                                                                .aimHeadingOffset(
                                                                                                    Rotation2d.k180deg)
+                                                                               .scaleTranslation(0.4)
+                                                                               .scaleRotation(0.3)
                                                                                                .aimWhile(
                                                                                                    m_driverController.leftBumper()));
 
