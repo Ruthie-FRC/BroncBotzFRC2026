@@ -101,7 +101,7 @@ public final class Constants {
   public static final Distance length = Inches.of(19.25);
 
   public static final Angle softLowerLimit = Degrees.of(0);
-  public static final Angle softUpperLimit = Degrees.of(55);
+  public static final Angle softUpperLimit = Degrees.of(65);
   public static final Angle hardLowerLimit = Degrees.of(-5);
   public static final Angle hardUpperLimit = Degrees.of(60);
 

@@ -138,12 +138,14 @@ public class IntakeArmSubsystem extends SubsystemBase
   public void periodic()
   {
     arm.updateTelemetry();
+    slaveMotorController.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic()
   {
     arm.simIterate();
+    slaveMotorController.simIterate();
   }
 
   public BooleanSupplier aroundAngle(Angle angle)
