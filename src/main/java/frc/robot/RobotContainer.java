@@ -29,6 +29,8 @@ import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OutakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
+import frc.robot.commands.TrenchCommand;
+import frc.robot.commands.UnjamCommand;
 import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -107,7 +109,7 @@ public class RobotContainer
     
 
     new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(-0.3).withTimeout(1)
-                                                  .alongWith(new IntakeCommand(intakeRoller, agitator, hood)));
+                                                  .alongWith(new IntakeCommand(intakeRoller, agitator)));
     
     
     
@@ -146,6 +148,7 @@ public class RobotContainer
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
+    hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -164,8 +167,8 @@ public class RobotContainer
    
 */
     
-    m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.5));
-    m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
+    // m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.5));
+    // m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
 //    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
 //    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
     //m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
@@ -199,10 +202,11 @@ public class RobotContainer
     m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
     m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
+    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
-    m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
+   // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-    m_driverController.leftBumper().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
+    
     m_operatorController.rightTrigger().whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
@@ -210,8 +214,9 @@ public class RobotContainer
                                                                                // hood,
                                                                                drivebase));
     
-    m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeRoller, agitator, hood));
-    m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
+    m_operatorController.povUp().whileTrue(new OutakeCommand(intakeRoller, agitator));
+  //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
     // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
@@ -251,6 +256,7 @@ public class RobotContainer
     // m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
     m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
     m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
+    m_driverController.x().onTrue(intakeArm.setDutyCycleCommand(-0.3).withTimeout(1));
     // m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     // m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
   }

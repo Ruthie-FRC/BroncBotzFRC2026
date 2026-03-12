@@ -1,32 +1,32 @@
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Setpoints;
-import frc.robot.Setpoints.Intake;
-import frc.robot.Setpoints.Trench;
-import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.HoodSubsystem;
-
-import static edu.wpi.first.units.Units.Degrees;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
 
 
-public class TrenchCommand extends Command {
+
+public class UnjamCommand extends Command {
     
-    private final HoodSubsystem hoodSubsystem;
+    private final KickerSubsystem kickerSubsystem;
+    private final IndexerSubsystem indexerSubsystem;
 
-    public TrenchCommand( HoodSubsystem hoodSubsystem) {
-        
-        this.hoodSubsystem = hoodSubsystem;
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements( this.hoodSubsystem);
+
+    public UnjamCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem) {
+       
+        this.kickerSubsystem = kickerSubsystem;
+        this.indexerSubsystem  = indexerSubsystem;
+        addRequirements(this.kickerSubsystem,this.indexerSubsystem);
     }
+ 
 
     /**
      * The initial subroutine of a command.  Called once when the command is initially scheduled.
      */
     @Override
     public void initialize() {
-
+        kickerSubsystem.setDutycycleSetpoint(0);
+        indexerSubsystem.setDutyCycleSetpoint(0);
     }
 
     /**
@@ -35,8 +35,11 @@ public class TrenchCommand extends Command {
      */
     @Override
     public void execute() {
+        
+        
+            kickerSubsystem.setDutycycleSetpoint(-0.5);//(Setpoints.Intake.intakeRollerRPM);
+            indexerSubsystem.setDutyCycleSetpoint(-0.5);
        
-        hoodSubsystem.setAngleSetpoint(Trench.hoodDownAngle);
     }
 
     /**
@@ -70,6 +73,7 @@ public class TrenchCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        hoodSubsystem.setAngleSetpoint(Trench.hoodUpAngle);
+        kickerSubsystem.setDutycycleSetpoint(0);
+        indexerSubsystem.setDutyCycleSetpoint(0);
     }
 }

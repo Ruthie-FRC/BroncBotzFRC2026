@@ -11,15 +11,15 @@ import static edu.wpi.first.units.Units.Degrees;
 
 
 public class OutakeCommand extends Command {
-    private final IntakeArmSubsystem intakeArmSubsystem;
+    
     private final IntakeRollerSubsystem intakeRollerSubsystem;
     private final AgitatorSubsystem agitatorSubsystem;
 
-    public OutakeCommand(IntakeArmSubsystem intakeArmSubsystem, IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem) {
-        this.intakeArmSubsystem = intakeArmSubsystem;
+    public OutakeCommand( IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem) {
+       
         this.intakeRollerSubsystem = intakeRollerSubsystem;
         this.agitatorSubsystem = agitatorSubsystem;
-        addRequirements(this.intakeArmSubsystem, this.intakeRollerSubsystem,this.agitatorSubsystem);
+        addRequirements(this.intakeRollerSubsystem,this.agitatorSubsystem);
     }
 
     /**
@@ -27,7 +27,6 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void initialize() {
-        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
     }
@@ -38,13 +37,11 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
         
-        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
-        {
+        
             intakeRollerSubsystem.setDutycycleSetpoint(1);//(Setpoints.Intake.intakeRollerRPM);
             agitatorSubsystem.setDutyCycleSetpoint(-0.5);
-        }
+       
     }
 
     /**
@@ -78,7 +75,6 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleUp);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
     }
