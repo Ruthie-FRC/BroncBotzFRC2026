@@ -7,31 +7,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Two Path Two"
+            "pathName": "Basic One"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Two Shoot"
+            "pathName": "Auto One Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Two Shoot"
+            "pathName": "Auto One Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Two Shoot"
+            "pathName": "Auto One Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto Two Shoot"
+            "pathName": "Auto One Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto One Shoot"
           }
         }
       ]
