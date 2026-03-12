@@ -74,7 +74,10 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withClosedLoopController(4.5, 0, 0.5)
       .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0))
       .withSimClosedLoopController(10, 0, 0)
-      .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
+      .withSimFeedforward(new ArmFeedforward(
+        
+      
+      0.25, 0, 0.25))
       .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
       .withGearing(GroundConstants.gearing)
       .withMotorInverted(true)
@@ -101,7 +104,8 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withLength(GroundConstants.length)
       .withMass(GroundConstants.weight)
       // Telemetry name and verbosity for the arm.
-      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH);
+      .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
+      .withStartingPosition(Degrees.zero());
 
 
   // Arm Mechanism

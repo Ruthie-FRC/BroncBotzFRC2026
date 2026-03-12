@@ -12,19 +12,18 @@ import static edu.wpi.first.units.Units.Degrees;
 
 
 public class IntakeCommand extends Command {
-    private final IntakeArmSubsystem intakeArmSubsystem;
     private final IntakeRollerSubsystem intakeRollerSubsystem;
     private final AgitatorSubsystem agitatorSubsystem;
     private final HoodSubsystem hoodSubsystem;
 
-    public IntakeCommand(IntakeArmSubsystem intakeArmSubsystem, IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem, HoodSubsystem hoodSubsystem) {
-        this.intakeArmSubsystem = intakeArmSubsystem;
+    public IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem, HoodSubsystem hoodSubsystem) {
+        //this.intakeArmSubsystem = intakeArmSubsystem;
         this.intakeRollerSubsystem = intakeRollerSubsystem;
         this.agitatorSubsystem = agitatorSubsystem;
         this.hoodSubsystem = hoodSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.intakeArmSubsystem, this.intakeRollerSubsystem, this.agitatorSubsystem, this.hoodSubsystem);
+        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem, this.hoodSubsystem);
     }
 
     /**

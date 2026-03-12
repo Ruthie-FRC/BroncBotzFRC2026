@@ -106,8 +106,8 @@ public class RobotContainer
     // Named commands do NOT run with path's. They are inbetween paths.
     
 
-    new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(0.3).withTimeout(0.5)
-                                                  .alongWith(new IntakeCommand(intakeArm, intakeRoller, agitator, hood)));
+    new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(-0.3).withTimeout(1)
+                                                  .alongWith(new IntakeCommand(intakeRoller, agitator, hood)));
     
     
     
@@ -141,7 +141,6 @@ public class RobotContainer
   {
 
     drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity);
-
     kicker.setDefaultCommand(kicker.setDutyCycleCommand(-0)); // Set -0.3 before on field
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
@@ -211,7 +210,7 @@ public class RobotContainer
                                                                                // hood,
                                                                                drivebase));
     
-    m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeRoller, agitator, hood));
     m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
     // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));

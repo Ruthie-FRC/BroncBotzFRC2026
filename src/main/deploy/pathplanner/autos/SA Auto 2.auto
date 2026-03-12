@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SA 2 Path 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto Two Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto Two Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto Two Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto Two Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
