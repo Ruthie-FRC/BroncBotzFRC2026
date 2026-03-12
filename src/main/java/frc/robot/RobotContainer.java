@@ -199,7 +199,7 @@ public class RobotContainer
 
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
 
-    m_operatorController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    m_operatorController.rightTrigger().whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
