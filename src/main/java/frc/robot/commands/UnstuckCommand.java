@@ -6,13 +6,13 @@ import frc.robot.subsystems.KickerSubsystem;
 
 
 
-public class UnjamCommand extends Command {
+public class UnstuckCommand extends Command {
     
     private final KickerSubsystem kickerSubsystem;
     private final IndexerSubsystem indexerSubsystem;
 
 
-    public UnjamCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem) {
+    public UnstuckCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem) {
        
         this.kickerSubsystem = kickerSubsystem;
         this.indexerSubsystem  = indexerSubsystem;

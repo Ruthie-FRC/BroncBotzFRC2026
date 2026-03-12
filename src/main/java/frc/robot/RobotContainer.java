@@ -30,7 +30,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OutakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.TrenchCommand;
-import frc.robot.commands.UnjamCommand;
+import frc.robot.commands.UnstuckCommand;
 import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
@@ -216,9 +216,9 @@ public class RobotContainer
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.povUp().whileTrue(new OutakeCommand(intakeRoller, agitator));
+    m_operatorController.povDown().whileTrue(new UnstuckCommand(kicker, indexer));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
-    // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
     // m_driverController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
     //                                                              kicker,
