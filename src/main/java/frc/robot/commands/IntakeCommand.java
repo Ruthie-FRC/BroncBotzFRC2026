@@ -42,14 +42,10 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void execute() {
-        intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
+        //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
         hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-    
-        if(intakeArmSubsystem.getAngle().isNear(Intake.intakeArmAngleDown, Degrees.of(7)))
-        {
-            intakeRollerSubsystem.setDutycycleSetpoint(-1);//(Setpoints.Intake.intakeRollerRPM);
-            agitatorSubsystem.setDutyCycleSetpoint(0.5);//(Setpoints.Intake.agitatorRPMin);
-        }
+        intakeRollerSubsystem.setDutycycleSetpoint(-1);//(Setpoints.Intake.intakeRollerRPM);
+        agitatorSubsystem.setDutyCycleSetpoint(0.5);//(Setpoints.Intake.agitatorRPMin);
         
     }
 
@@ -84,7 +80,7 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
+        //intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
         agitatorSubsystem.setDutyCycleSetpoint(0);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         hoodSubsystem.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);

@@ -106,9 +106,14 @@ public class RobotContainer
     // Named commands do NOT run with path's. They are inbetween paths.
     
 
-    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(0.3).withTimeout(0.5)
+                                                  .alongWith(new IntakeCommand(intakeArm, intakeRoller, agitator, hood)));
+    
+    
+    
     new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
                                                    .alongWith(intakeRoller.stopCommand()));
+
     new EventTrigger("Shoot").onTrue(
                                   new ShootKickIndexCommand(turretFlywheel,
                                                             kicker,
