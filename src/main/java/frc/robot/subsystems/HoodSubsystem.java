@@ -29,7 +29,7 @@ public class HoodSubsystem extends SubsystemBase {//Modeled as a pivot, since it
   private final SparkMax hoodMotor = new SparkMax(CanIDConstants.hoodID, MotorType.kBrushless);
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)
-          .withClosedLoopController(0,0,0)
+          .withClosedLoopController(2,0,0)
               //DegreesPerSecond.of(180),  
               //DegreesPerSecondPerSecond.of(90))  //Don't add it unless it's not increasing fast enough
           .withSimClosedLoopController(0,0,0)

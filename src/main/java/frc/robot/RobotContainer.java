@@ -165,7 +165,7 @@ public class RobotContainer
 //    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
 //    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
     //m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-   // m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+   // m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyslowCycleCommand(0, 0.3));
   
   }
 
@@ -194,11 +194,11 @@ public class RobotContainer
     //  Regular driver and operator controls.
     m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
-
+    m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
-
+    m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-
+    m_driverController.leftBumper().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
     m_operatorController.rightTrigger().whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
