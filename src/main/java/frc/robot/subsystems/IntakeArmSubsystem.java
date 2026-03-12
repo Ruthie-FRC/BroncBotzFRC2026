@@ -20,6 +20,8 @@ import frc.robot.Constants.GroundConstants;
 import frc.robot.Setpoints;
 import frc.robot.Setpoints.Intake;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
@@ -51,11 +53,12 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withGearing(GroundConstants.gearing)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))
-      .withMotorInverted(true)
+      .withMotorInverted(false)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
 
       .withExternalEncoder(m_followerAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      .withExternalEncoderInverted(false)
       // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       .withResetPreviousConfig(false);
@@ -78,9 +81,10 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
-
+      
       .withExternalEncoder(m_masterAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      .withExternalEncoderInverted(true)
       // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       
@@ -108,6 +112,9 @@ public class IntakeArmSubsystem extends SubsystemBase
    */
   public IntakeArmSubsystem()
   {
+  //  followerMotorController.setEncoderPosition(Rotations.of(m_followerAbsoluteEncoder.getPosition()));
+  //  masterMotorController.setEncoderPosition(Rotations.of(m_masterAbsoluteEncoder.getPosition()));
+
   }
 
   public Angle getAngle()
@@ -142,6 +149,14 @@ public class IntakeArmSubsystem extends SubsystemBase
     }).withName("SetBothDutyCycle");
   }
 
+  public Command setDutyCycleCommand(Supplier<Double> left, Supplier<Double> right)
+  {
+    return run(() -> {
+      masterMotorController.setDutyCycle(left.get()*-0.5);
+      followerMotorController.setDutyCycle(right.get()*-0.5);
+    }).withName("SetBothDutyCycle");
+  }
+
   public void setDutyCycleSetpoint(double dutyCycle)
   {
     masterMotorController.setDutyCycle(dutyCycle);
@@ -151,8 +166,8 @@ public class IntakeArmSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
-    SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
+    // SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
+    // SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
     arm.updateTelemetry();
     followerMotorController.updateTelemetry();
   }

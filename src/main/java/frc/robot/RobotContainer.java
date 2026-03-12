@@ -27,6 +27,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Hood;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.OutakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -128,6 +129,7 @@ public class RobotContainer
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+    intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -143,42 +145,15 @@ public class RobotContainer
     Voltage armCtrlVolts = Volts.of(3);
     Time    window       = Seconds.of(0.5);
 /*    // Press a twice, and hold to have the left intake arm go up.
-    m_driverController.a().and(DriverStation::isTest)
-                      .multiPress(2, window.in(Seconds)).debounce(1)
-                      .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts, Volts.of(0)));
-
-    // Press b twice, and hold to have the right intake arm go up.
-    m_driverController.b().and(DriverStation::isTest)
-                      .multiPress(2, window.in(Seconds)).debounce(1)
-                      .whileTrue(intakeArm.setVoltageCommand(Volts.of(0), armCtrlVolts));
-
-    // Press a 3 times and hold to have the left intake arm go down.
-    m_driverController.a().and(DriverStation::isTest)
-                      .multiPress(3, window.in(Seconds)).debounce(1)
-                      .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts.times(-1), Volts.of(0)));
-
-    // Press b 3 times and hold to have the right intake arm go down.
-    m_driverController.b().and(DriverStation::isTest)
-                      .multiPress(3, window.in(Seconds)).debounce(1)
-                      .whileTrue(intakeArm.setVoltageCommand(Volts.of(0), armCtrlVolts.times(-1)));
-
-    // Press x to make the intake arm go up
-    m_driverController.x().and(DriverStation::isTest)
-                      .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts));
-
-    // Press y to make the intake arm go down
-    m_driverController.y().and(DriverStation::isTest)
-                      .whileTrue(intakeArm.setVoltageCommand(armCtrlVolts.times(-1)));
-    
-    m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
-
+   
 */
-    m_operatorController.povUp().whileTrue(intakeArm.setDutyCycleCommand(0.5));
-    m_operatorController.povDown().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
+    
+    m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.5));
+    m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
 //    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
 //    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
-    m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-    m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
+    //m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
+   // m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
   
   }
 
@@ -220,7 +195,7 @@ public class RobotContainer
                                                                                drivebase));
     
     m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
-
+    m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
     // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 

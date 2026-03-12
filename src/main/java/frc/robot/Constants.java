@@ -95,15 +95,15 @@ public final class Constants {
   // public static final double ksimV = 0;
 
 
-  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromReductionStages(9,4,4));
+  public static final MechanismGearing gearing = new MechanismGearing(GearBox.fromReductionStages(9,5));
 
   public static final Mass weight = Pounds.of(11);
   public static final Distance length = Inches.of(19.25);
 
-  public static final Angle softLowerLimit = Degrees.of(0);
-  public static final Angle softUpperLimit = Degrees.of(65);
-  public static final Angle hardLowerLimit = Degrees.of(-5);
-  public static final Angle hardUpperLimit = Degrees.of(60);
+  public static final Angle softLowerLimit = Degrees.of(-600);
+  public static final Angle softUpperLimit = Degrees.of(768);
+  public static final Angle hardLowerLimit = Degrees.of(-3);
+  public static final Angle hardUpperLimit = Degrees.of(70);
 
   //public static final Angle kHorizontalZero = Degrees.of(0);// Parallel to the ground at 15deg - setting position of absolute
   //public static final Angle kArmAllowableError = Degrees.of(RobotBase.isSimulation() ? 0.01 : 4);
