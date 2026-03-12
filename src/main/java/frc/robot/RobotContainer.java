@@ -27,6 +27,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Hood;
 import frc.robot.commands.AutoAimCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.OutakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.slowMode;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -103,7 +104,12 @@ public class RobotContainer
     defaultCommands();
 
     // Named commands do NOT run with path's. They are inbetween paths.
-    NamedCommands.registerCommand("ShootCommand",
+    
+
+    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
+                                                   .alongWith(intakeRoller.stopCommand()));
+    new EventTrigger("Shoot").onTrue(
                                   new ShootKickIndexCommand(turretFlywheel,
                                                             kicker,
                                                             indexer,
@@ -113,9 +119,16 @@ public class RobotContainer
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
 
-    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
-                                                   .alongWith(intakeRoller.stopCommand()));
+                                  
+    NamedCommands.registerCommand("ShootCommand",
+                                  new ShootKickIndexCommand(turretFlywheel,
+                                                            kicker,
+                                                            indexer,
+                                                            agitator,
+                                                            // hood,
+                                                            Setpoints.Shooter.hubRPM
+                                                            //Setpoints.Hood.hubDegree
+                                  ).withTimeout(Seconds.of(6)));
   }
 
 
@@ -128,6 +141,7 @@ public class RobotContainer
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
+    //intakeRoller.setDefaultCommand(intakeRoller.setDutyCycleCommand(0));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -212,14 +226,15 @@ public class RobotContainer
 
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
 
-    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    m_operatorController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
                                                                                // hood,
                                                                                drivebase));
     
-    m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    m_operatorController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    m_operatorController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller,agitator));
 
 
     // m_operatorController.povDown().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
