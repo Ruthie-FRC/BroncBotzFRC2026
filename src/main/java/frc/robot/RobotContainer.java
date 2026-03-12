@@ -104,7 +104,12 @@ public class RobotContainer
     defaultCommands();
 
     // Named commands do NOT run with path's. They are inbetween paths.
-    NamedCommands.registerCommand("ShootCommand",
+    
+
+    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
+    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
+                                                   .alongWith(intakeRoller.stopCommand()));
+    new EventTrigger("Shoot").onTrue(
                                   new ShootKickIndexCommand(turretFlywheel,
                                                             kicker,
                                                             indexer,
@@ -114,9 +119,16 @@ public class RobotContainer
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
 
-    new EventTrigger("IntakeStart").onTrue(new IntakeCommand(intakeArm, intakeRoller, agitator, hood));
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
-                                                   .alongWith(intakeRoller.stopCommand()));
+                                  
+    NamedCommands.registerCommand("ShootCommand",
+                                  new ShootKickIndexCommand(turretFlywheel,
+                                                            kicker,
+                                                            indexer,
+                                                            agitator,
+                                                            // hood,
+                                                            Setpoints.Shooter.hubRPM
+                                                            //Setpoints.Hood.hubDegree
+                                  ).withTimeout(Seconds.of(6)));
   }
 
 
@@ -187,7 +199,7 @@ public class RobotContainer
 
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
 
-    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    m_operatorController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
