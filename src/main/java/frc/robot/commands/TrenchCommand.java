@@ -36,7 +36,7 @@ public class TrenchCommand extends Command {
     @Override
     public void execute() {
        
-        hoodSubsystem.setAngleSetpoint(Trench.hoodUpAngle);
+        hoodSubsystem.setAngleSetpoint(Trench.hoodDownAngle);
     }
 
     /**
@@ -45,7 +45,7 @@ public class TrenchCommand extends Command {
      * this method returning true -- the scheduler will call its {@link #end(boolean)} method.
      * </p><p>
      * Returning false will result in the command never ending automatically. It may still be
-     * cancelled manually or interrupted by another command. Hard coding this command to always
+     * cancelled manually or interdDownted by another command. Hard coding this command to always
      * return true will result in the command executing once and finishing immediately. It is
      * recommended to use * {@link edu.wpi.first.wpilibj2.command.InstantCommand InstantCommand}
      * for such an operation.

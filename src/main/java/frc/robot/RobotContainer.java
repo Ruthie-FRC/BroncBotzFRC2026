@@ -202,7 +202,7 @@ public class RobotContainer
     m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
     m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
-    m_driverController.button(1).whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
+    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
     //m_driverController.leftBumper().on(new TrenchCommand(hood));
     //m_driverController.button(1).toggleOnTrue(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
     //m_driverController.button(1).multiPress(1, 2).whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
@@ -210,7 +210,7 @@ public class RobotContainer
    // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
     
-    m_operatorController.button(2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
