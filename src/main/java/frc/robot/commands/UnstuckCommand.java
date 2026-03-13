@@ -42,7 +42,7 @@ public class UnstuckCommand extends Command {
         
             kickerSubsystem.setDutycycleSetpoint(-0.5);//(Setpoints.Intake.intakeRollerRPM);
             indexerSubsystem.setDutyCycleSetpoint(-0.5);
-            agitatorSubsystem.setDutyCycleSetpoint(-0.3);
+            agitatorSubsystem.setDutyCycleSetpoint(-0.6);
        
     }
 

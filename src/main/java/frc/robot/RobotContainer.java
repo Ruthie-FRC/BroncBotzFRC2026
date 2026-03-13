@@ -121,7 +121,7 @@ public class RobotContainer
                                                             kicker,
                                                             indexer,
                                                             agitator,
-                                                            // hood,
+                                                            hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(10)));
@@ -132,7 +132,7 @@ public class RobotContainer
                                                             kicker,
                                                             indexer,
                                                             agitator,
-                                                            // hood,
+                                                            hood,
                                                             Setpoints.Shooter.hubRPM
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
@@ -148,7 +148,7 @@ public class RobotContainer
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
-    hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
+    hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -211,7 +211,7 @@ public class RobotContainer
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
-                                                                               // hood,
+                                                                               hood,
                                                                                drivebase));
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
