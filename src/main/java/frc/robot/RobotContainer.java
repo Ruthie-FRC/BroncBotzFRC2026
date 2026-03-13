@@ -216,7 +216,7 @@ public class RobotContainer
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.povUp().whileTrue(new OutakeCommand(intakeRoller, agitator));
-    m_operatorController.povDown().whileTrue(new UnstuckCommand(kicker, indexer));
+    m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
 

@@ -35,7 +35,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
                     .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
                     .withIdleMode(MotorMode.COAST)
                     .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.HIGH)//not Intake"ARM" motor
-                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(60))
                     .withMotorInverted(false)
                     .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
                     .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
