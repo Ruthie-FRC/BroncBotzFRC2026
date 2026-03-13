@@ -98,7 +98,7 @@ public class ShootKickIndexCommand extends Command {
         this.goalRPM = goalRPM1;   // <-- store parameter
         //this.goalDegree = goalDegree1;
 
-        addRequirements(this.shooter, this.kicker, this.indexer, this.agitator);//this.hood
+        addRequirements(this.shooter, this.kicker, this.indexer, this.agitator, this.hood);
     }
 
     public ShootKickIndexCommand(
@@ -132,6 +132,7 @@ public class ShootKickIndexCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         kicker.setVelocitySetpoint(RPM.of(1000));
+        hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
         if (swerve.isEmpty()) {
             shooter.setVelocitySetpoint(goalRPM);
             hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
