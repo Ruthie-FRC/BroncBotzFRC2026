@@ -36,7 +36,7 @@ public class TrenchCommand extends Command {
     @Override
     public void execute() {
        
-        hoodSubsystem.setAngleSetpoint(Trench.hoodDownAngle);
+        hoodSubsystem.setAngleSetpoint(Trench.hoodUpAngle);
     }
 
     /**
@@ -70,6 +70,6 @@ public class TrenchCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        hoodSubsystem.setAngleSetpoint(Trench.hoodUpAngle);
+        hoodSubsystem.setAngleSetpoint(Trench.hoodDownAngle);
     }
 }

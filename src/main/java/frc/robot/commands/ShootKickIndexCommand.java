@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Second;
 import java.util.List;
 import java.util.Optional;
 
+import frc.robot.Setpoints;
 import frc.robot.subsystems.*;
 
 import edu.wpi.first.math.Pair;
@@ -45,7 +46,7 @@ public class ShootKickIndexCommand extends Command {
     private final IndexerSubsystem indexer;
     private final AgitatorSubsystem agitator;
     private final Optional<SwerveSubsystem> swerve;
-   // private final HoodSubsystem hood;//94 rpm
+    private final HoodSubsystem hood;//94 rpm
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     //private final Angle goalDegree;
 
@@ -83,7 +84,7 @@ public class ShootKickIndexCommand extends Command {
             KickerSubsystem kicker,
             IndexerSubsystem indexer,
             AgitatorSubsystem agitator,
-            //HoodSubsystem hood,
+            HoodSubsystem hood,
             AngularVelocity goalRPM1
            // Angle goalDegree1   // <-- parameter passed in
     ) {
@@ -91,13 +92,13 @@ public class ShootKickIndexCommand extends Command {
         this.kicker = kicker;
         this.indexer = indexer;
         this.agitator = agitator;
-        //this.hood = hood;
+        this.hood = hood;
         this.swerve = Optional.empty();
         
         this.goalRPM = goalRPM1;   // <-- store parameter
         //this.goalDegree = goalDegree1;
 
-        addRequirements(this.shooter, this.kicker, this.indexer, this.agitator);//this.hood
+        addRequirements(this.shooter, this.kicker, this.indexer, this.agitator, this.hood);
     }
 
     public ShootKickIndexCommand(
@@ -105,14 +106,14 @@ public class ShootKickIndexCommand extends Command {
             KickerSubsystem kicker,
             IndexerSubsystem indexer,
             AgitatorSubsystem agitator,
-            //HoodSubsystem hood,
+            HoodSubsystem hood,
             SwerveSubsystem swerve
     ) {
         this.shooter = shooter;
         this.kicker = kicker;
         this.indexer = indexer;
         this.agitator = agitator;
-       // this.hood = hood;
+        this.hood = hood;
         this.swerve = Optional.of(swerve);
         goalRPM = RPM.zero();
         //goalDegree = Degrees.zero();
@@ -122,7 +123,7 @@ public class ShootKickIndexCommand extends Command {
             calculatedTOF.put(shot.distance.in(Meters), shot.tof.in(Second));
            // calculatedHoodAngle.put(shot.distance.in(Meters), shot.hoodAngle.in(Degrees));
         }
-        addRequirements(this.shooter, this.kicker, this.indexer);//, this.hood
+        addRequirements(this.shooter, this.kicker, this.indexer, this.hood);
     }
 
     
@@ -131,9 +132,10 @@ public class ShootKickIndexCommand extends Command {
     public void initialize() {
         // Spin up shooter to the passed RPM
         kicker.setVelocitySetpoint(RPM.of(1000));
+        hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
         if (swerve.isEmpty()) {
             shooter.setVelocitySetpoint(goalRPM);
-           // hood.setAngleSetpoint(goalDegree);
+            
         }
         agitator.setDutyCycleSetpoint(0);
         
@@ -150,7 +152,7 @@ public class ShootKickIndexCommand extends Command {
         }
 
         shooter.setVelocitySetpoint(goalRPM1);
-        //hood.setAngleSetpoint(goalDegree1);
+        hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
 
         AngularVelocity shooterRPM = shooter.getRPM();
 
@@ -179,7 +181,7 @@ public class ShootKickIndexCommand extends Command {
         kicker.setDutycycleSetpoint(0);
         indexer.setDutyCycleSetpoint(0);
         agitator.setDutyCycleSetpoint(0);
-        //hood.setDutyCycleSetpoint(0);
+        hood.setDutyCycleSetpoint(0);
 
     }
 

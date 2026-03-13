@@ -121,7 +121,7 @@ public class RobotContainer
                                                             kicker,
                                                             indexer,
                                                             agitator,
-                                                            // hood,
+                                                            hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(10)));
@@ -132,7 +132,7 @@ public class RobotContainer
                                                             kicker,
                                                             indexer,
                                                             agitator,
-                                                            // hood,
+                                                            hood,
                                                             Setpoints.Shooter.hubRPM
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
@@ -148,7 +148,7 @@ public class RobotContainer
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
-    hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
+    hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -202,16 +202,19 @@ public class RobotContainer
     m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     // m_driverController.x().whileTrue(drivebase.lockPos());
     m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
-    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
+    m_driverController.button(1).whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
+    //m_driverController.leftBumper().on(new TrenchCommand(hood));
+    //m_driverController.button(1).toggleOnTrue(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
+    //m_driverController.button(1).multiPress(1, 2).whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
    // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
     
-    m_operatorController.rightTrigger().whileTrue(new ShootKickIndexCommand(turretFlywheel,
+    m_operatorController.button(2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
-                                                                               // hood,
+                                                                               hood,
                                                                                drivebase));
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
