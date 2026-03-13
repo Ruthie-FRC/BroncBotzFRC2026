@@ -122,7 +122,7 @@ public class RobotContainer
                                                             indexer,
                                                             agitator,
                                                             // hood,
-                                                            Setpoints.Shooter.hubRPM
+                                                            drivebase
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(10)));
 
