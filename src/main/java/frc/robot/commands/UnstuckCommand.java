@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 
@@ -10,12 +11,13 @@ public class UnstuckCommand extends Command {
     
     private final KickerSubsystem kickerSubsystem;
     private final IndexerSubsystem indexerSubsystem;
+    private final AgitatorSubsystem agitatorSubsystem;
 
-
-    public UnstuckCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem) {
+    public UnstuckCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem, AgitatorSubsystem agitatorSubsystem) {
        
         this.kickerSubsystem = kickerSubsystem;
         this.indexerSubsystem  = indexerSubsystem;
+        this.agitatorSubsystem = agitatorSubsystem;
         addRequirements(this.kickerSubsystem,this.indexerSubsystem);
     }
  
@@ -27,6 +29,7 @@ public class UnstuckCommand extends Command {
     public void initialize() {
         kickerSubsystem.setDutycycleSetpoint(0);
         indexerSubsystem.setDutyCycleSetpoint(0);
+        agitatorSubsystem.setDutyCycleSetpoint(0);
     }
 
     /**
@@ -39,6 +42,7 @@ public class UnstuckCommand extends Command {
         
             kickerSubsystem.setDutycycleSetpoint(-0.5);//(Setpoints.Intake.intakeRollerRPM);
             indexerSubsystem.setDutyCycleSetpoint(-0.5);
+            agitatorSubsystem.setDutyCycleSetpoint(-0.3);
        
     }
 
@@ -75,5 +79,6 @@ public class UnstuckCommand extends Command {
     public void end(boolean interrupted) {
         kickerSubsystem.setDutycycleSetpoint(0);
         indexerSubsystem.setDutyCycleSetpoint(0);
+        agitatorSubsystem.setDutyCycleSetpoint(0);
     }
 }
