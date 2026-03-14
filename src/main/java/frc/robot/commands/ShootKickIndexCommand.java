@@ -137,7 +137,6 @@ public class ShootKickIndexCommand extends Command {
             shooter.setVelocitySetpoint(goalRPM);
             hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
         }
-        agitator.setDutyCycleSetpoint(0);
         
     }
 
@@ -165,9 +164,11 @@ public class ShootKickIndexCommand extends Command {
         );
         kicker.setVelocitySetpoint(RPM.of(1000));
 
+        agitator.setDutyCycleSetpoint(0.5);
+
         if (shooterReady) {
-            agitator.setDutyCycleSetpoint(0.5);
-            indexer.setVelocitySetpoint(RPM.of(400));
+            
+            indexer.setVelocitySetpoint(RPM.of(500));
         } else {
             indexer.setDutyCycleSetpoint(-0.3);;
         }

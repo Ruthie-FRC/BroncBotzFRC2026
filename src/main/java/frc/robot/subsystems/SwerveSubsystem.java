@@ -230,7 +230,7 @@ public class SwerveSubsystem extends SubsystemBase
         Pose2d usefulPose    = result.getBotPose2d(Alliance.Blue);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() > 0.03 && // TODO: Change me, i am bad, too low
+        if (poseEstimate.getAvgTagAmbiguity() < 0.03 && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {
           if (llTimestamp != poseEstimate.timestampSeconds)

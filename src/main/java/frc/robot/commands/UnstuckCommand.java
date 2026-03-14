@@ -13,7 +13,8 @@ public class UnstuckCommand extends Command {
     private final IndexerSubsystem indexerSubsystem;
     private final AgitatorSubsystem agitatorSubsystem;
 
-    public UnstuckCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem, AgitatorSubsystem agitatorSubsystem) {
+    public 
+    UnstuckCommand(KickerSubsystem kickerSubsystem, IndexerSubsystem indexerSubsystem, AgitatorSubsystem agitatorSubsystem) {
        
         this.kickerSubsystem = kickerSubsystem;
         this.indexerSubsystem  = indexerSubsystem;

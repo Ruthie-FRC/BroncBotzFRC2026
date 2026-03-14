@@ -218,8 +218,11 @@ public class RobotContainer
                                                                                drivebase));
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
-    m_operatorController.povUp().whileTrue(new OutakeCommand(intakeRoller, agitator));
+    m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
+    m_driverController.leftTrigger().whileTrue(agitator.setDutyCycleCommand(0.2));
+    m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
+    m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
 
@@ -257,9 +260,9 @@ public class RobotContainer
     //                                                             ));
 
     // m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
-    m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-    m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
-    m_operatorController.x().onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1));
+    // m_operatorController.a().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
+    // m_operatorController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(55)));
+    // m_operatorController.x().onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1));
     // m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     // m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
   }
