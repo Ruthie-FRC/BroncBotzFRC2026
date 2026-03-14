@@ -28,7 +28,7 @@ public class slowMode extends Command
   public void initialize()
   {
     swerveInputStream
-                     .scaleTranslation(0.5);
+                     .scaleTranslation(0.25);
 
   }
 

@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.NewtonMeter;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -209,7 +210,7 @@ public class RobotContainer
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
    // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-    
+    m_operatorController.povUp().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(2400)));
     m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,

@@ -67,7 +67,6 @@ public class ShootKickIndexCommand extends Command {
             new RecordedShot(Inches.of(115), RPM.of(2400),Second.of(1)),
             new RecordedShot(Inches.of(105), RPM.of(2400), Second.of(1)),
              new RecordedShot(Inches.of(97), RPM.of(2200),  Second.of(1)),
-            new RecordedShot(Inches.of(265), RPM.of(4000),Second.of(1)),
             new RecordedShot(Inches.of(207), RPM.of(3100), Second.of(1)),
              new RecordedShot(Inches.of(174), RPM.of(2800),  Second.of(1)),
             new RecordedShot(Inches.of(162), RPM.of(2700),Second.of(1)),
@@ -167,7 +166,7 @@ public class ShootKickIndexCommand extends Command {
         agitator.setDutyCycleSetpoint(0.5);
 
         if (shooterReady) {
-            
+
             indexer.setVelocitySetpoint(RPM.of(500));
         } else {
             indexer.setDutyCycleSetpoint(-0.3);;
