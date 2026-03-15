@@ -114,7 +114,7 @@ public class RobotContainer
     
     
     
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
+    new EventTrigger("IntakeStop").onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1)
                                                    .alongWith(intakeRoller.stopCommand()));
 
     new EventTrigger("Shoot").onTrue(
