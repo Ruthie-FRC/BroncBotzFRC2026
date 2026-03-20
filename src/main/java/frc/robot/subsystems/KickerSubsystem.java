@@ -36,7 +36,7 @@ public class KickerSubsystem extends SubsystemBase {
                     .withStatorCurrentLimit(Amps.of(40))
                     .withMotorInverted(true)//check
                     .withFeedforward(new SimpleMotorFeedforward(0.18, 0.62, 0))
-                    .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
+                    .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0)) //30 rpm
                     .withControlMode(ControlMode.CLOSED_LOOP);
 
     private final SmartMotorController motor =

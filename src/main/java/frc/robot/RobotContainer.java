@@ -33,6 +33,7 @@ import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.TrenchCommand;
 import frc.robot.commands.UnstuckCommand;
 import frc.robot.commands.slowMode;
+import frc.robot.commands.unused.ShootOnTheMoveCommand;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.FlywheelSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -150,6 +151,7 @@ public class RobotContainer
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
     hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
+
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -210,7 +212,7 @@ public class RobotContainer
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
    // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
     //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-    m_operatorController.povUp().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(2400)));
+    m_operatorController.povUp().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(1500)));
     m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
@@ -221,9 +223,9 @@ public class RobotContainer
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
-    m_driverController.leftTrigger().whileTrue(agitator.setDutyCycleCommand(0.2));
+    m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
-    m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
+    //m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
 
 

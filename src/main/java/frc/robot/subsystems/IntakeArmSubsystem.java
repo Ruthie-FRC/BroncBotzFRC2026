@@ -47,9 +47,9 @@ public class IntakeArmSubsystem extends SubsystemBase
   private SmartMotorControllerConfig followerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withClosedLoopController(4.5, 0, 0.5) 
-      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0))
+      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0)) 
       .withSimClosedLoopController(10, 0, 0)
-      .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
+      .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25)) //this just get it faster
       .withGearing(GroundConstants.gearing)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))

@@ -34,7 +34,7 @@ public class AgitatorSubsystem extends SubsystemBase {
                     .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
                     .withIdleMode(MotorMode.COAST)
                     .withTelemetry("AgitatorMotor", TelemetryVerbosity.HIGH)
-                    .withStatorCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(60))
                     .withMotorInverted(false)
                     .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
                     .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
