@@ -62,6 +62,10 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       .withResetPreviousConfig(false);
+      .withExternalEncoderGearing(1)
+      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+      .withUseExternalFeedbackEncoder(true);
+      //.withResetPreviousConfig(false);
 
 
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -90,8 +94,8 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoderInverted(true)
       .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
-      
-      .withResetPreviousConfig(false);
+      .withExternalEncoderGearing(1);
+      //.withResetPreviousConfig(false);
 
   private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
                                                                                 masterConfig);

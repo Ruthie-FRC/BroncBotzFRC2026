@@ -22,6 +22,8 @@ public class Setpoints {
 
         public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(171.011);
         public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(0);
+        public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(40.8555);
+        public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(170.6637);
 
         public static final Angle hoodDownAngle = Degrees.of(0);
         public static final Angle hoodUpAngle = Degrees.of(8965.65);
