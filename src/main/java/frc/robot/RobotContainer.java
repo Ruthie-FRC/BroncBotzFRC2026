@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.NewtonMeter;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -11,11 +12,13 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,12 +47,14 @@ import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.FieldConstants;
 import swervelib.SwerveInputStream;
+import java.util.function.Predicate;
 
 
 public class RobotContainer
 {
 
   private final SendableChooser<Command> autoChooser;
+  
 
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
@@ -190,6 +195,56 @@ public class RobotContainer
   //controlssss
   private void configureBindings()
   {
+    var topRightOfTrench = new Pose2d().getTranslation();
+    var bottomLeftOfTrench = new Pose2d().getTranslation();
+    var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
+
+
+      var topBlueTrenchTopLeft = new Translation2d(5.238, 8.016);
+      var topBlueTrenchBottomRight = new Translation2d(4.048, 6.747);
+      var topBlueTrench = new Rectangle2d(topBlueTrenchTopLeft, topBlueTrenchBottomRight);
+
+      var bottomBlueTrenchTopLeft = new Translation2d(5.146, 1.409);
+      var bottomBlueTrenchBottomRight = new Translation2d(4.034, 0.045);
+      var bottomBlueTrench = new Rectangle2d(bottomBlueTrenchTopLeft, bottomBlueTrenchBottomRight);
+
+      var topRedTrenchTopLeft = new Translation2d(12.558, 8.013);
+      var topRedTrenchBottomRight = new Translation2d(11.394, 6.816);
+      var topRedTrench = new Rectangle2d(topRedTrenchTopLeft, topRedTrenchBottomRight);
+
+      var bottomRedTrenchTopLeft = new Translation2d(12.539, 1.254);
+      var bottomRedTrenchBottomRight = new Translation2d(11.394, 0.045);
+      var bottomRedTrench = new Rectangle2d(bottomRedTrenchTopLeft, bottomRedTrenchBottomRight);
+
+      Predicate<Pose2d> inTheTrenches = pose -> 
+                                      topBlueTrench.contains(pose.getTranslation()) ||
+                                      bottomBlueTrench.contains(pose.getTranslation()) ||
+                                      topRedTrench.contains(pose.getTranslation()) ||
+                                      bottomRedTrench.contains(pose.getTranslation())
+                                      ;
+                                  
+
+      double headingDegrees = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 0.0 : 180.0;
+    
+      SwerveInputStream stream = driveAngularVelocity.copy().withControllerHeadingAxis(
+                                                              ()->  Math.cos(Degrees.of(headingDegrees).in(Radians)), 
+                                                              ()->Math.sin(Degrees.of(headingDegrees).in(Radians)))
+                                                            .headingWhile(true);
+      
+      Command driveAimedAtTrenchFieldOriented = drivebase.driveFieldOriented(stream);
+
+
+      Trigger trench = new Trigger( 
+                                  () -> inTheTrenches.test(drivebase.getPose())
+                                  )
+                                    .whileTrue(
+                                                Commands.run(
+                                                              ()-> {drivebase.setDefaultCommand(driveAimedAtTrenchFieldOriented);} 
+                                                            )
+
+                                    .finallyDo(  () -> drivebase.setDefaultCommand(driveFieldOrientedAngularVelocity) )
+                                  );
+
 
     // m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
     // m_driverController.button(2).whileTrue(drivebase.lockPos().withTimeout(5));

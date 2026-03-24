@@ -59,7 +59,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoder(m_followerAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
       .withExternalEncoderInverted(false)
-      // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       .withResetPreviousConfig(false);
 
@@ -88,7 +88,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoder(m_masterAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
       .withExternalEncoderInverted(true)
-      // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+      .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       
       .withResetPreviousConfig(false);
@@ -116,8 +116,8 @@ public class IntakeArmSubsystem extends SubsystemBase
    */
   public IntakeArmSubsystem()
   {
-  //  followerMotorController.setEncoderPosition(Rotations.of(m_followerAbsoluteEncoder.getPosition()));
-  //  masterMotorController.setEncoderPosition(Rotations.of(m_masterAbsoluteEncoder.getPosition()));
+   followerMotorController.setEncoderPosition(Rotations.of(m_followerAbsoluteEncoder.getPosition()));
+   masterMotorController.setEncoderPosition(Rotations.of(m_masterAbsoluteEncoder.getPosition()));
 
   }
 
@@ -170,8 +170,8 @@ public class IntakeArmSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    // SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
-    // SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
+    SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
+    SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
     arm.updateTelemetry();
     followerMotorController.updateTelemetry();
   }
