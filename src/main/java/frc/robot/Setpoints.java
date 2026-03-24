@@ -20,8 +20,7 @@ public class Setpoints {
         public static final AngularVelocity agitatorRPMin      = RPM.of(500);
         public static Angle                 intakeArmAngleDown = Degrees.of(0);
 
-        public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(171.011);
-        public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(0);
+
         public static Angle masterIntakeAbsoluteEncoderOffset = Degrees.of(40.8555);
         public static Angle followerIntakeAbsoluteEncoderOffset = Degrees.of(170.6637);
 

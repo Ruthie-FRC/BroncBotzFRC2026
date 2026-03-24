@@ -59,9 +59,6 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoder(m_followerAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
       .withExternalEncoderInverted(false)
-      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      .withUseExternalFeedbackEncoder(true)
-      .withResetPreviousConfig(false);
       .withExternalEncoderGearing(1)
       .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true);
