@@ -58,9 +58,10 @@ public class IntakeArmSubsystem extends SubsystemBase
 
       .withExternalEncoder(m_followerAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      //Soft limit is 2 degrees!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       .withExternalEncoderInverted(false)
       .withExternalEncoderGearing(1)
-      .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+     // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true);
       //.withResetPreviousConfig(false);
 
@@ -89,7 +90,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withExternalEncoder(m_masterAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
       .withExternalEncoderInverted(true)
-      .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+     // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
       .withUseExternalFeedbackEncoder(true)
       .withExternalEncoderGearing(1);
       //.withResetPreviousConfig(false);
@@ -157,8 +158,8 @@ public class IntakeArmSubsystem extends SubsystemBase
   public Command setDutyCycleCommand(Supplier<Double> left, Supplier<Double> right)
   {
     return run(() -> {
-      masterMotorController.setDutyCycle(left.get()*-0.07);
-      followerMotorController.setDutyCycle(right.get()*-0.07);
+      masterMotorController.setDutyCycle(left.get()*-0.1);
+      followerMotorController.setDutyCycle(right.get()*-0.1);
     }).withName("SetBothDutyCycle");
   }
 

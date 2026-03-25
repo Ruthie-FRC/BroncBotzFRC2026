@@ -10,7 +10,7 @@
     "canbus": null
   },
   "angle": {
-    "type": "nova_neo",
+    "type": "sparkmax_neo",
     "id": 4,
     "canbus": null
   },
