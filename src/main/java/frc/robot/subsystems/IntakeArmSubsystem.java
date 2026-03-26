@@ -34,36 +34,37 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class IntakeArmSubsystem extends SubsystemBase
 {
 
-  private Angle masterAbsoluteEncoderZeroOffset = Setpoints.Intake.masterIntakeAbsoluteEncoderOffset;
-  private Angle followerAbsoluteEncoderZeroOffset = Setpoints.Intake.followerIntakeAbsoluteEncoderOffset;
+  // private Angle masterAbsoluteEncoderZeroOffset = Setpoints.Intake.masterIntakeAbsoluteEncoderOffset;
+  // private Angle followerAbsoluteEncoderZeroOffset = Setpoints.Intake.followerIntakeAbsoluteEncoderOffset;
 
   private SparkMax             m_masterMotor   = new SparkMax(Constants.CanIDConstants.intakeArmID,
                                                               MotorType.kBrushless);
-  private SparkAbsoluteEncoder m_masterAbsoluteEncoder = m_masterMotor.getAbsoluteEncoder();
+  // private SparkAbsoluteEncoder m_masterAbsoluteEncoder = m_masterMotor.getAbsoluteEncoder();
   private SparkMax             m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID,
                                                               MotorType.kBrushless);
-  private SparkAbsoluteEncoder m_followerAbsoluteEncoder = m_followerMotor.getAbsoluteEncoder();
+  //  private SparkAbsoluteEncoder m_followerAbsoluteEncoder = m_followerMotor.getAbsoluteEncoder();
 
   private SmartMotorControllerConfig followerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(4.5, 0, 0.5) 
-      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0)) 
+      .withClosedLoopController(2, 0, 2) 
+      .withFeedforward(new ArmFeedforward(0.01, 0.02, 0, 0)) 
       .withSimClosedLoopController(10, 0, 0)
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25)) //this just get it faster
       .withGearing(GroundConstants.gearing)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(40))
       .withMotorInverted(false)
+      .withStartingPosition(Intake.intakeArmStartAngle)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
 
-      .withExternalEncoder(m_followerAbsoluteEncoder)
-      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+      //.withExternalEncoder(m_followerAbsoluteEncoder)
+      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)//5 deg to 65 deg
       //Soft limit is 2 degrees!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      .withExternalEncoderInverted(false)
-      .withExternalEncoderGearing(1)
+      // .withExternalEncoderInverted(false)
+      // .withExternalEncoderGearing(1)
      // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      .withUseExternalFeedbackEncoder(true);
-      //.withResetPreviousConfig(false);
+    //  .withUseExternalFeedbackEncoder(false)
+      .withResetPreviousConfig(false);
 
 
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -73,12 +74,10 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   private SmartMotorControllerConfig masterConfig            = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withClosedLoopController(4.5, 0, 0.5)
-      .withFeedforward(new ArmFeedforward(0.15, 0, 100, 0))
+      .withClosedLoopController(2, 0, 2)
+      .withFeedforward(new ArmFeedforward(0.01, 0.02, 0, 0))
       .withSimClosedLoopController(10, 0, 0)
       .withSimFeedforward(new ArmFeedforward(
-        
-      
       0.25, 0, 0.25))
       .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
       .withGearing(GroundConstants.gearing)
@@ -87,13 +86,13 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
       
-      .withExternalEncoder(m_masterAbsoluteEncoder)
+      // .withExternalEncoder(m_masterAbsoluteEncoder)
       .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-      .withExternalEncoderInverted(true)
+    //  .withExternalEncoderInverted(true)
      // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      .withUseExternalFeedbackEncoder(true)
-      .withExternalEncoderGearing(1);
-      //.withResetPreviousConfig(false);
+      //  .withUseExternalFeedbackEncoder(false)
+      // .withExternalEncoderGearing(1);
+      .withResetPreviousConfig(false);
 
   private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
                                                                                 masterConfig);
@@ -107,7 +106,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withMass(GroundConstants.weight)
       // Telemetry name and verbosity for the arm.
       .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
-      .withStartingPosition(Degrees.zero());
+      .withStartingPosition(Setpoints.Intake.intakeArmStartAngle);
 
 
   // Arm Mechanism
@@ -118,8 +117,8 @@ public class IntakeArmSubsystem extends SubsystemBase
    */
   public IntakeArmSubsystem()
   {
-   followerMotorController.setEncoderPosition(Rotations.of(m_followerAbsoluteEncoder.getPosition()));
-   masterMotorController.setEncoderPosition(Rotations.of(m_masterAbsoluteEncoder.getPosition()));
+  //  followerMotorController.setEncoderPosition(Rotations.of(m_followerAbsoluteEncoder.getPosition()));
+  //  masterMotorController.setEncoderPosition(Rotations.of(m_masterAbsoluteEncoder.getPosition()));
 
   }
 
@@ -172,8 +171,8 @@ public class IntakeArmSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
-    SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
-    SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
+    // SmartDashboard.putNumber("Maste Absolute Encoder Value(deg)",Rotations.of(m_masterAbsoluteEncoder.getPosition()).in(Degrees));
+    // SmartDashboard.putNumber("Follower Absolute Encoder(deg)",Rotations.of(m_followerAbsoluteEncoder.getPosition()).in(Degrees));
     arm.updateTelemetry();
     followerMotorController.updateTelemetry();
   }

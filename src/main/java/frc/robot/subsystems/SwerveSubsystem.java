@@ -72,13 +72,14 @@ public class SwerveSubsystem extends SubsystemBase
   private ShooterTargetingSystem shooterAimer;
 
   public static SwerveDrive swerveDrive;
-  private Limelight              limelight_swerve;
+  private Limelight              limelight_swerve; //Instance Variables
   private LimelightPoseEstimator limelightPoseEstimator_swerve;
   private Limelight              limelight_turret;
   private LimelightPoseEstimator limelightPoseEstimator_turret;
 
   Field2d m_field2d = new Field2d();
 
+  // Look I am above the constuctor!!!
   public SwerveSubsystem()
   {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -111,11 +112,11 @@ public class SwerveSubsystem extends SubsystemBase
             0.451739, // up from the floor reference
             new Rotation3d()));
 
-    setupPathPlanner();
-    setupLimelight();
-  }
+    setupPathPlanner(); 
+    setupLimelight(); //I am inside the constuctor !!!!
+  } //I am a bracket!
 
-  public void setupLimelight()
+  public void setupLimelight() //I am a method!!
   {
     swerveDrive.stopOdometryThread();
     limelight_swerve = new Limelight("limelight"); // We didn't rename the limelight
@@ -124,7 +125,7 @@ public class SwerveSubsystem extends SubsystemBase
         .withPipelineIndex(0)
         .withCameraOffset(
             new Pose3d( // TODO: Give the right offset here
-                Units.inchesToMeters(-12),
+                Units.inchesToMeters(-12), // CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
                 Units.inchesToMeters(-12), /// +Right, maybe?
                 Units.inchesToMeters(10),
                 new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
@@ -145,7 +146,7 @@ public class SwerveSubsystem extends SubsystemBase
         .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
         .save();
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
-  }
+  } //I am also a bracket!!
 
   /**
    * Returns a Command that tells the robot to drive forward until the command ends.
@@ -200,8 +201,8 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Query some boolean state, such as a digital sensor.
     return false;
-  }
-
+  } 
+  // I am a bunch a important varaibles
   private int     outofAreaReading = 0;
   private boolean initialReading   = false;
   private double  lastLLTimestamp_swerve  = 0;
@@ -250,15 +251,15 @@ public class SwerveSubsystem extends SubsystemBase
     }
     return llTimestamp;
   }
-
+// I am above periodic!!!
   @Override
-  public void periodic()
+  public void periodic() //I get called every 20 ms!!!
   {
     outofAreaReading = 0;
     swerveDrive.updateOdometry();
     
-    lastLLTimestamp_swerve = updateLimelight(limelight_swerve, limelightPoseEstimator_swerve, lastLLTimestamp_swerve, Degrees.of(180), "swerve");
-    lastLLTimestamp_turret = updateLimelight(limelight_turret, limelightPoseEstimator_turret, lastLLTimestamp_turret, Degrees.zero(), "turret");
+    lastLLTimestamp_swerve = updateLimelight(limelight_swerve, limelightPoseEstimator_swerve, lastLLTimestamp_swerve, Degrees.of(180), "swerve"); //Hiiiiii, I am a method being called
+    lastLLTimestamp_turret = updateLimelight(limelight_turret, limelightPoseEstimator_turret, lastLLTimestamp_turret, Degrees.zero(), "turret"); // I am not needed if I do not have a turret limelight
     // TODO: Remove me
     distanceToHub();
   }
