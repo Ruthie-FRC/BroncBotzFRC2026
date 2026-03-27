@@ -13,19 +13,18 @@ import static edu.wpi.first.units.Units.Degrees;
 
 public class IntakeCommand extends Command {
     private final IntakeRollerSubsystem intakeRollerSubsystem;
-    private final AgitatorSubsystem agitatorSubsystem;
     //private final HoodSubsystem hoodSubsystem;
 
-    public IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem 
+    public IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem
     //HoodSubsystem hoodSubsystem
     ) {
         //this.intakeArmSubsystem = intakeArmSubsystem;
         this.intakeRollerSubsystem = intakeRollerSubsystem;
-        this.agitatorSubsystem = agitatorSubsystem;
+
         //this.hoodSubsystem = hoodSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem);
+        addRequirements(this.intakeRollerSubsystem);
     }
 
     /**
@@ -34,7 +33,6 @@ public class IntakeCommand extends Command {
     @Override
     public void initialize() {
         intakeRollerSubsystem.setDutycycleSetpoint(0);
-        agitatorSubsystem.setDutyCycleSetpoint(0);
     }
 
     /**
@@ -46,7 +44,6 @@ public class IntakeCommand extends Command {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
         intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
-        agitatorSubsystem.setDutyCycleSetpoint(0.3);//(Setpoints.Intake.agitatorRPMin);
         
     }
 
@@ -82,7 +79,6 @@ public class IntakeCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         //intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
-        agitatorSubsystem.setDutyCycleSetpoint(0);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
        // hoodSubsystem.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
     }

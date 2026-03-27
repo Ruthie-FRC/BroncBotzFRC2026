@@ -11,33 +11,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Auto One Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto One Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto One Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto One Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto One Shoot"
+            "name": "ShootCommand"
           }
         }
       ]

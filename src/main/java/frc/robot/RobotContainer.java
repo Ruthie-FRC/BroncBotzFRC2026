@@ -106,17 +106,29 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    NamedCommands.registerCommand("ShootCommand",
+                                  new ShootKickIndexCommand(turretFlywheel,
+                                                            kicker,
+                                                            indexer,
+                                                            agitator,
+                                                            hood,
+                                                            drivebase
+                                                            //Setpoints.Hood.hubDegree
+                                  ).withTimeout(Seconds.of(6)));
     // Configure the trigger bindings
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     configureBindings();
     defaultCommands();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    
 
     // Named commands do NOT run with path's. They are inbetween paths.
     
 
     new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1)
-                                                  .alongWith(new IntakeCommand(intakeRoller, agitator)));
+                                                  .alongWith(new IntakeCommand(intakeRoller)));
     
     
     
@@ -134,15 +146,7 @@ public class RobotContainer
                                   ).withTimeout(Seconds.of(10)));
 
                                   
-    NamedCommands.registerCommand("ShootCommand",
-                                  new ShootKickIndexCommand(turretFlywheel,
-                                                            kicker,
-                                                            indexer,
-                                                            agitator,
-                                                            hood,
-                                                            Setpoints.Shooter.hubRPM
-                                                            //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(6)));
+    
   }
 
 
@@ -275,7 +279,7 @@ public class RobotContainer
                                                                                hood,
                                                                                drivebase));
     
-    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
+    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller));
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
