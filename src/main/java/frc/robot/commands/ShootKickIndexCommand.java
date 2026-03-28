@@ -167,7 +167,7 @@ public class ShootKickIndexCommand extends Command {
 
         if (shooterReady) {
 
-            indexer.setVelocitySetpoint(RPM.of(643));
+            indexer.setVelocitySetpoint(RPM.of(847));
         } else {
             indexer.setDutyCycleSetpoint(-0.3);;
         }
