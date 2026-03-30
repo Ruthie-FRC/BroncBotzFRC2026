@@ -284,10 +284,8 @@ public class RobotContainer
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
-    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
-    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
-    m_driverController.leftBumper().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
-    m_driverController.leftBumper().whileFalse(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
+    m_operatorController.leftBumper().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    m_operatorController.leftBumper().whileFalse(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
    
     //m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
