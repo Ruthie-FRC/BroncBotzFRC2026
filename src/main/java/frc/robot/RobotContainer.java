@@ -30,6 +30,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Setpoints.Hood;
 import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.IntakeAgitateCommand;
+import frc.robot.commands.IntakeAutoCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OutakeCommand;
 import frc.robot.commands.ShootKickIndexCommand;
@@ -118,6 +120,8 @@ public class RobotContainer
     // Configure the trigger bindings
 
     configureBindings();
+    driverControls();
+    operatorControls();
     defaultCommands();
 
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -128,7 +132,7 @@ public class RobotContainer
     
 
     new EventTrigger("IntakeStart").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
-                                                  .alongWith(new IntakeCommand(intakeRoller)).alongWith(agitator.setDutyCycleCommand(0.3)));
+                                                  .alongWith(new IntakeAutoCommand(intakeRoller)).alongWith(agitator.setDutyCycleCommand(0.3)));
     
     
     
@@ -149,7 +153,7 @@ public class RobotContainer
     
   }
 
-
+/*------------------------------- DEFAULT COMMANDS ------------------------------------------------------------------------------------------------------------------------------------ */
   public void defaultCommands()
   {
 
@@ -167,26 +171,44 @@ public class RobotContainer
     RobotModeTriggers.teleop()
                      .onTrue(Commands.runOnce(() -> driveAngularVelocity.aim(FieldConstants.Hub.getHubPose())));
 
-    testModeControls();
-  }
-
-
-  private void testModeControls()
-  {
-    Voltage armCtrlVolts = Volts.of(3);
-    Time    window       = Seconds.of(0.5);
-/*    // Press a twice, and hold to have the left intake arm go up.
-   
-*/
     
-    // m_operatorController.leftBumper().whileTrue(intakeArm.setDutyCycleCommand(0.5));
-    // m_operatorController.rightBumper().whileTrue(intakeArm.setDutyCycleCommand(-0.5));
-//    m_operatorController.b().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
-//    m_operatorController.a().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0, 0.3));
-    //m_operatorController.leftBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyCycleCommand(0.3, 0));
-   // m_operatorController.rightBumper().and(DriverStation::isTest).whileTrue(intakeArm.setDutyslowCycleCommand(0, 0.3));
-  
   }
+
+
+/*-------------------------------- DRIVER CONTROLLERS ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+  public void driverControls(){
+    m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
+    m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
+    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
+    m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
+    m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
+
+  }
+
+/*-------------------------------- OPERATOR CONTROLLERS ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+  public void operatorControls(){
+    m_operatorController.povRight().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(1500)));
+    m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(2400)));
+    m_operatorController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(3000)));
+    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+                                                                               kicker,
+                                                                               indexer,
+                                                                               agitator,
+                                                                               hood,
+                                                                               drivebase));
+    
+    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
+    m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
+    m_operatorController.rightBumper().whileTrue((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitSeconds(1))).repeatedly());
+    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
+    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+   
+    m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
+    m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
+  }
+
+  
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -250,54 +272,14 @@ public class RobotContainer
                                   );
 
 
-    // m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
-    // m_driverController.button(2).whileTrue(drivebase.lockPos().withTimeout(5));
+  //  m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
+     //m_driverController.button(1).whileTrue((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitSeconds(1))).repeatedly());
     // m_driverController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, Setpoints.Shooter.hubRPM).withTimeout(5));
     // m_driverController.button(4).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
     // m_driverController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
     // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
     //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
     //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-
-    // Test mode controls.
-    //  Regular driver and operator controls.
-    m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
-    // m_driverController.x().whileTrue(drivebase.lockPos());
-    m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
-    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
-    //m_driverController.leftBumper().on(new TrenchCommand(hood));
-    //m_driverController.button(1).toggleOnTrue(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
-    //m_driverController.button(1).multiPress(1, 2).whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
-    m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
-   // m_driverController.a().whileTrue(hood.setDegreeCommand(Setpoints.Intake.hoodUpAngle.in(Degrees)));
-    //m_driverController.button(1).whileFalse(Commands.run(()->driveAngularVelocity.scaleTranslation(0.8)));//Fast Mode
-    m_operatorController.povRight().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(1500)));
-    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
-                                                                               kicker,
-                                                                               indexer,
-                                                                               agitator,
-                                                                               hood,
-                                                                               drivebase));
-                                                                               
-    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
-                                                                               kicker,
-                                                                               indexer,
-                                                                               agitator,
-                                                                               hood,
-                                                                               RPM.of(2000)));
-
-    
-    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.3)));
-    m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
-    m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
-    m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
-    m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
-    m_operatorController.leftBumper().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
-    m_operatorController.leftBumper().whileFalse(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
-   
-    //m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
-  //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
-
 
     // m_driverController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
     //                                                              kicker,

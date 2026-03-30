@@ -1,35 +1,34 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Setpoints;
 import frc.robot.Setpoints.Intake;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
-import frc.robot.subsystems.IntakeRollerSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import java.time.chrono.ThaiBuddhistChronology;
+import edu.wpi.first.wpilibj.Timer;
 
 
-public class IntakeCommand extends Command {
-
-    private final IntakeRollerSubsystem intakeRollerSubsystem;
-    private final AgitatorSubsystem agitatorSubsystem;
+public class IntakeAgitateCommand extends Command {
+    private final IntakeArmSubsystem IntakeArmSubsystem;
+    Timer timer = new Timer();
+    Timer timer2 = new Timer();
     //private final HoodSubsystem hoodSubsystem;
 
-    public IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem
+    public IntakeAgitateCommand(IntakeArmSubsystem IntakeArmSubsystem
     //HoodSubsystem hoodSubsystem
     ) {
         //this.intakeArmSubsystem = intakeArmSubsystem;
-        this.intakeRollerSubsystem = intakeRollerSubsystem;
-        this.agitatorSubsystem = agitatorSubsystem;
-
+        this.IntakeArmSubsystem = IntakeArmSubsystem;
         //this.hoodSubsystem = hoodSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem);
+        addRequirements(this.IntakeArmSubsystem);
     }
 
     /**
@@ -37,8 +36,11 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void initialize() {
-        intakeRollerSubsystem.setDutycycleSetpoint(0);
-        agitatorSubsystem.setDutyCycleSetpoint(0);
+        IntakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown);
+        timer.reset();
+       timer.start();
+
+        
     }
 
     /**
@@ -49,8 +51,13 @@ public class IntakeCommand extends Command {
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
-        agitatorSubsystem.setDutyCycleSetpoint(0.5);
+
+        if (timer.hasElapsed(0.3)){
+         IntakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
+        timer.reset();
+        timer.start();
+        } 
+  
         
     }
 
@@ -71,8 +78,9 @@ public class IntakeCommand extends Command {
      */
     @Override
     public boolean isFinished() {
+        
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+        return  IntakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleUp, Degrees.of(4));
     }
 
     /**
@@ -85,9 +93,11 @@ public class IntakeCommand extends Command {
      */
     @Override
     public void end(boolean interrupted) {
-        //intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
-        intakeRollerSubsystem.setDutycycleSetpoint(0);
-        agitatorSubsystem.setDutyCycleSetpoint(0);
-       // hoodSubsystem.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
+        timer.reset();
+        timer.start();
+        if (timer.hasElapsed(0.3)){
+         IntakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown);
+        } 
+        
     }
 }
