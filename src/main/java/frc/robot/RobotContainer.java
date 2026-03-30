@@ -278,6 +278,14 @@ public class RobotContainer
                                                                                agitator,
                                                                                hood,
                                                                                drivebase));
+                                                                               
+    m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
+                                                                               kicker,
+                                                                               indexer,
+                                                                               agitator,
+                                                                               hood,
+                                                                               RPM.of(2000)));
+
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.3)));
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
