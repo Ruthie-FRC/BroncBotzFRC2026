@@ -46,7 +46,7 @@ public class IntakeAutoCommand extends Command {
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
+        intakeRollerSubsystem.setDutycycleSetpoint(-0.3);//(Setpoints.Intake.intakeRollerRPM);
         
     }
 

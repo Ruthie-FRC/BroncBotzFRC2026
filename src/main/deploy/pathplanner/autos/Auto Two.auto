@@ -15,6 +15,24 @@
           "data": {
             "name": "ShootCommand"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Auto Two Path Two"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of Copy of Auto Two Path Two"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
+          }
         }
       ]
     }

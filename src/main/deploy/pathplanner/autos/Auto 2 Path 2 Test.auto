@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto One Path One"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootCommand"
+            "pathName": "Copy of Auto Two Path Two"
           }
         }
       ]

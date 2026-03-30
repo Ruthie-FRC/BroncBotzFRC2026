@@ -145,6 +145,7 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setDutyCycleCommand(double left, double right)
   {
+
     return run(() -> {
       masterMotorController.setDutyCycle(left);
       followerMotorController.setDutyCycle(right);
@@ -156,9 +157,12 @@ public class IntakeArmSubsystem extends SubsystemBase
 
   public Command setDutyCycleCommand(Supplier<Double> left, Supplier<Double> right)
   {
+
+    double multiplier = left.get() < 0.2 && right.get() < 0.2 ? -0.1 : -0.05;
+
     return run(() -> {
-      masterMotorController.setDutyCycle(left.get()*-0.2);
-      followerMotorController.setDutyCycle(right.get()*-0.2);
+      masterMotorController.setDutyCycle(left.get()* multiplier);
+      followerMotorController.setDutyCycle(right.get()* multiplier);
     }).withName("SetBothDutyCycle");
   }
 

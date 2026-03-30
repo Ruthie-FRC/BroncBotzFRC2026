@@ -49,7 +49,7 @@ public class IntakeCommand extends Command {
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
+        intakeRollerSubsystem.setDutycycleSetpoint(-0.6);//(Setpoints.Intake.intakeRollerRPM);
         agitatorSubsystem.setDutyCycleSetpoint(0.5);
         
     }
