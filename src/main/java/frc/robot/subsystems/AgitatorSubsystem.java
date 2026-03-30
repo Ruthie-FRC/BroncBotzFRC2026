@@ -78,5 +78,7 @@ public class AgitatorSubsystem extends SubsystemBase {
     {
         agitator.setMechanismVelocitySetpoint(velocity);
     }
-
+    public Command stopCommand() {
+        return agitator.set(0);
+    }
 }

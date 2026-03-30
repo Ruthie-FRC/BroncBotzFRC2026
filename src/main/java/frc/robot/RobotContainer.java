@@ -127,8 +127,8 @@ public class RobotContainer
     // Named commands do NOT run with path's. They are inbetween paths.
     
 
-    new EventTrigger("IntakeStart").onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1)
-                                                  .alongWith(new IntakeCommand(intakeRoller)));
+    new EventTrigger("IntakeStart").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
+                                                  .alongWith(new IntakeCommand(intakeRoller)).alongWith(agitator.setDutyCycleCommand(0.3)));
     
     
     
@@ -158,7 +158,7 @@ public class RobotContainer
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY));
+    intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY)); //NEED TO CHANGE
     hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
 
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
@@ -279,13 +279,15 @@ public class RobotContainer
                                                                                hood,
                                                                                drivebase));
     
-    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller));
+    m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.3)));
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
     m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
     m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    m_driverController.leftBumper().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    m_driverController.leftBumper().whileFalse(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
    
     //m_driverController.leftTrigger().whileFalse(agitator.setDutyCycleCommand(0));
   //  m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
