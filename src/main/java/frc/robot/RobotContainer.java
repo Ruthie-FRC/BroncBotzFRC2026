@@ -174,7 +174,7 @@ public class RobotContainer
     RobotModeTriggers.teleop()
                      .onTrue(Commands.runOnce(() -> driveAngularVelocity.aim(FieldConstants.Hub.getHubPose())));
 
-    
+        //m_operatorController.button(1).whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
   }
 
 
@@ -190,26 +190,30 @@ public class RobotContainer
   }
 
 /*-------------------------------- OPERATOR CONTROLLERS ---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+ 
   public void operatorControls(){
+
     m_operatorController.povRight().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(1500)));
     m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(2400)));
     m_operatorController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(3000)));
+
     m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
                                                                                agitator,
                                                                                hood,
                                                                                drivebase));
-    
+
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_operatorController.rightBumper().whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
-    m_operatorController.povDown().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
-    m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).until(()->intakeArm.getAngle().isNear(Setpoints.Intake.intakeArmAngleDown, 6.7 )));
+    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp).until(()->intakeArm.getAngle().isNear(Setpoints.Intake.intakeArmAngleUp, 6.7)));
     //m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
    
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
+
   }
 
   
