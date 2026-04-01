@@ -80,7 +80,7 @@ public class IntakeAgitateCommand extends Command {
     public boolean isFinished() {
         
         // TODO: Make this return true when this Command no longer needs to run execute()
-        return  IntakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleUp, Degrees.of(10));
+        return  IntakeArmSubsystem.getAngle().isNear(Setpoints.Intake.intakeArmAngleUp, Degrees.of(10)) || timer.hasElapsed(1);
     }
 
     /**

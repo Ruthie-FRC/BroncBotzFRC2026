@@ -203,12 +203,13 @@ public class RobotContainer
                                                                                agitator,
                                                                                hood,
                                                                                drivebase));
+    m_operatorController.rightTrigger(0.2).whileTrue(Commands.waitTime(Seconds.of(5)).andThen(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly()));
 
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_operatorController.rightBumper().whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
-    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).until(()->intakeArm.getAngle().isNear(Setpoints.Intake.intakeArmAngleDown, 6.7 )));
-    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp).until(()->intakeArm.getAngle().isNear(Setpoints.Intake.intakeArmAngleUp, 6.7)));
+    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3));
+    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp).withTimeout(1.3));
     //m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
    
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));

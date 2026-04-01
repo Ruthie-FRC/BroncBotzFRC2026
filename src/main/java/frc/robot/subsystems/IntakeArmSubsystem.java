@@ -126,10 +126,18 @@ public class IntakeArmSubsystem extends SubsystemBase
   {
     return arm.getAngle();
   }
+  public Command setAngle(Angle angle)
+  {
+    return arm.setAngle(angle).until(()->arm.getAngle().isNear(angle, 3));
+  }
 
   public Command setAngleCommand(Angle angle)
   {
     return run(() -> setAngleSetpoint(angle)).withName("SetAngleCommand");
+  }
+
+  public void resetEncoder(){
+    //masterMotorController.setEncoderPosition(null);
   }
 
   public void setAngleSetpoint(Angle angle)
