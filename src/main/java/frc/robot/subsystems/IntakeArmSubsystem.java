@@ -158,7 +158,7 @@ public class IntakeArmSubsystem extends SubsystemBase
   public Command setDutyCycleCommand(Supplier<Double> left, Supplier<Double> right)
   {
 
-    double multiplier = left.get() < 0.2 && right.get() < 0.2 ? -0.1 : -0.05;
+    double multiplier = left.get() < 0.2 && right.get() < 0.2 ? -0.2 : -0.2;
 
     return run(() -> {
       masterMotorController.setDutyCycle(left.get()* multiplier);

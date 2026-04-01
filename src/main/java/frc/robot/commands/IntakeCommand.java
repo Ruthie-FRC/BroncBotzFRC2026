@@ -10,7 +10,6 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import java.time.chrono.ThaiBuddhistChronology;
 
 
 public class IntakeCommand extends Command {
@@ -42,14 +41,15 @@ public class IntakeCommand extends Command {
     }
 
     /**
-     * The main body of a command.  Called repeatedly while the command is scheduled.
+     * The main body of a command.  Called repe
+     * atedly while the command is scheduled.
      * (That is, it is called repeatedly until {@link #isFinished()}) returns true.)
      */
     @Override
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.6);//(Setpoints.Intake.intakeRollerRPM);
+        intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
         agitatorSubsystem.setDutyCycleSetpoint(0.5);
         
     }

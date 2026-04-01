@@ -11,9 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "ShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimAtHub"
+                }
+              }
+            ]
           }
         },
         {
@@ -23,15 +36,34 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Copy of Copy of Auto Two Path Two"
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "ShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimAtHub"
+                }
+              }
+            ]
           }
         }
       ]

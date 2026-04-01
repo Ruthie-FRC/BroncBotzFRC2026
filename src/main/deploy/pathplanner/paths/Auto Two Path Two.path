@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.055720399429386,
-        "y": 4.701340941512126
+        "x": 2.6872405198491123,
+        "y": 5.493586365533192
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.89169757489301
       },
       "prevControl": {
-        "x": 2.8487018544935796,
-        "y": 5.231825962910129
+        "x": 2.5981900803234974,
+        "y": 5.613341374514446
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "IntakeStart",
-      "waypointRelativePos": 0.5778727445394124,
-      "endWaypointRelativePos": 0.7051282051282057,
+      "waypointRelativePos": 0.750712250712251,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -49,12 +49,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -41.42366562500267
+    "rotation": -5.355825042855212
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 2.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -117,6 +118,9 @@ public class RobotContainer
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(6)));
+    NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
+    
+    
     // Configure the trigger bindings
 
     configureBindings();
@@ -136,8 +140,7 @@ public class RobotContainer
     
     
     
-    new EventTrigger("IntakeStop").onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1)
-                                                   .alongWith(intakeRoller.stopCommand()));
+    new EventTrigger("IntakeStop").onTrue(intakeRoller.stopCommand().alongWith(agitator.setDutyCycleCommand(0)));
 
     // new EventTrigger("Shoot").onTrue(
     //                               new ShootKickIndexCommand(turretFlywheel,
@@ -200,9 +203,10 @@ public class RobotContainer
     
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
-    m_operatorController.rightBumper().whileTrue((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitSeconds(1))).repeatedly());
-    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
-    m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    m_operatorController.rightBumper().whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
+    m_operatorController.povDown().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown));
+    m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
+    //m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
    
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));

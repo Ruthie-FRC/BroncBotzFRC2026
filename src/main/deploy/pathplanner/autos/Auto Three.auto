@@ -11,51 +11,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Auto Three Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Path Three Follow"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Path Three Follow Two"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Three Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimAtHub"
+                }
+              }
+            ]
           }
         }
       ]

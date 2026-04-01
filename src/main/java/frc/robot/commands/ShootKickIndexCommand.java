@@ -130,7 +130,7 @@ public class ShootKickIndexCommand extends Command {
     @Override
     public void initialize() {
         // Spin up shooter to the passed RPM
-        kicker.setVelocitySetpoint(RPM.of(1000));
+        kicker.setVelocitySetpoint(RPM.of(1513));
         hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
         if (swerve.isEmpty()) {
             shooter.setVelocitySetpoint(goalRPM);
@@ -161,15 +161,15 @@ public class ShootKickIndexCommand extends Command {
                 )
 
         );
-        kicker.setVelocitySetpoint(RPM.of(1000));
+        kicker.setVelocitySetpoint(RPM.of(1513));
 
-       agitator.setDutyCycleSetpoint(0.5);//RPM.of(757)
+       agitator.setDutyCycleSetpoint(0.7);//RPM.of(757)
 
         if (shooterReady) {
 
-            indexer.setVelocitySetpoint(RPM.of(847));
+            indexer.setVelocitySetpoint(RPM.of(1210));
         } else {
-            indexer.setDutyCycleSetpoint(-0.3);;
+            indexer.setDutyCycleSetpoint(-0.1);;
         }
 
 
