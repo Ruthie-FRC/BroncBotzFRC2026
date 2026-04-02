@@ -233,43 +233,43 @@ public class RobotContainer
   //controlssss
   private void configureBindings()
   {
-    // var topRightOfTrench = new Pose2d().getTranslation();
-    // var bottomLeftOfTrench = new Pose2d().getTranslation();
-    // var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
+    var topRightOfTrench = new Pose2d().getTranslation();
+    var bottomLeftOfTrench = new Pose2d().getTranslation();
+    var trenchRight = new Rectangle2d(topRightOfTrench,bottomLeftOfTrench);
 
 
-    //   var topBlueTrenchTopLeft = new Translation2d(5.238, 8.016);
-    //   var topBlueTrenchBottomRight = new Translation2d(4.048, 6.747);
-    //   var topBlueTrench = new Rectangle2d(topBlueTrenchTopLeft, topBlueTrenchBottomRight);
+      var topBlueTrenchTopLeft = new Translation2d(5.238, 8.016);
+      var topBlueTrenchBottomRight = new Translation2d(4.048, 6.747);
+      var topBlueTrench = new Rectangle2d(topBlueTrenchTopLeft, topBlueTrenchBottomRight);
 
-    //   var bottomBlueTrenchTopLeft = new Translation2d(5.146, 1.409);
-    //   var bottomBlueTrenchBottomRight = new Translation2d(4.034, 0.045);
-    //   var bottomBlueTrench = new Rectangle2d(bottomBlueTrenchTopLeft, bottomBlueTrenchBottomRight);
+      var bottomBlueTrenchTopLeft = new Translation2d(5.146, 1.409);
+      var bottomBlueTrenchBottomRight = new Translation2d(4.034, 0.045);
+      var bottomBlueTrench = new Rectangle2d(bottomBlueTrenchTopLeft, bottomBlueTrenchBottomRight);
 
-    //   var topRedTrenchTopLeft = new Translation2d(12.558, 8.013);
-    //   var topRedTrenchBottomRight = new Translation2d(11.394, 6.816);
-    //   var topRedTrench = new Rectangle2d(topRedTrenchTopLeft, topRedTrenchBottomRight);
+      var topRedTrenchTopLeft = new Translation2d(12.558, 8.013);
+      var topRedTrenchBottomRight = new Translation2d(11.394, 6.816);
+      var topRedTrench = new Rectangle2d(topRedTrenchTopLeft, topRedTrenchBottomRight);
 
-    //   var bottomRedTrenchTopLeft = new Translation2d(12.539, 1.254);
-    //   var bottomRedTrenchBottomRight = new Translation2d(11.394, 0.045);
-    //   var bottomRedTrench = new Rectangle2d(bottomRedTrenchTopLeft, bottomRedTrenchBottomRight);
+      var bottomRedTrenchTopLeft = new Translation2d(12.539, 1.254);
+      var bottomRedTrenchBottomRight = new Translation2d(11.394, 0.045);
+      var bottomRedTrench = new Rectangle2d(bottomRedTrenchTopLeft, bottomRedTrenchBottomRight);
 
-    //   Predicate<Pose2d> inTheTrenches = pose -> 
-    //                                   topBlueTrench.contains(pose.getTranslation()) ||
-    //                                   bottomBlueTrench.contains(pose.getTranslation()) ||
-    //                                   topRedTrench.contains(pose.getTranslation()) ||
-    //                                   bottomRedTrench.contains(pose.getTranslation())
-    //                                   ;
+      Predicate<Pose2d> inTheTrenches = pose -> 
+                                      topBlueTrench.contains(pose.getTranslation()) ||
+                                      bottomBlueTrench.contains(pose.getTranslation()) ||
+                                      topRedTrench.contains(pose.getTranslation()) ||
+                                      bottomRedTrench.contains(pose.getTranslation())
+                                      ;
                                   
 
-    //   double headingDegrees = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 0.0 : 180.0;
+      double headingDegrees = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 0.0 : 180.0;
     
-    //   SwerveInputStream stream = driveAngularVelocity.copy().withControllerHeadingAxis(
-    //                                                           ()->  Math.cos(Degrees.of(headingDegrees).in(Radians)), 
-    //                                                           ()->Math.sin(Degrees.of(headingDegrees).in(Radians)))
-    //                                                         .headingWhile(true);
+      SwerveInputStream stream = driveAngularVelocity.copy().withControllerHeadingAxis(
+                                                              ()->  Math.cos(Degrees.of(headingDegrees).in(Radians)), 
+                                                              ()->Math.sin(Degrees.of(headingDegrees).in(Radians)))
+                                                            .headingWhile(true);
       
-    //   Command driveAimedAtTrenchFieldOriented = drivebase.driveFieldOriented(stream);
+      Command driveAimedAtTrenchFieldOriented = drivebase.driveFieldOriented(stream);
 
 
     //   Trigger trench = new Trigger( 
