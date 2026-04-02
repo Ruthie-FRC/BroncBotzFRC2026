@@ -72,8 +72,8 @@
         "y": 0.8068045649072757
       },
       "nextControl": {
-        "x": 5.722887653603589,
-        "y": 0.5909095886118187
+        "x": 5.722887653603586,
+        "y": 0.5909095886118182
       },
       "isLocked": false,
       "linkedName": null
@@ -135,7 +135,7 @@
   "eventMarkers": [
     {
       "name": "IntakeStart",
-      "waypointRelativePos": 0.21066846725184243,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 2.852126941255875,
       "command": null
     }

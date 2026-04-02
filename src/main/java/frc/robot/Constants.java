@@ -19,7 +19,6 @@ import yams.gearing.MechanismGearing;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.Indenter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean

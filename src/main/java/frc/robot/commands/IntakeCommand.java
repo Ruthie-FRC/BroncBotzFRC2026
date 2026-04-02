@@ -18,7 +18,8 @@ public class IntakeCommand extends Command {
     private final AgitatorSubsystem agitatorSubsystem;
     //private final HoodSubsystem hoodSubsystem;
 
-    public IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem
+    public 
+    IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem
     //HoodSubsystem hoodSubsystem
     ) {
         //this.intakeArmSubsystem = intakeArmSubsystem;

@@ -232,7 +232,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.04 && // TODO: Change me, i am bad, too low
+        if (poseEstimate.getAvgTagAmbiguity() < 0.05 && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {
           if (llTimestamp != poseEstimate.timestampSeconds)
@@ -737,5 +737,8 @@ public class SwerveSubsystem extends SubsystemBase
       });
     });
   }
+
+  //public Command resetOdometryCommand(Pose2d odom){
+   // return runOnce(()->)}
 
 }

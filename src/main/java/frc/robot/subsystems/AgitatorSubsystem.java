@@ -33,7 +33,7 @@ public class AgitatorSubsystem extends SubsystemBase {
                     .withClosedLoopController(0, 0, 0)
                     .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
                     .withIdleMode(MotorMode.COAST)
-                    .withTelemetry("AgitatorMotor", TelemetryVerbosity.HIGH)
+                    .withTelemetry("AgitatorMotor", TelemetryVerbosity.LOW)
                     .withStatorCurrentLimit(Amps.of(60))
                     .withMotorInverted(false)
                     .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
@@ -47,7 +47,7 @@ public class AgitatorSubsystem extends SubsystemBase {
             new FlyWheelConfig(motor)
                     .withDiameter(Inches.of(2))
                     .withMass(Pounds.of(1.2))
-                    .withTelemetry("Agitator", TelemetryVerbosity.HIGH);
+                    .withTelemetry("Agitator", TelemetryVerbosity.LOW);
 
     private final FlyWheel agitator = new FlyWheel(agitatorConfig);
 
