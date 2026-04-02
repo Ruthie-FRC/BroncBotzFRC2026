@@ -186,7 +186,9 @@ public class RobotContainer
     m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
     m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
-    // I bought some thing stupid
+    //reset odometry
+    m_driverController.povUp().onTrue(drivebase.resetOdometryCommand(Setpoints.SwerveDrive.robotPoseAtHub));
+    
 
   }
 
@@ -339,6 +341,7 @@ public class RobotContainer
   /*  */
   public Command getAutonomousCommand()
   {
+
     return autoChooser.getSelected();
   }
 

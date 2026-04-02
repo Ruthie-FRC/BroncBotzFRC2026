@@ -39,6 +39,7 @@ import frc.robot.AlignmentConstants.DriveToPose;
 import frc.robot.Constants;
 import frc.robot.subsystems.unused.TurretVisualizer;
 import frc.robot.systems.ShooterTargetingSystem;
+import frc.robot.systems.field.AllianceFlipUtil;
 import frc.robot.systems.field.FieldConstants;
 import java.io.File;
 import java.io.IOException;
@@ -129,7 +130,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(-12), /// +Right, maybe?
                 Units.inchesToMeters(10),
                 new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 3, 4, 10, 11))
         .save();
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
 
@@ -143,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(0), /// +Right, maybe?
                 Units.inchesToMeters(20.5),
                 new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 6, 7, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11))
         .save();
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   } //I am also a bracket!!
@@ -232,7 +233,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.05 && // TODO: Change me, i am bad, too low
+        if (poseEstimate.getAvgTagAmbiguity() < 0.04 && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {
           if (llTimestamp != poseEstimate.timestampSeconds)
@@ -724,6 +725,11 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.driveFieldOriented(speeds);
   }
+    public Command resetOdometryCommand(Pose2d odom)
+  {
+    return runOnce(() -> swerveDrive.resetOdometry(AllianceFlipUtil.apply(odom)));
+  }
+
 
   public Command zeroGyroWithAlliance()
   {

@@ -2,9 +2,16 @@ package frc.robot;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import frc.robot.systems.field.FieldConstants.Hub;
 import yams.units.YUnits;
 
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 
 public class Setpoints {
     public static class Shooter {
@@ -48,6 +55,10 @@ public class Setpoints {
         public static final Angle intakeArmUpAngle = Degrees.of(55);
         public static final Angle intakeArmDownAngle = Degrees.of(0);
     }
-    
+    public static class SwerveDrive {
+        public static final Distance robotLength = Inches.of(32);
+         public static final Pose2d robotPoseAtHub     = Hub.nearFace
+          .plus(new Transform2d(robotLength.div(2).in(Meters), 0, Rotation2d.k180deg));
+    }
 
 }
