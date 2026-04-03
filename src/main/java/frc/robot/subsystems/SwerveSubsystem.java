@@ -233,7 +233,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.05
+        if (poseEstimate.getAvgTagAmbiguity() < 0.07
          && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {
@@ -265,6 +265,8 @@ public class SwerveSubsystem extends SubsystemBase
     // TODO: Remove me
     distanceToHub();
   }
+
+  
 
 
   public Rotation2d getOdometryHeading()
