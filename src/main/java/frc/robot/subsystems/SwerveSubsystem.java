@@ -219,6 +219,7 @@ public class SwerveSubsystem extends SubsystemBase
                 new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
         .save();
 
+        
     Optional<PoseEstimate> poseEstimates =
         llPoseEst.getPoseEstimate();
     Optional<LimelightResults> results = ll.getLatestResults();
@@ -233,7 +234,7 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.07
+        if (poseEstimate.getAvgTagAmbiguity() < 0.2
          && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {

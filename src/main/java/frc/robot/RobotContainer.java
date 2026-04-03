@@ -117,8 +117,10 @@ public class RobotContainer
                                                             hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(6)));
+                                  ).withTimeout(Seconds.of(10)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
+
+    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle));
     
     
     // Configure the trigger bindings
@@ -206,7 +208,7 @@ public class RobotContainer
                                                                                agitator,
                                                                                hood,
                                                                                drivebase));
-    m_operatorController.rightTrigger(0.2).whileTrue(Commands.waitTime(Seconds.of(5)).andThen(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly()));
+    //m_operatorController.rightTrigger(0.2).whileTrue(Commands.waitTime(Seconds.of(5)).andThen(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly()));
 
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
