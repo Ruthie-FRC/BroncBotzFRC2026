@@ -11,27 +11,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Auto Two Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Two Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Two Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto Two Shoot"
+            "name": "ShootCommand"
           }
         }
       ]
