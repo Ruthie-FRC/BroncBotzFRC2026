@@ -122,7 +122,7 @@ public class RobotContainer
 
     NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.9));
     NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmDownAngle).withTimeout(1.4));
-    
+  
     
     // Configure the trigger bindings
 

@@ -5,28 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Auto Two Path Two"
+            "name": "ArmDown"
           }
         },
         {
-          "type": "deadline",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootCommand"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AimAtHub"
-                }
-              }
-            ]
+            "pathName": "Copy of Auto Two Path One"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmUp"
           }
         },
         {
@@ -36,15 +29,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of Copy of Auto Two Path Two"
+            "name": "ArmDown"
           }
         },
         {
@@ -61,6 +48,37 @@
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    }
+                  ]
                 }
               }
             ]
