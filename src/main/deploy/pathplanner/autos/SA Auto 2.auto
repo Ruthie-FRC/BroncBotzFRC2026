@@ -37,61 +37,6 @@
                 "data": {
                   "name": "AgitatorRun"
                 }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmDown"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmDown"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmDown"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmDown"
-                      }
-                    }
-                  ]
-                }
               }
             ]
           }

@@ -117,7 +117,7 @@ public class RobotContainer
                                                             hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(10)));
+                                  ).withTimeout(Seconds.of(15)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
 
     NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.9));

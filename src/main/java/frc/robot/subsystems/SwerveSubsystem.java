@@ -144,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(0), /// +Right, maybe?
                 Units.inchesToMeters(20.5),
                 new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11,31, 32, 16, 17))
         .save();
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   } //I am also a bracket!!
@@ -234,14 +234,14 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.2
+        if (poseEstimate.getAvgTagAmbiguity() < 0.16
          && // TODO: Change me, i am bad, too low
             poseEstimate.tagCount > 1) 
         {
           if (llTimestamp != poseEstimate.timestampSeconds)
           {
             var stdDevScale = Math.pow(poseEstimate.avgTagDist, 2.0) / poseEstimate.tagCount;
-            // stdDevScale = distance^2/tagsInView
+            // stdDevScale = distance^2/tagsInView$
             // swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.09 * stdDevScale,
             // 0.023 * stdDevScale,
             //  0.07 * stdDevScale));
