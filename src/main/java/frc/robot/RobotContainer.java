@@ -120,7 +120,8 @@ public class RobotContainer
                                   ).withTimeout(Seconds.of(10)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
 
-    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle));
+    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.8));
+    NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmDownAngle).withTimeout(1.9));
     
     
     // Configure the trigger bindings
@@ -137,12 +138,16 @@ public class RobotContainer
     // Named commands do NOT run with path's. They are inbetween paths.
     
 
-    new EventTrigger("IntakeStart").onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown)
-                                                  .alongWith(new IntakeAutoCommand(intakeRoller)).alongWith(agitator.setDutyCycleCommand(0.3)));//.alongWith(new IntakeAutoCommand(intakeRoller))
+    new EventTrigger("IntakeStart").onTrue(
+                                                  new IntakeAutoCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.3)));//.alongWith(new IntakeAutoCommand(intakeRoller))
     
     
     
     new EventTrigger("IntakeStop").onTrue(intakeRoller.stopCommand().alongWith(agitator.setDutyCycleCommand(0)));
+
+
+ 
+    // new EventTrigger("Shoot").onTrue(
 
     // new EventTrigger("Shoot").onTrue(
     //                               new ShootKickIndexCommand(turretFlywheel,
