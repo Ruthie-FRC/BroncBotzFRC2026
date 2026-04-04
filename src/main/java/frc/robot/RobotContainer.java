@@ -120,8 +120,8 @@ public class RobotContainer
                                   ).withTimeout(Seconds.of(10)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
 
-    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.8));
-    NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmDownAngle).withTimeout(1.9));
+    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.9));
+    NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmDownAngle).withTimeout(1.4));
     
     
     // Configure the trigger bindings

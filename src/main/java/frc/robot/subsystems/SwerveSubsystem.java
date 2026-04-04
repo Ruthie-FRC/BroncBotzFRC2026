@@ -130,7 +130,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(-12), /// +Right, maybe?
                 Units.inchesToMeters(10),
                 new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 3, 4, 10, 11))
+        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 3, 4, 10, 11, 31, 32, 16, 29, 30, 14, 13))
         .save();
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
 
@@ -144,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase
                 Units.inchesToMeters(0), /// +Right, maybe?
                 Units.inchesToMeters(20.5),
                 new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11))
+        .withAprilTagIdFilter(List.of(18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11))
         .save();
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   } //I am also a bracket!!
@@ -219,7 +219,7 @@ public class SwerveSubsystem extends SubsystemBase
                 new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
         .save();
 
-        
+
     Optional<PoseEstimate> poseEstimates =
         llPoseEst.getPoseEstimate();
     Optional<LimelightResults> results = ll.getLatestResults();

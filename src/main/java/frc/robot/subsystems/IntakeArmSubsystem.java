@@ -52,7 +52,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25)) //this just get it faster
       .withGearing(GroundConstants.gearing)
       .withIdleMode(MotorMode.BRAKE)
-      .withStatorCurrentLimit(Amps.of(30))
+      .withStatorCurrentLimit(Amps.of(35))
       .withMotorInverted(false)
       .withStartingPosition(Intake.intakeArmStartAngle)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
