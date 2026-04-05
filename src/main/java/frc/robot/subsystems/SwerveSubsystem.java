@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Second;
 
@@ -72,11 +74,11 @@ public class SwerveSubsystem extends SubsystemBase
   private TurretVisualizer       turretVisualizer;
   private ShooterTargetingSystem shooterAimer;
 
-  public static SwerveDrive swerveDrive;
-  private Limelight              limelight_swerve; //Instance Variables
-  private LimelightPoseEstimator limelightPoseEstimator_swerve;
-  private Limelight              limelight_turret;
-  private LimelightPoseEstimator limelightPoseEstimator_turret;
+  public static SwerveDrive            swerveDrive;
+  private       Limelight              limelight_swerve; //Instance Variables
+  private       LimelightPoseEstimator limelightPoseEstimator_swerve;
+  private       Limelight              limelight_turret;
+  private       LimelightPoseEstimator limelightPoseEstimator_turret;
 
   Field2d m_field2d = new Field2d();
 
@@ -113,7 +115,7 @@ public class SwerveSubsystem extends SubsystemBase
             0.451739, // up from the floor reference
             new Rotation3d()));
 
-    setupPathPlanner(); 
+    setupPathPlanner();
     setupLimelight(); //I am inside the constuctor !!!!
   } //I am a bracket!
 
@@ -126,11 +128,41 @@ public class SwerveSubsystem extends SubsystemBase
         .withPipelineIndex(0)
         .withCameraOffset(
             new Pose3d( // TODO: Give the right offset here
-                Units.inchesToMeters(-12), // CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-                Units.inchesToMeters(-12), /// +Right, maybe?
-                Units.inchesToMeters(10),
-                new Rotation3d(0, Units.degreesToRadians(45), Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 3, 4, 10, 11, 31, 32, 16, 29, 30, 14, 13))
+                        Units.inchesToMeters(-12), // CHANGE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+                        Units.inchesToMeters(-12), /// +Right, maybe?
+                        Units.inchesToMeters(10),
+                        new Rotation3d(0,
+                                       Units.degreesToRadians(45),
+                                       Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
+        .withAprilTagIdFilter(List.of(17,
+                                      18,
+                                      19,
+                                      20,
+                                      21,
+                                      22,
+                                      25,
+                                      26,
+                                      27,
+                                      18,
+                                      19,
+                                      20,
+                                      21,
+                                      24,
+                                      6,
+                                      7,
+                                      8,
+                                      9,
+                                      3,
+                                      4,
+                                      10,
+                                      11,
+                                      31,
+                                      32,
+                                      16,
+                                      29,
+                                      30,
+                                      14,
+                                      13))
         .save();
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
 
@@ -140,11 +172,35 @@ public class SwerveSubsystem extends SubsystemBase
         .withPipelineIndex(0)
         .withCameraOffset(
             new Pose3d( // TODO: Give the right offset here
-                Units.inchesToMeters(0),
-                Units.inchesToMeters(0), /// +Right, maybe?
-                Units.inchesToMeters(20.5),
-                new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11,31, 32, 16, 17))
+                        Units.inchesToMeters(0),
+                        Units.inchesToMeters(0), /// +Right, maybe?
+                        Units.inchesToMeters(20.5),
+                        new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
+        .withAprilTagIdFilter(List.of(18,
+                                      19,
+                                      20,
+                                      21,
+                                      22,
+                                      25,
+                                      26,
+                                      27,
+                                      18,
+                                      19,
+                                      20,
+                                      21,
+                                      24,
+                                      6,
+                                      7,
+                                      3,
+                                      4,
+                                      8,
+                                      9,
+                                      10,
+                                      11,
+                                      31,
+                                      32,
+                                      16,
+                                      17))
         .save();
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   } //I am also a bracket!!
@@ -202,14 +258,16 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Query some boolean state, such as a digital sensor.
     return false;
-  } 
-  // I am a bunch a important varaibles
-  private int     outofAreaReading = 0;
-  private boolean initialReading   = false;
-  private double  lastLLTimestamp_swerve  = 0;
-  private double lastLLTimestamp_turret = 0;
+  }
 
-  private double updateLimelight(Limelight ll, LimelightPoseEstimator llPoseEst, double llTimestamp, Angle cameraYaw, String llname)
+  // I am a bunch a important varaibles
+  private int     outofAreaReading       = 0;
+  private boolean initialReading         = false;
+  private double  lastLLTimestamp_swerve = 0;
+  private double  lastLLTimestamp_turret = 0;
+
+  private double updateLimelight(Limelight ll, LimelightPoseEstimator llPoseEst, double llTimestamp, Angle cameraYaw,
+                                 String llname)
   {
     ll
         .getSettings()
@@ -218,7 +276,6 @@ public class SwerveSubsystem extends SubsystemBase
                 new Rotation3d(swerveDrive.getOdometryHeading().rotateBy(new Rotation2d(cameraYaw))),
                 new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(0))))
         .save();
-
 
     Optional<PoseEstimate> poseEstimates =
         llPoseEst.getPoseEstimate();
@@ -233,10 +290,10 @@ public class SwerveSubsystem extends SubsystemBase
         Pose2d usefulPose    = result.getBotPose2d(Alliance.Blue);
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
-        SmartDashboard.putNumber("LimelightTuning/"+llname+"/ambiguity", poseEstimate.getAvgTagAmbiguity());
+        SmartDashboard.putNumber("LimelightTuning/" + llname + "/ambiguity", poseEstimate.getAvgTagAmbiguity());
         if (poseEstimate.getAvgTagAmbiguity() < 0.16
-         && // TODO: Change me, i am bad, too low
-            poseEstimate.tagCount > 1) 
+            && // TODO: Change me, i am bad, too low
+            poseEstimate.tagCount > 1 && poseEstimate.avgTagDist < Feet.of(6).in(Meters))
         {
           if (llTimestamp != poseEstimate.timestampSeconds)
           {
@@ -254,20 +311,27 @@ public class SwerveSubsystem extends SubsystemBase
     }
     return llTimestamp;
   }
-// I am above periodic!!!
+
+  // I am above periodic!!!
   @Override
   public void periodic() //I get called every 20 ms!!!
   {
     outofAreaReading = 0;
     swerveDrive.updateOdometry();
-    
-    lastLLTimestamp_swerve = updateLimelight(limelight_swerve, limelightPoseEstimator_swerve, lastLLTimestamp_swerve, Degrees.of(180), "swerve"); //Hiiiiii, I am a method being called
-    lastLLTimestamp_turret = updateLimelight(limelight_turret, limelightPoseEstimator_turret, lastLLTimestamp_turret, Degrees.zero(), "turret"); // I am not needed if I do not have a turret limelight
+
+    lastLLTimestamp_swerve = updateLimelight(limelight_swerve,
+                                             limelightPoseEstimator_swerve,
+                                             lastLLTimestamp_swerve,
+                                             Degrees.of(180),
+                                             "swerve"); //Hiiiiii, I am a method being called
+    lastLLTimestamp_turret = updateLimelight(limelight_turret,
+                                             limelightPoseEstimator_turret,
+                                             lastLLTimestamp_turret,
+                                             Degrees.zero(),
+                                             "turret"); // I am not needed if I do not have a turret limelight
     // TODO: Remove me
     distanceToHub();
   }
-
-  
 
 
   public Rotation2d getOdometryHeading()
@@ -729,7 +793,8 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.driveFieldOriented(speeds);
   }
-    public Command resetOdometryCommand(Pose2d odom)
+
+  public Command resetOdometryCommand(Pose2d odom)
   {
     return runOnce(() -> swerveDrive.resetOdometry(AllianceFlipUtil.apply(odom)));
   }
@@ -749,6 +814,6 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   //public Command resetOdometryCommand(Pose2d odom){
-   // return runOnce(()->)}
+  // return runOnce(()->)}
 
 }
