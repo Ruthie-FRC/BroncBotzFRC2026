@@ -5,6 +5,7 @@ import frc.robot.Setpoints;
 import frc.robot.Setpoints.Intake;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
@@ -16,22 +17,25 @@ public class IntakeCommand extends Command {
 
     private final IntakeRollerSubsystem intakeRollerSubsystem;
     private final AgitatorSubsystem agitatorSubsystem;
+    private final IndexerSubsystem indexerSubsystem;
+    
     //private final HoodSubsystem hoodSubsystem;
 
     public 
-    IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem
+    IntakeCommand(IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem, IndexerSubsystem indexerSubsystem
     //HoodSubsystem hoodSubsystem
     ) {
         //this.intakeArmSubsystem = intakeArmSubsystem;
         this.intakeRollerSubsystem = intakeRollerSubsystem;
         this.agitatorSubsystem = agitatorSubsystem;
+        this.indexerSubsystem = indexerSubsystem;
 
         //this.hoodSubsystem = hoodSubsystem;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem);
+        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem, this.indexerSubsystem);
     }
-
+    //please speed we need this
     /**
      * The initial subroutine of a command.  Called once when the command is initially scheduled.
      */
@@ -39,6 +43,7 @@ public class IntakeCommand extends Command {
     public void initialize() {
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
+        indexerSubsystem.setDutyCycleSetpoint(0);
     }
 
     /**
@@ -52,6 +57,7 @@ public class IntakeCommand extends Command {
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
         intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
         agitatorSubsystem.setDutyCycleSetpoint(0.5);
+        indexerSubsystem.setDutyCycleSetpoint(-0.267);
         
     }
 
@@ -89,6 +95,7 @@ public class IntakeCommand extends Command {
         //intakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleUp);
         intakeRollerSubsystem.setDutycycleSetpoint(0);
         agitatorSubsystem.setDutyCycleSetpoint(0);
+        indexerSubsystem.setDutyCycleSetpoint(0);
        // hoodSubsystem.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
     }
 }

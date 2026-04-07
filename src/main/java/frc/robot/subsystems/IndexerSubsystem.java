@@ -36,7 +36,8 @@ public class IndexerSubsystem extends SubsystemBase {
           .withGearing(IndexerConstants.gearingIndexer) //always ask mech whether there's extra chain or gears that need to be take in account for :)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("IndexerMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(60))
+          //.withStatorCurrentLimit(Amps.of(40))
+          .withSupplyCurrentLimit(Amps.of(40))
           .withMotorInverted(false)//check
           // .withClosedLoopRampRate(Seconds.of(0.25))  //limits the speed, don't add it
           // .withOpenLoopRampRate(Seconds.of(0.25))

@@ -35,7 +35,7 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-            intakeRollerSubsystem.setDutycycleSetpoint(1);//(Setpoints.Intake.intakeRollerRPM);
+            intakeRollerSubsystem.setDutycycleSetpoint(0.6);//(Setpoints.Intake.intakeRollerRPM);
     }
 
     /**
