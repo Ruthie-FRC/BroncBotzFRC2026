@@ -34,7 +34,7 @@ public class KickerSubsystem extends SubsystemBase {
                     .withIdleMode(MotorMode.COAST)
                     .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH)
                     //.withStatorCurrentLimit(Amps.of(40))
-                    .withSupplyCurrentLimit(Amps.of(40))
+                    .withStatorCurrentLimit(Amps.of(40))
                     .withMotorInverted(true)//check
                     .withFeedforward(new SimpleMotorFeedforward(0.18, 0.62, 0))
                     .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0)) //30 rpm

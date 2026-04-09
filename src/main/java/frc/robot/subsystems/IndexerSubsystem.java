@@ -37,7 +37,7 @@ public class IndexerSubsystem extends SubsystemBase {
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("IndexerMotor", TelemetryVerbosity.HIGH)
           //.withStatorCurrentLimit(Amps.of(40))
-          .withSupplyCurrentLimit(Amps.of(40))
+          .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)//check
           // .withClosedLoopRampRate(Seconds.of(0.25))  //limits the speed, don't add it
           // .withOpenLoopRampRate(Seconds.of(0.25))

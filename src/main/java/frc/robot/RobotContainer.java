@@ -109,10 +109,12 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("ShootCommand",
                                   new ShootKickIndexCommand(turretFlywheel,
                                                             kicker,
                                                             indexer,
+
                                                             agitator,
                                                             hood,
                                                             drivebase
@@ -173,7 +175,7 @@ public class RobotContainer
     agitator.setDefaultCommand(agitator.setDutyCycleCommand(0));
     indexer.setDefaultCommand(indexer.setDutyCycleCommand(-0)); // Set -0.3 before on field
     turretFlywheel.setDefaultCommand(turretFlywheel.setDutyCycle(0));
-    intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(m_operatorController::getLeftY, m_operatorController::getRightY)); //NEED TO CHANGE
+    intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(()->m_operatorController.getLeftY(), ()->m_operatorController.getRightY())); //NEED TO CHANGE
     hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
 
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));

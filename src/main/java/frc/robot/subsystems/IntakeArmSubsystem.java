@@ -3,10 +3,14 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -33,16 +37,12 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakeArmSubsystem extends SubsystemBase
 {
-
-  // private Angle masterAbsoluteEncoderZeroOffset = Setpoints.Intake.masterIntakeAbsoluteEncoderOffset;
-  // private Angle followerAbsoluteEncoderZeroOffset = Setpoints.Intake.followerIntakeAbsoluteEncoderOffset;
-
   private SparkMax             m_masterMotor   = new SparkMax(Constants.CanIDConstants.intakeArmID,
                                                               MotorType.kBrushless);
-  // private SparkAbsoluteEncoder m_masterAbsoluteEncoder = m_masterMotor.getAbsoluteEncoder();
+  private SparkAbsoluteEncoder m_masterAbsoluteEncoder = m_masterMotor.getAbsoluteEncoder();
   private SparkMax             m_followerMotor = new SparkMax(Constants.CanIDConstants.intakeArmFollowerID,
                                                               MotorType.kBrushless);
-  //  private SparkAbsoluteEncoder m_followerAbsoluteEncoder = m_followerMotor.getAbsoluteEncoder();
+   private SparkAbsoluteEncoder m_followerAbsoluteEncoder = m_followerMotor.getAbsoluteEncoder();
 
   private SmartMotorControllerConfig followerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
@@ -57,14 +57,14 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withStartingPosition(Intake.intakeArmStartAngle)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
 
-      //.withExternalEncoder(m_followerAbsoluteEncoder)
-      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)//5 deg to 65 deg
+      .withExternalEncoder(m_followerAbsoluteEncoder)
+      // .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)//5 deg to 65 deg
       //Soft limit is 2 degrees!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // .withExternalEncoderInverted(false)
-      // .withExternalEncoderGearing(1)
-     // .withExternalEncoderZeroOffset(followerAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
+     .withExternalEncoderZeroOffset(Degrees.of(13.68)) // Remove if configured in REV HW Client
     //  .withUseExternalFeedbackEncoder(false)
-      .withResetPreviousConfig(false);
+    .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)))
+      .withResetPreviousConfig(true);
 
 
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -83,16 +83,17 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withGearing(GroundConstants.gearing)
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
-      .withSupplyCurrentLimit(Amps.of(30))
+      //.withSupplyCurrentLimit(Amps.of(30))
+      .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
       
-      // .withExternalEncoder(m_masterAbsoluteEncoder)
-      .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-    //  .withExternalEncoderInverted(true)
-     // .withExternalEncoderZeroOffset(masterAbsoluteEncoderZeroOffset) // Remove if configured in REV HW Client
-      //  .withUseExternalFeedbackEncoder(false)
-      // .withExternalEncoderGearing(1);
-      .withResetPreviousConfig(false);
+      .withExternalEncoder(m_masterAbsoluteEncoder)
+      // .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
+     .withExternalEncoderInverted(true)
+    .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)))
+
+     .withExternalEncoderZeroOffset(Degrees.of(-19.31)) // Remove if configured in REV HW Client
+      .withResetPreviousConfig(true);
 
   private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
                                                                                 masterConfig);
@@ -106,7 +107,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withMass(GroundConstants.weight)
       // Telemetry name and verbosity for the arm.
       .withTelemetry("IntakeArm", TelemetryVerbosity.HIGH)
-      .withStartingPosition(Setpoints.Intake.intakeArmStartAngle);
+      .withSimStartingPosition(Setpoints.Intake.intakeArmStartAngle);
 
 
   // Arm Mechanism
