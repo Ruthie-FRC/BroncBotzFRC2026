@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -34,6 +35,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.YUnits;
 
 public class IntakeArmSubsystem extends SubsystemBase
 {
@@ -56,14 +58,14 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withMotorInverted(false)
       .withStartingPosition(Intake.intakeArmStartAngle)
       .withTelemetry("IntakeArmFollowerMotor", TelemetryVerbosity.HIGH)
-
-      .withExternalEncoder(m_followerAbsoluteEncoder)
+      //.withTrapezoidalProfile(RPM.of(15000),YUnits.RPMPerSecond.of(20000))
+      //.withExternalEncoder(m_followerAbsoluteEncoder)
       // .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)//5 deg to 65 deg
       //Soft limit is 2 degrees!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // .withExternalEncoderInverted(false)
-     .withExternalEncoderZeroOffset(Degrees.of(13.68)) // Remove if configured in REV HW Client
+     //.withExternalEncoderZeroOffset(Degrees.of(10.68 )) // Remove if configured in REV HW Client
     //  .withUseExternalFeedbackEncoder(false)
-    .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)))
+    //.withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)))
       .withResetPreviousConfig(true);
 
 
@@ -83,15 +85,16 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withGearing(GroundConstants.gearing)
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
+      .withStartingPosition(Intake.intakeArmStartAngle)
       .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
-      
-      .withExternalEncoder(m_masterAbsoluteEncoder)
+      // .withTrapezoidalProfile(RPM.of(15000),YUnits.RPMPerSecond.of(20000))
+      //.withExternalEncoder(m_masterAbsoluteEncoder)
       // .withSoftLimit(GroundConstants.softLowerLimit, GroundConstants.softUpperLimit)
-     .withExternalEncoderInverted(true)
+    // .withExternalEncoderInverted(true)
     .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)))
 
-     .withExternalEncoderZeroOffset(Degrees.of(-19.31)) // Remove if configured in REV HW Client
+     //.withExternalEncoderZeroOffset(Degrees.of(-19.31)) // Remove if configured in REV HW Client
       .withResetPreviousConfig(true);
 
   private SmartMotorController       masterMotorController   = new SparkWrapper(m_masterMotor, DCMotor.getNEO(2),
@@ -137,7 +140,12 @@ public class IntakeArmSubsystem extends SubsystemBase
   }
 
   public void resetEncoder(){
-    //masterMotorController.setEncoderPosition(null);
+    masterMotorController.setEncoderPosition(Degrees.of(0));
+    followerMotorController.setEncoderPosition(Degrees.of(0));
+  }
+
+  public Command resetEncoderCommand(){
+    return run(()-> resetEncoder());
   }
 
   public void setAngleSetpoint(Angle angle)

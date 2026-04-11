@@ -36,7 +36,8 @@ public class IntakeAgitateCommand extends Command {
      */
     @Override
     public void initialize() {
-        IntakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown);
+        IntakeArmSubsystem.setAngleSetpoint(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(10)));
+
         timer.reset();
        timer.start();
 
