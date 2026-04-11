@@ -83,7 +83,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withGearing(GroundConstants.gearing)
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
-      //.withSupplyCurrentLimit(Amps.of(30))
+      .withSupplyCurrentLimit(Amps.of(30))
       .withStatorCurrentLimit(Amps.of(40))
       .withLooselyCoupledFollowers(followerMotorController)
       
