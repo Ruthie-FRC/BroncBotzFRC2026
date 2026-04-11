@@ -5,15 +5,83 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ArmDown"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Auto One Advanced Path 1"
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "ShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto One Advanced Path Follow"
           }
         },
         {
@@ -23,15 +91,71 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "ShootCommand"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Main",
   "choreoAuto": false
 }

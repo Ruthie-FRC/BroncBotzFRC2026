@@ -77,6 +77,18 @@
                       "data": {
                         "name": "ArmDown"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
                     }
                   ]
                 }
@@ -88,6 +100,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Main",
   "choreoAuto": false
 }
