@@ -44,6 +44,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.FieldConstants;
+import frc.robot.systems.field.LEDSystem;
 import swervelib.SwerveInputStream;
 
 
@@ -67,6 +68,8 @@ public class RobotContainer
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem   kicker   = new KickerSubsystem();
   private final HoodSubsystem hood = new HoodSubsystem();
+
+  private final LEDSystem LEDs = new LEDSystem();
 
   public static Timer                 timerThing           = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -128,6 +131,7 @@ public class RobotContainer
     driverControls();
     operatorControls();
     defaultCommands();
+    LEDLightsBinding();
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -173,6 +177,7 @@ public class RobotContainer
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(()->m_operatorController.getLeftY(), ()->m_operatorController.getRightY())); //NEED TO CHANGE
     hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
 
+    
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -226,6 +231,15 @@ public class RobotContainer
 
   }
 
+  public void LEDLightsBinding(){
+    m_operatorController.rightTrigger(0.3).whileTrue(Commands.runOnce(()->LEDs.RainbowLEDCycle()));
+    m_operatorController.rightTrigger(0.3).onFalse(Commands.runOnce(()->LEDs.teleopInitLEDS()));
+    
+    m_operatorController.button(1).whileTrue(Commands.runOnce(()->LEDs.intakeLEDS()));
+    m_operatorController.button(1).onFalse(Commands.runOnce(()->LEDs.teleopInitLEDS()));
+    
+   
+  }
   
 
   /**
