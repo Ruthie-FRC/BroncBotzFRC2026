@@ -72,6 +72,7 @@ public class LEDSystem {
   public void disableInitLEDS(){
     m_leds.leds.SetGroupAnimationSequence("backLights", "celebrate");
   }
+
   public void autoInitLEDS(){
          // Play a rainbow animation on the "front" zone
         m_leds.leds.SetAnimation(Animation.Fire)
@@ -89,11 +90,21 @@ public class LEDSystem {
         .WithDelay(Units.Milliseconds.of(100))
         .RunOnce(false);
   }
+
   public void intakeLEDS(){
     
      m_leds.leds.SetAnimation(Animation.Blink)
         .ForGroup("backLights")
         .WithColor(Color.kBlue)
+        .WithDelay(Units.Milliseconds.of(20))
+        .RunOnce(false);
+  }
+
+    public void outTakeLEDS(){
+    
+     m_leds.leds.SetAnimation(Animation.Blink)
+        .ForGroup("backLights")
+        .WithColor(Color.kRed)
         .WithDelay(Units.Milliseconds.of(20))
         .RunOnce(false);
   }

@@ -13,11 +13,13 @@ import static edu.wpi.first.units.Units.Degrees;
 public class OutakeCommand extends Command {
     
     private final IntakeRollerSubsystem intakeRollerSubsystem;
+    private final AgitatorSubsystem agitatorSubsystem;
 
-    public OutakeCommand( IntakeRollerSubsystem intakeRollerSubsystem) {
+    public OutakeCommand( IntakeRollerSubsystem intakeRollerSubsystem, AgitatorSubsystem agitatorSubsystem) {
        
         this.intakeRollerSubsystem = intakeRollerSubsystem;
-        addRequirements(this.intakeRollerSubsystem);
+        this.agitatorSubsystem = agitatorSubsystem;
+        addRequirements(this.intakeRollerSubsystem, this.agitatorSubsystem);
     }
 
     /**
@@ -26,6 +28,7 @@ public class OutakeCommand extends Command {
     @Override
     public void initialize() {
         intakeRollerSubsystem.setDutycycleSetpoint(0);
+        agitatorSubsystem.setDutyCycleCommand(0);
        
     }
 
@@ -36,6 +39,7 @@ public class OutakeCommand extends Command {
     @Override
     public void execute() {
             intakeRollerSubsystem.setDutycycleSetpoint(0.6);//(Setpoints.Intake.intakeRollerRPM);
+            agitatorSubsystem.setDutyCycleCommand(-0.4);
     }
 
     /**

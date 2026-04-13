@@ -201,10 +201,10 @@ public final class Constants {
   public static class HoodConstants{
 
     public static final Angle hardLimitMin = Degrees.of(-1);
-    public static final Angle hardLimitMax = Degrees.of(8969);
+    public static final Angle hardLimitMax = Degrees.of(21000);
     public static final Distance length = Inches.of(7);
     public static final Angle softLimitMin = Degrees.of(-1);
-    public static final Angle softLimitMax = Degrees.of(8969);
+    public static final Angle softLimitMax = Degrees.of(21000);
     public static final MomentOfInertia MOIInKilogram =
             KilogramSquareMeters.of(Pounds.of(306.068).in(Kilograms) * Inches.of(1).in(Meters) * Inches.of(1).in(Meters));
     //.per(Inches).per(Inches).in(KilogramSquareMeters);

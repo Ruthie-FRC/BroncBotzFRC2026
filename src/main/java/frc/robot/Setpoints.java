@@ -33,6 +33,7 @@ public class Setpoints {
 
         public static final Angle hoodDownAngle = Degrees.of(0);
         public static final Angle hoodUpAngle = Degrees.of(8965.65);
+        public static final Angle hoodPassAngle = Degree.of(20108.75);
 
     }
 
