@@ -163,7 +163,7 @@ public class ShootKickIndexCommand extends Command {
         );
         kicker.setVelocitySetpoint(RPM.of(1792));
 
-       agitator.setDutyCycleSetpoint(0.7);//RPM.of(1135)
+       agitator.setDutyCycleSetpoint(0.55);//RPM.of(1135)
 
         if (shooterReady) {
 

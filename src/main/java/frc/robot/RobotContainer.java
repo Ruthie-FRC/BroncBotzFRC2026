@@ -116,7 +116,7 @@ public class RobotContainer
                                   ).withTimeout(Seconds.of(6)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
     NamedCommands.registerCommand("PreShotAgitate", agitator.setDutyCycleCommand(-0.1).withTimeout(1));
-    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.9));
+    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.5));
     NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(15))).withTimeout(.1)
                                                   .andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3)));
     NamedCommands.registerCommand("AgitatorRun", agitator.setDutyCycleCommand(0.3).withTimeout(10));
