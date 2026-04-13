@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -28,6 +29,8 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private final SparkMax indexMotor =
       new SparkMax(CanIDConstants.indexerflywheelID, MotorType.kBrushless);
+
+    
 
   private final SmartMotorControllerConfig motorConfig =
       new SmartMotorControllerConfig(this)

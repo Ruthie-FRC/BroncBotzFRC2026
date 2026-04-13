@@ -31,6 +31,7 @@ import frc.robot.commands.IntakeAgitateCommand;
 import frc.robot.commands.IntakeAutoCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OutakeCommand;
+import frc.robot.commands.PassCommand;
 import frc.robot.commands.ShootKickIndexCommand;
 import frc.robot.commands.TrenchCommand;
 import frc.robot.commands.UnstuckCommand;
@@ -44,6 +45,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.FieldConstants;
+import frc.robot.systems.field.LEDSystem;
 import swervelib.SwerveInputStream;
 
 
@@ -67,6 +69,8 @@ public class RobotContainer
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem   kicker   = new KickerSubsystem();
   private final HoodSubsystem hood = new HoodSubsystem();
+  
+  private final LEDSystem LEDs = new LEDSystem();
 
   public static Timer                 timerThing           = new Timer();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -128,6 +132,7 @@ public class RobotContainer
     driverControls();
     operatorControls();
     defaultCommands();
+    LEDLightsBinding();
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -173,6 +178,7 @@ public class RobotContainer
     intakeArm.setDefaultCommand(intakeArm.setDutyCycleCommand(()->m_operatorController.getLeftY(), ()->m_operatorController.getRightY())); //NEED TO CHANGE
     hood.setDefaultCommand(hood.setDegreeCommand(Setpoints.Intake.hoodDownAngle.in(Degrees)));
 
+    
     // intakeArm.setDefaultCommand(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
 
     // Change the auto-aim to aim at our alliances hub.
@@ -205,6 +211,7 @@ public class RobotContainer
     m_operatorController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(2400)));
     m_operatorController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(3000)));
 
+
     m_operatorController.rightTrigger(0.2).whileTrue(new ShootKickIndexCommand(turretFlywheel,
                                                                                kicker,
                                                                                indexer,
@@ -216,16 +223,31 @@ public class RobotContainer
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator, indexer));
     m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
     m_operatorController.rightBumper().whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
-    m_operatorController.povDown().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(15))).withTimeout(.1)
-                                  .andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3)));
+    m_operatorController.povDown().onTrue( intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(20))).withTimeout(.5).andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3)));
     m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp).withTimeout(1.3));
     //m_operatorController.povUp().whileTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp));
     m_operatorController.start().and(m_operatorController.back()).onTrue(intakeArm.resetEncoderCommand());
-    m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller));
-    m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer,agitator));
+    m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller, agitator));
+    m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer, agitator));
+    m_operatorController.povLeft().whileTrue(new PassCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(4000)));
 
   }
 
+  public void LEDLightsBinding(){
+
+    m_operatorController.rightTrigger(0.3).whileTrue(Commands.runOnce(()->LEDs.RainbowLEDCycle()));
+    m_operatorController.rightTrigger(0.3).onFalse(Commands.runOnce(()->LEDs.teleopInitLEDS()));
+    
+    m_operatorController.leftTrigger(0.3).whileTrue(Commands.runOnce(()->LEDs.intakeLEDS()));
+    m_operatorController.leftTrigger(0.3).onFalse(Commands.runOnce(()->LEDs.teleopInitLEDS()));
+
+    m_operatorController.b().whileTrue(Commands.runOnce(()->LEDs.outTakeLEDS()));
+    m_operatorController.b().onFalse(Commands.runOnce(()->LEDs.teleopInitLEDS()));
+
+    
+    
+   
+  }
   
 
   /**
@@ -290,52 +312,7 @@ public class RobotContainer
     //                               );
 
 
-  //  m_driverController.button(1).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity).withTimeout(5));
-     //m_driverController.button(1).whileTrue((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitSeconds(1))).repeatedly());
-    // m_driverController.button(3).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, Setpoints.Shooter.hubRPM).withTimeout(5));
-    // m_driverController.button(4).whileTrue(new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, drivebase));
-    // m_driverController.button(5).whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-    // m_driverController.button(6).whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
-    //m_driverController.b().whileTrue(intakeArm.setAngleCommand(Degrees.of(45)));
-    //m_driverController.y().whileTrue(intakeArm.setAngleCommand(Degrees.of(0)));
-
-    // m_driverController.x().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                              kicker,
-    //                                                              indexer,
-    //                                                              agitator,
-    //                                                             // hood,
-    //                                                              RPM.of(2800)
-    //                                                             // Setpoints.Hood.hubDegree
-    //                                                             ));
-    // m_driverController.y().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                              kicker,
-    //                                                              indexer,
-    //                                                              agitator,
-    //                                                             // hood,
-    //                                                              RPM.of(3350)
-    //                                                             // Setpoints.Hood.hubDegree
-    //                                                             ));
-    // m_driverController.b().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                              kicker,
-    //                                                              indexer,
-    //                                                              agitator,
-    //                                                             // hood,
-    //                                                              RPM.of(3100)
-    //                                                             // Setpoints.Hood.hubDegree
-    //                                                             ));
-    // m_driverController.a().whileTrue(new ShootKickIndexCommand(turretFlywheel,
-    //                                                              kicker,
-    //                                                              indexer,
-    //                                                              agitator,
-    //                                                             // hood,
-    //                                                              RPM.of(2950)
-    //                                                             // Setpoints.Hood.hubDegree
-    //                                                             ));
-
-    // m_operatorController.x().whileTrue(kicker.setVelocityCommand(RPM.of(-1000)).alongWith(indexer.setVeloctiyCommand(RPM.of(-400))));
-     // m_operatorController.x().onTrue(intakeArm.setDutyCycleCommand(-0.2).withTimeout(1));
-    // m_operatorController.leftBumper().whileTrue(new IntakeCommand(intakeArm, intakeRoller, agitator));
-    // m_operatorController.rightBumper().whileTrue(new OutakeCommand(intakeArm, intakeRoller, agitator));
+ 
   }
 
 
