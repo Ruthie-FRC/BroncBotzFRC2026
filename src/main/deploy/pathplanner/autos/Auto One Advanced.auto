@@ -33,6 +33,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "AgitatorRun"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -104,6 +110,12 @@
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AgitatorRun"
                 }
               },
               {

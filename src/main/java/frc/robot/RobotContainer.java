@@ -117,12 +117,12 @@ public class RobotContainer
                                                             hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(6)));
+                                  ).withTimeout(Seconds.of(5)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
     NamedCommands.registerCommand("PreShotAgitate", agitator.setDutyCycleCommand(-0.1).withTimeout(1));
-    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle).withTimeout(0.5));
-    NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(15))).withTimeout(.1)
-                                                  .andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3)));
+    NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle.plus(Degrees.of(2))).withTimeout(0.5));
+    NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.minus(Degrees.of(3))).withTimeout(.2)
+                                                  .andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.minus(Degrees.of(3))).withTimeout(1)));
     NamedCommands.registerCommand("AgitatorRun", agitator.setDutyCycleCommand(0.3).withTimeout(10));
     
     
@@ -142,11 +142,11 @@ public class RobotContainer
     
 
     new EventTrigger("IntakeStart").onTrue(
-                                                  new IntakeAutoCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.3)));//.alongWith(new IntakeAutoCommand(intakeRoller))
+                                                  new IntakeAutoCommand(intakeRoller).alongWith(agitator.setDutyCycleCommand(0.55)));//.alongWith(new IntakeAutoCommand(intakeRoller))
     
     
     
-    new EventTrigger("IntakeStop").onTrue(intakeRoller.stopCommand().alongWith(agitator.setDutyCycleCommand(0)));
+    new EventTrigger("IntakeStop").onTrue(intakeRoller.stopCommand().alongWith(agitator.setDutyCycleCommand(0.55)));
 
 
  
