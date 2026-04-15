@@ -47,7 +47,7 @@ public class AgitatorSubsystem extends SubsystemBase {
             new FlyWheelConfig(motor)
                     .withDiameter(Inches.of(2))
                     .withMass(Pounds.of(1.2))
-                    .withTelemetry("Agitator", TelemetryVerbosity.LOW);
+                    .withTelemetry("Agitator", TelemetryVerbosity.HIGH);
 
     private final FlyWheel agitator = new FlyWheel(agitatorConfig);
 

@@ -23,13 +23,19 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootCommand"
+                  "name": "ShootTestCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AgitatorRun"
                 }
               },
               {
@@ -97,13 +103,19 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootCommand"
+                  "name": "ShootTestCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AgitatorRun"
                 }
               },
               {

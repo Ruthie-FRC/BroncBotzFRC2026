@@ -118,6 +118,16 @@ public class RobotContainer
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
                                   ).withTimeout(Seconds.of(5)));
+    // NamedCommands.registerCommand("ShootTestCommand",
+    //                               new ShootKickIndexCommand(turretFlywheel,
+    //                                                         kicker,
+    //                                                         indexer,
+
+    //                                                         agitator,
+    //                                                         hood,
+    //                                                         RPM.of(2000)
+    //                                                         //Setpoints.Hood.hubDegree
+    //                               ).withTimeout(Seconds.of(5)));
     NamedCommands.registerCommand("AimAtHub", new AutoAimCommand(drivebase, driveAngularVelocity));
     NamedCommands.registerCommand("PreShotAgitate", agitator.setDutyCycleCommand(-0.1).withTimeout(1));
     NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle.plus(Degrees.of(2))).withTimeout(0.5));

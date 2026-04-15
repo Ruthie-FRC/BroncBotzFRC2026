@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto One Advanced Path 1"
+            "pathName": "Auto Three Advanced Path 1"
           }
         },
         {
@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootCommand"
+                  "name": "ShootTestCommand"
                 }
               },
               {
@@ -81,13 +81,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto One Advanced Path Follow"
+            "pathName": "Auto Three Path Three Follow Two"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Auto One Advanced Path 2"
+            "pathName": "Auto Three Advanced Path 2"
           }
         },
         {
@@ -97,7 +97,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootCommand"
+                  "name": "ShootTestCommand"
                 }
               },
               {
