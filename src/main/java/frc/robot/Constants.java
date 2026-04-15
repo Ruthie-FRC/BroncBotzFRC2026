@@ -61,7 +61,7 @@ public final class Constants {
   public static class AgitatorConstants {
     
     public static double AgitatorSpeed = 0.55;
-    public static double AgitatorInverseSpeed = 0.55;
+    public static double AgitatorInverseSpeed = -0.4;
 
   }
 
