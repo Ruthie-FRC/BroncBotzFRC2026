@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Setpoints;
 import frc.robot.Setpoints.Intake;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -55,9 +56,9 @@ public class IntakeCommand extends Command {
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.8);//(Setpoints.Intake.intakeRollerRPM);
-        agitatorSubsystem.setDutyCycleSetpoint(0.6);
-        indexerSubsystem.setDutyCycleSetpoint(-0.267);
+        intakeRollerSubsystem.setDutycycleSetpoint(Constants.IntakeRollerConstants.IntakeRollerIntakeSpeeds);//(Setpoints.Intake.intakeRollerRPM);
+        agitatorSubsystem.setDutyCycleSetpoint(Constants.AgitatorConstants.AgitatorSpeed);
+        indexerSubsystem.setDutyCycleSetpoint(Constants.IndexerConstants.indexerInverse);
         
     }
 

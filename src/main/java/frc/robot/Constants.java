@@ -58,9 +58,11 @@ public final class Constants {
     public static final int intakeArmFollowerID = 41;
   }
 
-  public static class Agitator {
+  public static class AgitatorConstants {
     
-    public static double AgitatorRollerIntakeSpeeds = .5;
+    public static double AgitatorSpeed = 0.55;
+    public static double AgitatorInverseSpeed = 0.55;
+
   }
 
   public static class IndexerConstants {
@@ -72,6 +74,9 @@ public final class Constants {
     public static double indexerVoltageOut = -4;
     public static double kickerVoltage = 4;
     public static double kickerVoltageReverse = -4;
+
+    public static double indexerRPM = 1707;
+    public static double indexerInverse = -0.1;
 
   }
 
@@ -114,9 +119,9 @@ public final class Constants {
 
   public static class IntakeRollerConstants {
 
-    public static double IntakeRollerOuttakeSpeeds = -.5;
-    public static double IntakeRollerIntakeSpeeds = .5;
-    public static double IntakeRollerHoldSpeed = 0.3;
+    public static double IntakeRollerOuttakeSpeeds = 0.8;
+    public static double IntakeRollerIntakeSpeeds = -0.8;
+    //public static double IntakeRollerHoldSpeed = 0.3;
 
     public static double kWristMomentOfInertia = 0.5;
     public static double kWristGearRatio = 3.0;
@@ -160,18 +165,14 @@ public final class Constants {
       public static Angle softLimitMax = Degrees.of(70);
       public static double EncoderAOffset = (0);
     }
-    public static class IndexerConstants {
-      public static final  MechanismGearing gearingIndexer = new MechanismGearing(GearBox.fromStages("5:1"));
-      public static final  MechanismGearing gearingKicker = new MechanismGearing(GearBox.fromStages("3:1"));
-
-      public static double indexerVoltage = 4;
-      public static double indexerVoltageOut = -4;
-    }
     
-    public static class KickerConstants{
+  }
+
+  public static class KickerConstants{
       public static double kickerVoltage = 5;
       public static double kickerVoltageReverse = -5;
-    }
+
+      public static double kickerRPM = 1792;
   }
 
   public static class ClimberConstants {
