@@ -11,6 +11,9 @@ import static edu.wpi.first.units.Units.Second;
 import java.util.List;
 import java.util.Optional;
 
+//import com.google.flatbuffers.Constants;
+import frc.robot.Constants;
+
 import frc.robot.Setpoints;
 import frc.robot.subsystems.*;
 
@@ -130,7 +133,7 @@ public class AutoShootKickCommand extends Command {
     @Override
     public void initialize() {
         // Spin up shooter to the passed RPM
-        kicker.setVelocitySetpoint(RPM.of(1513));
+        kicker.setVelocitySetpoint(RPM.of(Constants.KickerConstants.kickerRPM));
         hood.setAngleSetpoint(Setpoints.Intake.hoodUpAngle);
         if (swerve.isEmpty()) {
             shooter.setVelocitySetpoint(goalRPM);
@@ -161,9 +164,9 @@ public class AutoShootKickCommand extends Command {
                 )
 
         );
-        kicker.setVelocitySetpoint(RPM.of(1792));
+        kicker.setVelocitySetpoint(RPM.of(Constants.KickerConstants.kickerRPM));
 
-       agitator.setDutyCycleSetpoint(0.);//RPM.of(1135)
+       agitator.setDutyCycleSetpoint(Constants.AgitatorConstants.AgitatorSpeed);//RPM.of(1135)
 
         
 

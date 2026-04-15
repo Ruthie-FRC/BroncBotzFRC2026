@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import frc.robot.Setpoints;
 import frc.robot.subsystems.*;
+import frc.robot.Constants;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.Debouncer;
@@ -74,7 +75,7 @@ public class PassCommand extends Command {
     @Override
     public void initialize() {
         // Spin up shooter to the passed RPM
-        kicker.setVelocitySetpoint(RPM.of(1513));
+        kicker.setVelocitySetpoint(RPM.of(Constants.KickerConstants.kickerRPM));
         hood.setAngleSetpoint(Setpoints.Intake.hoodPassAngle);
         if (swerve.isEmpty()) {
             shooter.setVelocitySetpoint(goalRPM);
@@ -106,15 +107,15 @@ public class PassCommand extends Command {
 
         );
         
-        kicker.setVelocitySetpoint(RPM.of(1792));
+        kicker.setVelocitySetpoint(RPM.of(Constants.KickerConstants.kickerRPM));
 
-       agitator.setDutyCycleSetpoint(0.7);//RPM.of(1135)
+       agitator.setDutyCycleSetpoint(Constants.AgitatorConstants.AgitatorSpeed);//RPM.of(1135)
 
         if (shooterReady) {
 
-            indexer.setVelocitySetpoint(RPM.of(1707));
+            indexer.setVelocitySetpoint(RPM.of(Constants.IndexerConstants.indexerRPM));
         } else {
-            indexer.setDutyCycleSetpoint(-0.1);;
+            indexer.setDutyCycleSetpoint(Constants.IndexerConstants.indexerInverse);;
         }
 
 

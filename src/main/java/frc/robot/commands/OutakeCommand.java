@@ -9,6 +9,9 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+//import com.google.flatbuffers.Constants;
+import frc.robot.Constants;
+
 
 public class OutakeCommand extends Command {
     
@@ -38,8 +41,8 @@ public class OutakeCommand extends Command {
      */
     @Override
     public void execute() {
-            intakeRollerSubsystem.setDutycycleSetpoint(0.6);//(Setpoints.Intake.intakeRollerRPM);
-            agitatorSubsystem.setDutyCycleCommand(-0.4);
+            intakeRollerSubsystem.setDutycycleSetpoint(Constants.IntakeRollerConstants.IntakeRollerOuttakeSpeeds);//(Setpoints.Intake.intakeRollerRPM);
+            agitatorSubsystem.setDutyCycleCommand(Constants.AgitatorConstants.AgitatorInverseSpeed);
     }
 
     /**

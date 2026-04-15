@@ -8,6 +8,8 @@ import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeRollerSubsystem;
 
+import frc.robot.Constants;
+
 import static edu.wpi.first.units.Units.Degrees;
 
 import java.time.chrono.ThaiBuddhistChronology;
@@ -46,7 +48,7 @@ public class IntakeAutoCommand extends Command {
     public void execute() {
         //intakeArmSubsystem.setAngleSetpoint(Intake.intakeArmAngleDown);
        // hoodSubsystem.setAngleSetpoint(Intake.hoodDownAngle);
-        intakeRollerSubsystem.setDutycycleSetpoint(-0.7);//Sets.Intake.intakeRollerRPM);
+        intakeRollerSubsystem.setDutycycleSetpoint(Constants.IntakeRollerConstants.IntakeRollerIntakeSpeeds);//Sets.Intake.intakeRollerRPM);
     }
 
     /**
