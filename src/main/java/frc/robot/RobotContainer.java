@@ -45,6 +45,7 @@ import frc.robot.subsystems.IntakeRollerSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.systems.field.FieldConstants;
+import frc.robot.systems.field.HubTrackerSubsystem;
 import frc.robot.systems.field.LEDSystem;
 import swervelib.SwerveInputStream;
 
@@ -69,7 +70,6 @@ public class RobotContainer
   private final AgitatorSubsystem agitator = new AgitatorSubsystem();
   private final KickerSubsystem   kicker   = new KickerSubsystem();
   private final HoodSubsystem hood = new HoodSubsystem();
-  
   private final LEDSystem LEDs = new LEDSystem();
 
   public static Timer                 timerThing           = new Timer();
@@ -78,6 +78,10 @@ public class RobotContainer
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+
+
+  private final HubTrackerSubsystem hubtracker = new HubTrackerSubsystem(drivebase, m_driverController);
+
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -117,7 +121,7 @@ public class RobotContainer
                                                             hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(5)));
+                                  ).withTimeout(Seconds.of(8)));
     // NamedCommands.registerCommand("ShootTestCommand",
     //                               new ShootKickIndexCommand(turretFlywheel,
     //                                                         kicker,
@@ -133,7 +137,7 @@ public class RobotContainer
     NamedCommands.registerCommand("ArmUp", intakeArm.setAngleCommand(Setpoints.Trench.intakeArmUpAngle.plus(Degrees.of(2))).withTimeout(0.5));
     NamedCommands.registerCommand("ArmDown", intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.minus(Degrees.of(3))).withTimeout(.2)
                                                   .andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.minus(Degrees.of(3))).withTimeout(1)));
-    NamedCommands.registerCommand("AgitatorRun", agitator.setDutyCycleCommand(0.3).withTimeout(10));
+    NamedCommands.registerCommand("AgitatorRun", agitator.setDutyCycleCommand(0.55).withTimeout(10));
     
     
     // Configure the trigger bindings
@@ -231,7 +235,7 @@ public class RobotContainer
     //m_operatorController.rightTrigger(0.2).whileTrue(Commands.waitTime(Seconds.of(5)).andThen(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly()));
 
     m_operatorController.leftTrigger(0.3).whileTrue(new IntakeCommand(intakeRoller, agitator, indexer));
-    m_operatorController.leftBumper().whileTrue(agitator.setDutyCycleCommand(-0.5));
+    m_operatorController.leftBumper().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleIntake).withTimeout(1.3));
     m_operatorController.rightBumper().whileTrue(((new IntakeAgitateCommand(intakeArm).andThen(Commands.waitTime(Seconds.of(0.3)))).withTimeout(1.2)).repeatedly());
     m_operatorController.povDown().onTrue( intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown.plus(Degrees.of(20))).withTimeout(.5).andThen(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleDown).withTimeout(1.3)));
     m_operatorController.povUp().onTrue(intakeArm.setAngleCommand(Setpoints.Intake.intakeArmAngleUp).withTimeout(1.3));
@@ -240,7 +244,7 @@ public class RobotContainer
     m_operatorController.b().whileTrue(new OutakeCommand(intakeRoller, agitator));
     m_operatorController.a().whileTrue(new UnstuckCommand(kicker, indexer, agitator));
     m_operatorController.povLeft().whileTrue(new PassCommand(turretFlywheel, kicker, indexer, agitator, hood, RPM.of(4000)));
-
+    
   }
 
   public void LEDLightsBinding(){

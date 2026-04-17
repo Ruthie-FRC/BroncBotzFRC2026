@@ -37,7 +37,7 @@ public class FlywheelSubsystem extends SubsystemBase {
                     .withGearing(new MechanismGearing(GearBox.fromReductionStages(1)))
                     //don't change gears for SA comp //acutal gear ratio: 22:18 TT
                     .withIdleMode(MotorMode.COAST)
-                    .withTelemetry("FlywheelMotor", TelemetryVerbosity.HIGH)
+                    .withTelemetry("FlywheelMotor", TelemetryVerbosity.LOW)
                     .withStatorCurrentLimit(Amps.of(60))//For flywheel, stator current lm can be 60A/80A //talon fx can handle up to 260A
                     .withMotorInverted(true)
                     .withFeedforward(new SimpleMotorFeedforward(0.17, 0.117, 0.01)) //thanks 3561!

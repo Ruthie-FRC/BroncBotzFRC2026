@@ -81,7 +81,7 @@ public class IntakeArmSubsystem extends SubsystemBase
       .withSimClosedLoopController(10, 0, 0)
       .withSimFeedforward(new ArmFeedforward(
       0.25, 0, 0.25))
-      .withTelemetry("IntakeArmMotor", TelemetryVerbosity.HIGH)
+      .withTelemetry("IntakeArmMotor", TelemetryVerbosity.LOW)
       .withGearing(GroundConstants.gearing)
       .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)

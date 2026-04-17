@@ -66,6 +66,17 @@
                         "name": "ArmUp"
                       }
                     },
+                      "type": "named",
+                      "data": {
+                        "name": "ArmDown"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ArmUp"
+                      }
+                    },
                     {
                       "type": "named",
                       "data": {
@@ -79,9 +90,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "Auto Three Path Three Follow Two"
+            "waitTime": 0.5
           }
         },
         {

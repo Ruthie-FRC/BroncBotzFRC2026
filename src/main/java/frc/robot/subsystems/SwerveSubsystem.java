@@ -121,6 +121,9 @@ public class SwerveSubsystem extends SubsystemBase
 
   public void setupLimelight() //I am a method!!
   {
+    List<Integer> filteredListTurret = List.of(1, 3, 4, 6, 7,8, 9, 10, 11, 12,13,14,15,16, 17, 18, 19, 20, 21, 22, 23,24, 25, 26, 27, 28,31, 32);
+    List<Integer> filteredListSwerve = List.of(1, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28,29, 30, 31, 32);
+
     swerveDrive.stopOdometryThread();
     limelight_swerve = new Limelight("limelight"); // We didn't rename the limelight
     limelight_swerve
@@ -134,7 +137,7 @@ public class SwerveSubsystem extends SubsystemBase
                         new Rotation3d(0,
                                        Units.degreesToRadians(45),
                                        Units.degreesToRadians(180)))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(17, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 8, 9, 3, 4, 10, 11, 31, 32, 16, 29, 30, 14, 13))
+        .withAprilTagIdFilter(filteredListSwerve)
         .save();
     limelightPoseEstimator_swerve = limelight_swerve.createPoseEstimator(EstimationMode.MEGATAG1);
 
@@ -148,8 +151,9 @@ public class SwerveSubsystem extends SubsystemBase
                         Units.inchesToMeters(0), /// +Right, maybe?
                         Units.inchesToMeters(20.5),
                         new Rotation3d(0, Units.degreesToRadians(45), 0))) ///  Roll, Pitch, Yaw
-        .withAprilTagIdFilter(List.of(1, 18, 19, 20, 21, 22, 25, 26, 27, 18, 19, 20, 21, 24, 6, 7, 3, 4, 8, 9, 10, 11, 31, 32, 16, 17))
+        .withAprilTagIdFilter(filteredListTurret)
         .save();
+
     limelightPoseEstimator_turret = limelight_turret.createPoseEstimator(EstimationMode.MEGATAG1);
   } //I am also a bracket!!
 
@@ -241,9 +245,9 @@ public class SwerveSubsystem extends SubsystemBase
         swerveDrive.field.getObject("Vision").setPose(estimatorPose);
         // TODO: Tune this to be better
         SmartDashboard.putNumber("LimelightTuning/" + llname + "/ambiguity", poseEstimate.getAvgTagAmbiguity());
-        if (poseEstimate.getAvgTagAmbiguity() < 0.16
+        if (poseEstimate.getAvgTagAmbiguity() < 0.2
             && // TODO: Change me, i am bad, too low
-            poseEstimate.tagCount > 1 && poseEstimate.avgTagDist < Feet.of(6).in(Meters))
+            poseEstimate.tagCount > 1 && poseEstimate.avgTagDist < Feet.of(18).in(Meters))
         {
           if (llTimestamp != poseEstimate.timestampSeconds)
           {

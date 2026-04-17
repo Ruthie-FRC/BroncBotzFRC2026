@@ -6,10 +6,10 @@
   "autoFolders": [
     "Main"
   ],
-  "defaultMaxVel": 4.5,
-  "defaultMaxAccel": 5.0,
-  "defaultMaxAngVel": 540.0,
-  "defaultMaxAngAccel": 720.0,
+  "defaultMaxVel": 3.0,
+  "defaultMaxAccel": 2.0,
+  "defaultMaxAngVel": 300.0,
+  "defaultMaxAngAccel": 70.0,
   "defaultNominalVoltage": 12.0,
   "robotMass": 50.212,
   "robotMOI": 6.0,

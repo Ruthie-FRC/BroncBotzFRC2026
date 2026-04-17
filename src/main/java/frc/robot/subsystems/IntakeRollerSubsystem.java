@@ -37,7 +37,8 @@ public class IntakeRollerSubsystem extends SubsystemBase {
                     .withTelemetry("IntakeRollerMotor", TelemetryVerbosity.HIGH)//not Intake"ARM" motor
                     .withStatorCurrentLimit(Amps.of(40))
                     .withMotorInverted(false)
-                    .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+                    .withFeedforward(new SimpleMotorFeedforward(0,
+                     0, 0))
                     .withSimFeedforward(new SimpleMotorFeedforward(0, 0.5, 0))
                     .withControlMode(ControlMode.CLOSED_LOOP);
 
@@ -48,7 +49,7 @@ public class IntakeRollerSubsystem extends SubsystemBase {
             new FlyWheelConfig(motor)
                     .withDiameter(Inches.of(4))
                     .withMass(Pounds.of(1))
-                    .withTelemetry("IntakeRoller", TelemetryVerbosity.HIGH);
+                    .withTelemetry("IntakeRoller", TelemetryVerbosity.LOW);
 
     private final FlyWheel intakeRoller = new FlyWheel(intakeRollerConfig);
 

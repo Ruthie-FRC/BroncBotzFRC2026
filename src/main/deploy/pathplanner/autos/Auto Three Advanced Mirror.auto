@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Unused Auto One Advanced Path 1"
+            "pathName": "Auto Three Advanced Path 1 Mirror"
           }
         },
         {
@@ -23,19 +23,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootTestCommand"
+                  "name": "ShootCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitatorRun"
                 }
               },
               {
@@ -87,13 +81,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto One Advanced Path Follow"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto One Advanced Path 2"
+            "pathName": "Auto Three Advanced Path 2 Mirror"
           }
         },
         {
@@ -103,19 +91,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootTestCommand"
+                  "name": "ShootCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "AimAtHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AgitatorRun"
                 }
               },
               {
