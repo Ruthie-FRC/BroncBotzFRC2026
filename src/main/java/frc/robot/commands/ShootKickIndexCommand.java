@@ -53,7 +53,8 @@ public class ShootKickIndexCommand extends Command {
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     //private final Angle goalDegree;
 
-    private final Debouncer shootDebounce1 = new Debouncer(0.2
+    private final Debouncer shootDebounce1 = new Debouncer(0.1
+
     , DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
@@ -148,7 +149,9 @@ public class ShootKickIndexCommand extends Command {
 
         AngularVelocity goalRPM1 = goalRPM;
         //Angle goalDegree1 = goalDegree;
+
         if (swerve.isPresent()) {
+          
             goalRPM1 = RPM.of(calculatedGoalRPM.get(swerve.get().distanceToHub()));
             //goalDegree1 = Degrees.of(calculatedHoodAngle.get(swerve.get().distanceToHub()));
         }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.809949580043262,
-        "y": 7.400979299232473
+        "x": 3.81,
+        "y": 7.406
       },
       "isLocked": false,
       "linkedName": null
@@ -20,60 +20,60 @@
         "y": 7.406
       },
       "prevControl": {
-        "x": 4.8883649009650725,
-        "y": 7.521541047718699
+        "x": 4.877442130136204,
+        "y": 7.406
       },
       "nextControl": {
-        "x": 6.024410550941047,
-        "y": 7.304810041104888
+        "x": 6.033976629430182,
+        "y": 7.406
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.461349397590361,
-        "y": 6.9964096385542165
+        "x": 7.428566265060241,
+        "y": 7.040120481927711
       },
       "prevControl": {
-        "x": 7.1126682838410895,
-        "y": 7.45293772363235
+        "x": 7.1523504611125235,
+        "y": 7.54380812442061
       },
       "nextControl": {
-        "x": 7.710256578951163,
-        "y": 6.6705155353520755
+        "x": 7.61433734939759,
+        "y": 6.701361445783133
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.690831325301204,
-        "y": 6.056626506024097
+        "x": 7.341144578313252,
+        "y": 6.31889156626506
       },
       "prevControl": {
-        "x": 7.939280552889657,
-        "y": 6.162241357046607
+        "x": 7.589593805901705,
+        "y": 6.424506417287571
       },
       "nextControl": {
-        "x": 7.246584926338307,
-        "y": 5.8677789990337645
+        "x": 6.896898179350355,
+        "y": 6.130044059274728
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.696409638554217,
-        "y": 6.756
+        "x": 6.641771084337348,
+        "y": 6.810638554216868
       },
       "prevControl": {
-        "x": 6.924718162718387,
-        "y": 6.437732459856509
+        "x": 6.92589156626506,
+        "y": 6.526518072289157
       },
       "nextControl": {
-        "x": 6.55068850251075,
-        "y": 6.95913874694455
+        "x": 6.448131554843022,
+        "y": 7.004278083711194
       },
       "isLocked": false,
       "linkedName": null
@@ -126,11 +126,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.05,
+      "waypointRelativePos": 1.167634854771776,
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 2.4078014184397154,
+      "waypointRelativePos": 2.073858921161833,
       "rotationDegrees": -90.0
     },
     {
@@ -138,7 +138,7 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 4.865248226950339,
+      "waypointRelativePos": 4.931950207468886,
       "rotationDegrees": 0.0
     },
     {
@@ -149,12 +149,12 @@
   "constraintZones": [
     {
       "name": "TrenchOut",
-      "minWaypointRelativePos": 3.578163771712167,
-      "maxWaypointRelativePos": 4.939950372208426,
+      "minWaypointRelativePos": 3.9672456575682395,
+      "maxWaypointRelativePos": 5.148387096774183,
       "constraints": {
-        "maxVelocity": 1.7,
+        "maxVelocity": 1.5,
         "maxAcceleration": 1.0,
-        "maxAngularVelocity": 300.0,
+        "maxAngularVelocity": 60.0,
         "maxAngularAcceleration": 50.0,
         "nominalVoltage": 12.0,
         "unlimited": false
@@ -162,10 +162,10 @@
     },
     {
       "name": "Swipe",
-      "minWaypointRelativePos": 1.6605459057071945,
-      "maxWaypointRelativePos": 3.1751861042183616,
+      "minWaypointRelativePos": 1.5215880893300313,
+      "maxWaypointRelativePos": 3.5642679900744225,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.3,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 70.0,
@@ -184,7 +184,7 @@
     },
     {
       "name": "IntakeStop",
-      "waypointRelativePos": 3.69,
+      "waypointRelativePos": 3.56,
       "endWaypointRelativePos": null,
       "command": null
     }
