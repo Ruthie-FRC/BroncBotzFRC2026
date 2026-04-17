@@ -36,44 +36,44 @@
         "y": 1.259657631954351
       },
       "prevControl": {
-        "x": 7.40171548888125,
-        "y": 1.0327320293619846
+        "x": 7.363,
+        "y": 0.8331807228915671
       },
       "nextControl": {
-        "x": 7.619493780724927,
-        "y": 1.5038260389578881
+        "x": 7.5924682774636345,
+        "y": 1.5145866856453056
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.592481927710843,
-        "y": 1.9478072289156638
+        "x": 7.439493975903615,
+        "y": 1.9696626506024084
       },
       "prevControl": {
-        "x": 7.806311501865018,
-        "y": 1.8182815047638798
+        "x": 7.802636020691895,
+        "y": 1.4989229629138985
       },
       "nextControl": {
-        "x": 7.378652353556667,
-        "y": 2.077332953067448
+        "x": 7.1444457831325305,
+        "y": 2.352132530120481
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.696409638554217,
-        "y": 1.7948192771084335
+        "x": 6.67455421686747,
+        "y": 1.6746144578313262
       },
       "prevControl": {
-        "x": 6.912227917870005,
-        "y": 2.027903018769485
+        "x": 6.95867469879518,
+        "y": 2.0570843373493983
       },
       "nextControl": {
-        "x": 6.423216867469879,
-        "y": 1.4997710843373488
+        "x": 6.40587384240271,
+        "y": 1.3129293383595322
       },
       "isLocked": false,
       "linkedName": null
@@ -85,7 +85,7 @@
       },
       "prevControl": {
         "x": 6.0126391670355845,
-        "y": 0.7004585625232822
+        "y": 0.7004585625232821
       },
       "nextControl": {
         "x": 5.336813118613264,
@@ -148,11 +148,11 @@
   ],
   "constraintZones": [
     {
-      "name": "Swiping",
-      "minWaypointRelativePos": 1.7414035087719413,
-      "maxWaypointRelativePos": 3.391929824561413,
+      "name": "swipe out",
+      "minWaypointRelativePos": 3.619851116625312,
+      "maxWaypointRelativePos": 4.926054590570709,
       "constraints": {
-        "maxVelocity": 1.3,
+        "maxVelocity": 1.4,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 300.0,
         "maxAngularAcceleration": 140.0,
@@ -161,14 +161,14 @@
       }
     },
     {
-      "name": "swipe out",
-      "minWaypointRelativePos": 3.9421052631579006,
-      "maxWaypointRelativePos": 4.452982456140356,
+      "name": "swipe",
+      "minWaypointRelativePos": 1.7995037220843737,
+      "maxWaypointRelativePos": 3.578163771712159,
       "constraints": {
-        "maxVelocity": 1.3,
+        "maxVelocity": 1.5,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 300.0,
-        "maxAngularAcceleration": 140.0,
+        "maxAngularAcceleration": 70.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -178,22 +178,22 @@
   "eventMarkers": [
     {
       "name": "IntakeStart",
-      "waypointRelativePos": 0.75,
-      "endWaypointRelativePos": 2.4288017195056737,
+      "waypointRelativePos": 1.0213399503722118,
+      "endWaypointRelativePos": 3.5225806451612853,
       "command": null
     },
     {
       "name": "IntakeStop",
-      "waypointRelativePos": 3.9,
+      "waypointRelativePos": 3.55,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 2.4,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 300.0,
-    "maxAngularAcceleration": 140.0,
+    "maxAngularAcceleration": 70.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -207,5 +207,5 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

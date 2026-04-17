@@ -53,7 +53,8 @@ public class ShootKickIndexCommand extends Command {
     private final AngularVelocity goalRPM;   // <-- parameter stored here
     //private final Angle goalDegree;
 
-    private final Debouncer shootDebounce1 = new Debouncer(0.3, DebounceType.kFalling);
+    private final Debouncer shootDebounce1 = new Debouncer(0.2
+    , DebounceType.kFalling);
 
     private final List<RecordedShot> shots = List.of(
             // TUNE HERE

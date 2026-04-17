@@ -66,6 +66,7 @@
                         "name": "ArmUp"
                       }
                     },
+                    {
                       "type": "named",
                       "data": {
                         "name": "ArmDown"

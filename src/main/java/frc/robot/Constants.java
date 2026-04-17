@@ -75,7 +75,7 @@ public final class Constants {
     public static double kickerVoltage = 4;
     public static double kickerVoltageReverse = -4;
 
-    public static double indexerRPM = 1707;
+    public static double indexerRPM = 1817;
     public static double indexerInverse = -0.1;
 
   }

@@ -121,7 +121,7 @@ public class RobotContainer
                                                             hood,
                                                             drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(8)));
+                                  ).withTimeout(Seconds.of(7)));
     // NamedCommands.registerCommand("ShootTestCommand",
     //                               new ShootKickIndexCommand(turretFlywheel,
     //                                                         kicker,
