@@ -104,6 +104,7 @@ public class ShootKickIndexCommand extends Command {
 
         addRequirements(this.shooter, this.kicker, this.indexer, this.agitator, this.hood);
     }
+    //*while.shooting = motor.setYozuraTime (.5); */
 
     public ShootKickIndexCommand(
             FlywheelSubsystem shooter,

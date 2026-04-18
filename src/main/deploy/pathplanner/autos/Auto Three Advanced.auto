@@ -71,18 +71,6 @@
                       "data": {
                         "name": "ArmDown"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmUp"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ArmDown"
-                      }
                     }
                   ]
                 }
@@ -91,15 +79,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Auto Three Advanced Path 2"
+            "pathName": "Auto Three Advanced Path 2 In"
           }
         },
         {

@@ -7,8 +7,11 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.function.Predicate;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -53,9 +56,6 @@ import swervelib.SwerveInputStream;
 public class RobotContainer
 {
 
-  private final SendableChooser<Command> autoChooser;
-  
-
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem();
   // private final TurretVisualizer turretVisualizer =
@@ -78,7 +78,12 @@ public class RobotContainer
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final CommandXboxController m_operatorController =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-
+   // Establish a Sendable Chooser that will be able to be sent to the
+  // SmartDashboard, allowing selection of desired auto
+  private SendableChooser<Command> autoChooser;
+  private LoggedDashboardChooser<Command> loggedAutoChooser;
+  // Add this field at the top of RobotContainer (alongside your other fields)
+  private SendableChooser<Boolean> flipChooser = new SendableChooser<>();
 
   private final HubTrackerSubsystem hubtracker = new HubTrackerSubsystem(drivebase, m_driverController);
 
@@ -113,15 +118,9 @@ public class RobotContainer
   {
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("ShootCommand",
-                                  new ShootKickIndexCommand(turretFlywheel,
-                                                            kicker,
-                                                            indexer,
-
-                                                            agitator,
-                                                            hood,
-                                                            drivebase
+                                  new ShootKickIndexCommand(turretFlywheel, kicker, indexer, agitator, hood, drivebase
                                                             //Setpoints.Hood.hubDegree
-                                  ).withTimeout(Seconds.of(7)));
+                                  ).withTimeout(Seconds.of(6)));
     // NamedCommands.registerCommand("ShootTestCommand",
     //                               new ShootKickIndexCommand(turretFlywheel,
     //                                                         kicker,
@@ -148,8 +147,32 @@ public class RobotContainer
     defaultCommands();
     LEDLightsBinding();
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // setup the flip chooser
+    flipChooser.setDefaultOption("Not Flipped", false);
+    flipChooser.addOption("Flipped", true);
+    SmartDashboard.putData("Flip Auto", flipChooser);
+
+    flipChooser.onChange((Boolean flip) -> {
+      autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+          autoStream -> autoStream.map(auto -> {
+            auto = new PathPlannerAuto(auto.getName(), flip);
+            return auto;
+          }));
+      autoChooser.setDefaultOption("Do Nothing", Commands.none());
+      SmartDashboard.putData("Auto Chooser", autoChooser);
+      loggedAutoChooser = new LoggedDashboardChooser<>("Auto Routine", autoChooser);
+    });
+
+    autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        autoStream -> autoStream.map(auto -> {
+          auto = new PathPlannerAuto(auto.getName(), flipChooser.getSelected());
+          return auto;
+        }));
+    autoChooser.setDefaultOption("Do Nothing", Commands.none());
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    loggedAutoChooser = new LoggedDashboardChooser<>("Auto Routine", autoChooser);
+  
+
     
 
     // Named commands do NOT run with path's. They are inbetween paths.
@@ -208,7 +231,7 @@ public class RobotContainer
   public void driverControls(){
     m_driverController.a().and(()->!DriverStation.isTest()).whileTrue(new AutoAimCommand(drivebase, driveAngularVelocity));
     m_driverController.rightBumper().whileTrue(new slowMode(drivebase, driveAngularVelocity));
-    m_driverController.leftBumper().whileTrue(new TrenchCommand(hood));
+    m_driverController.leftBumper().whileTrue(drivebase.lockPos());
     m_driverController.start().and(m_driverController.back()).onTrue(drivebase.zeroGyroWithAlliance());
     m_driverController.x().whileTrue(agitator.setDutyCycleCommand(-0.2));
     //reset odometry
