@@ -63,8 +63,46 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+// JSim imports
+import jsim.PhysicsWorld;
+import jsim.PhysicsBody;
+import jsim.Vec3;
+
 public class SwerveSubsystem extends SubsystemBase
 {
+
+  // JSim simulation fields
+  private PhysicsWorld jsimWorld = null;
+  private java.util.List<PhysicsBody> jsimBodies = new java.util.ArrayList<>();
+  private boolean jsimInitialized = false;
+
+  // Example: Material properties, can be expanded
+  public static class JSimMaterial {
+    public double restitution = 0.5;
+    public double friction = 0.5;
+    public JSimMaterial(double restitution, double friction) {
+      this.restitution = restitution;
+      this.friction = friction;
+    }
+  }
+
+  // Example: Add a new body to the simulation
+  public PhysicsBody addSimBody(double mass, Vec3 position, Vec3 velocity, JSimMaterial material) {
+    if (jsimWorld == null) return null;
+    PhysicsBody body = jsimWorld.createBody(mass);
+    body.setPosition(position);
+    body.setLinearVelocity(velocity);
+    // Material support (if available in JSim API)
+    // body.setMaterial(material.restitution, material.friction); // Uncomment if supported
+    jsimBodies.add(body);
+    return body;
+  }
+
+  // Example: Add a global force (if supported)
+  public void addGlobalForce(Vec3 force) {
+    // Placeholder for future JSim API support
+    // jsimWorld.addGlobalForce(force); // Uncomment if supported
+  }
 
   /**
    * Creates a new ExampleSubsystem.
@@ -87,6 +125,20 @@ public class SwerveSubsystem extends SubsystemBase
   {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     Pose3d initialPose = new Pose3d();
+
+    // Initialize JSim simulation world and add example bodies if in simulation
+    if (edu.wpi.first.wpilibj.RobotBase.isSimulation()) {
+      try {
+        jsimWorld = new PhysicsWorld(0.02, true); // 20ms timestep, gravity enabled
+        // Example: Add two bodies with different properties
+        addSimBody(1.0, new Vec3(0.0, 0.0, 1.0), new Vec3(1.0, 0.0, 0.0), new JSimMaterial(0.8, 0.3));
+        addSimBody(2.0, new Vec3(2.0, 0.0, 2.0), new Vec3(-1.0, 0.0, 0.0), new JSimMaterial(0.5, 0.7));
+        jsimInitialized = true;
+      } catch (Exception e) {
+        System.err.println("JSim initialization failed: " + e.getMessage());
+        jsimInitialized = false;
+      }
+    }
 
     // error catching
     try
@@ -338,7 +390,23 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void simulationPeriodic()
   {
-    // This method will be called once per scheduler run during simulation
+    // Step JSim simulation and print state for debugging
+    if (jsimInitialized && jsimWorld != null && !jsimBodies.isEmpty()) {
+      jsimWorld.step();
+      for (int i = 0; i < jsimBodies.size(); ++i) {
+        PhysicsBody body = jsimBodies.get(i);
+        Vec3 pos = body.position();
+        Vec3 vel = body.linearVelocity();
+        System.out.printf("[JSim] body%d pos=(%.2f, %.2f, %.2f) vel=(%.2f, %.2f, %.2f)%n",
+          i, pos.x(), pos.y(), pos.z(), vel.x(), vel.y(), vel.z());
+        SmartDashboard.putNumber("JSim/body" + i + "/pos_x", pos.x());
+        SmartDashboard.putNumber("JSim/body" + i + "/pos_y", pos.y());
+        SmartDashboard.putNumber("JSim/body" + i + "/pos_z", pos.z());
+        SmartDashboard.putNumber("JSim/body" + i + "/vel_x", vel.x());
+        SmartDashboard.putNumber("JSim/body" + i + "/vel_y", vel.y());
+        SmartDashboard.putNumber("JSim/body" + i + "/vel_z", vel.z());
+      }
+    }
   }
 
   public SwerveDrive getSwerveDrive()
